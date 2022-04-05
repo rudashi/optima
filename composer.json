@@ -1,0 +1,55 @@
+{
+    "name": "rudashi/optima",
+    "description": "Unofficial wrapper for ERP Comarch OPTIMA.",
+    "keywords": [
+        "laravel",
+        "comarch",
+        "optima",
+        "api"
+    ],
+    "homepage": "https://github.com/rudashi/optima",
+    "authors": [
+        {
+            "name": "Borys Żmuda",
+            "email": "rudashi@gmail.com",
+            "homepage": "https://rudashi.github.io",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "spatie/data-transfer-object": "^3.4.0"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "pestphp/pest": "^v1.21.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rudashi\\Optima\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rudashi\\Optima\\Tests\\": "tests"
+        },
+        "files": [
+            "tests/Pest.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rudashi\\Optima\\OptimaServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "test": "vendor/bin/pest"
+    }
+}
