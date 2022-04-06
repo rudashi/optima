@@ -1,0 +1,71 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Optima API docs",
+        "description": "Unofficial wrapper for ERP Comarch OPTIMA.",
+        "version": "latest",
+        "contact": {
+            "name": "Borys Żmuda",
+            "email": "rudashi@gmail.com"
+        }
+    },
+    "paths": {
+        "/api/optima/ping": {
+            "get": {
+                "tags": [
+                    "Optima"
+                ],
+                "operationId": "optima.ping",
+                "description": "Ping optima db connection",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/HealthCheckOk"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/HealthCheckProblem"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "HealthCheckOk": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "default": "pong"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "HealthCheckProblem": {
+                "description": "Internal server error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "default": "problem"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Could not connect to db"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
