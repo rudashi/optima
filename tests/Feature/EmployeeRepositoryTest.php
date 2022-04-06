@@ -25,6 +25,13 @@ $employee = [
     ]
 ];
 
+$employees = [
+    '012E',
+    '019E',
+    '023E',
+    '074E_DOT_1_2_1CBR',
+];
+
 it('can find an employee by code', function (string $code, array $dataset) {
 
     $data = $this->repository->findByCode($code);
@@ -48,20 +55,15 @@ it('can find an employee by code', function (string $code, array $dataset) {
             'company',
             'deleted',
         ]);
-
 })->with([$employee]);
 
-it('can find an employee using alias method `find`', function (string $code, array $dataset) {
+it('can find an employee using alias method `find`', function (string $code) {
 
     $data = $this->repository->find($code);
 
     expect($data)
         ->toBeInstanceOf(Employee::class)
         ->toHaveProperty('code', $code)
-        ->toHaveProperty('firstname', $dataset['firstname'])
-        ->toHaveProperty('job_title', $dataset['job_title'])
-        ->toHaveProperty('department_id', $dataset['department_id'])
-        ->toHaveProperty('deleted', $dataset['deleted'])
         ->toHaveProperties([
             'id',
             'code',
@@ -74,8 +76,7 @@ it('can find an employee using alias method `find`', function (string $code, arr
             'company',
             'deleted',
         ]);
-
-})->with([$employee]);
+})->with($employees);
 
 it('throws an exception when employee code not exists', function () {
 
