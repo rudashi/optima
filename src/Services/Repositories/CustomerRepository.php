@@ -18,7 +18,7 @@ class CustomerRepository
         private OptimaService $service
     ) {}
 
-    public function findByCode(string $code, string $group = null): ?object
+    public function findByCode(string $code, string $group = null): Customer
     {
         $data = $this->queryCustomer()
             ->where('Knt_Kod', $code)
