@@ -25,6 +25,19 @@ it('get custom Query builder', function () {
         ->toBeInstanceOf(Builder::class);
 });
 
+it('can use helper function `optima`', function () {
+
+    expect(optima())
+        ->toBeInstanceOf(QueryBuilder::class)
+        ->toBeInstanceOf(Builder::class);
+
+    expect(optima(false))
+        ->toBeInstanceOf(OptimaService::class)
+        ->newQuery()
+        ->toBeInstanceOf(QueryBuilder::class)
+        ->toBeInstanceOf(Builder::class);
+});
+
 it('can parse multiple ids to flatten array', function () {
 
     $ids = [1, 'test', '34', 0];
