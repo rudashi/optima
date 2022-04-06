@@ -12,7 +12,6 @@ class OptimaServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadJsonTranslationsFrom(__DIR__ . '../lang/');
-        $this->loadTranslationsFrom(__DIR__ . '../lang',  'optima');
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
     }
 
