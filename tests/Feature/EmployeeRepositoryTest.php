@@ -26,6 +26,7 @@ $employee = [
 ];
 
 $employees = [
+    '130E',
     '012E',
     '019E',
     '023E',
@@ -53,6 +54,7 @@ it('can find an employee by code', function (string $code, array $dataset) {
             'department_id',
             'department_name',
             'company',
+            'rcp',
             'deleted',
         ]);
 })->with([$employee]);
@@ -74,6 +76,7 @@ it('can find an employee using alias method `find`', function (string $code) {
             'department_id',
             'department_name',
             'company',
+            'rcp',
             'deleted',
         ]);
 })->with($employees);

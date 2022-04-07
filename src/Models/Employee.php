@@ -18,6 +18,7 @@ class Employee extends DataTransferObject
     public int $department_id;
     public string $department_name;
     public string $company;
+    public ?string $rcp = null;
     public bool $deleted;
 
 }

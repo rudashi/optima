@@ -35,10 +35,7 @@
     "autoload-dev": {
         "psr-4": {
             "Rudashi\\Optima\\Tests\\": "tests"
-        },
-        "files": [
-            "tests/Pest.php"
-        ]
+        }
     },
     "extra": {
         "laravel": {
