@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests\Feature\DepartmentRepositoryTest;
 
-use Carbon\Carbon;
 use Illuminate\Database\RecordsNotFoundException;
 use Rudashi\Optima\Models\Department;
 use Rudashi\Optima\Services\Collection;
@@ -37,9 +36,7 @@ it('can get all departments', function() {
                     'name',
                     'parent_id',
                     'user_code',
-                    'user_date'
-                ])
-                ->user_date->toBeInstanceOf(Carbon::class);
+                ]);
         });
 });
 
@@ -52,15 +49,12 @@ it('can find a department by code', function (string $code) {
         ->toHaveProperty('name', $code)
         ->not()->toHaveProperty('parent_id', null)
         ->not()->toHaveProperty('user_code', null)
-        ->not()->toHaveProperty('user_date', null)
         ->toHaveProperties([
             'id',
             'name',
             'parent_id',
             'user_code',
-            'user_date'
-        ])
-        ->user_date->toBeInstanceOf(Carbon::class);
+        ]);
 
 })->with($departments);
 

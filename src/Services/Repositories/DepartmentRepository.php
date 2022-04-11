@@ -52,7 +52,6 @@ class DepartmentRepository
                 'CNT_Nazwa as name',
                 'CNT_ParentId as parent_id',
                 'PRI_Kod as user_code',
-                'CNK_OkresDo as user_date'
             ])
             ->leftJoin('CDN.CentraKierownicy', 'CNT_CntId', 'CNK_CntId')
             ->leftJoin('CDN.Pracidx', 'CNK_PraId', 'PRI_PraId')
