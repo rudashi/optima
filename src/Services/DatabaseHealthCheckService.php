@@ -38,6 +38,7 @@ class DatabaseHealthCheckService
             'context' => $context
         ];
     }
+
     public function okay(array $context = []): array
     {
         return [

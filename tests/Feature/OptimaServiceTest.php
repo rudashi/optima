@@ -20,7 +20,7 @@ test('can load database configuration', function () {
 
 it('get custom Query builder', function () {
 
-    expect($this->db->newQuery())
+    expect($this->service->newQuery())
         ->toBeInstanceOf(QueryBuilder::class)
         ->toBeInstanceOf(Builder::class);
 });
@@ -42,12 +42,12 @@ it('can parse multiple ids to flatten array', function () {
 
     $ids = [1, 'test', '34', 0];
 
-    expect($this->db->parseIds(1, 'test', '34', 0))
+    expect($this->service->parseIds(1, 'test', '34', 0))
         ->toBeArray()
         ->toHaveCount(4)
         ->toBe($ids);
 
-    expect($this->db->parseIds($ids))
+    expect($this->service->parseIds($ids))
         ->toBeArray()
         ->toHaveCount(4)
         ->toBe($ids);

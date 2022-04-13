@@ -9,13 +9,13 @@ use Rudashi\Optima\Services\OptimaService;
 class TestCase extends \Tests\TestCase
 {
 
-    public OptimaService $db;
+    public OptimaService $service;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->db = app(OptimaService::class);
+        $this->service = app(OptimaService::class);
     }
 
 }

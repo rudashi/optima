@@ -13,7 +13,7 @@ use Rudashi\Optima\Tests\TestCase;
 uses(TestCase::class);
 
 beforeEach(function () {
-    $this->repository = new DepartmentRepository($this->db);
+    $this->repository = new DepartmentRepository($this->service);
 });
 
 $departments = [

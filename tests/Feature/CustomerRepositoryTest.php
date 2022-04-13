@@ -14,7 +14,7 @@ use Rudashi\Optima\Tests\TestCase;
 uses(TestCase::class);
 
 beforeEach(function () {
-    $this->repository = new CustomerRepository($this->db);
+    $this->repository = new CustomerRepository($this->service);
 });
 
 $customers = [
