@@ -9,7 +9,7 @@ use Illuminate\Support\Collection as CollectionBase;
 class Collection extends CollectionBase
 {
 
-    public function pluckAll(array $values) : array
+    public function pluckAll(array $values): array
     {
         return $this->map(fn($item) => array_map(static function ($value) use ($item) {
             return is_array($item) ? $item[$value] : $item->{$value};
