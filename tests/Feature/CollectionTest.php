@@ -14,8 +14,8 @@ function makeArray(string $type = 'object', int $total = 3): array
 {
     return array_map(function() use ($type){
         $array = [
-            'uuid' => faker()->uuid,
-            'email' => faker()->email,
+            'uuid' => faker()->uuid(),
+            'email' => faker()->email(),
             'active' => 1
         ];
         settype($array, $type);
