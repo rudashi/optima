@@ -14,7 +14,7 @@ class DepartmentRepository
 {
 
     public function __construct(
-        private OptimaService $service
+        private readonly OptimaService $service
     ) {}
 
     public function all(): Collection

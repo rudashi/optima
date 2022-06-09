@@ -15,7 +15,7 @@ class CustomerRepository
 {
 
     public function __construct(
-        private OptimaService $service
+        private readonly OptimaService $service
     ) {}
 
     public function findByCode(string $code, string $group = null): Customer

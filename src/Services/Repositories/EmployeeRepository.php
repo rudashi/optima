@@ -19,7 +19,7 @@ class EmployeeRepository
     public const CONTRACTOR = 20;
 
     public function __construct(
-        private OptimaService $service
+        private readonly OptimaService $service
     ) {}
 
     public function find(string $code): Employee

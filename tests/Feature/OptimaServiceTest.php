@@ -29,13 +29,13 @@ it('can use helper function `optima`', function () {
 
     expect(optima())
         ->toBeInstanceOf(QueryBuilder::class)
-        ->toBeInstanceOf(Builder::class);
+        ->toBeInstanceOf(Builder::class)
+        ->and(optima(false))
+            ->toBeInstanceOf(OptimaService::class)
+            ->newQuery()
+            ->toBeInstanceOf(QueryBuilder::class)
+            ->toBeInstanceOf(Builder::class);
 
-    expect(optima(false))
-        ->toBeInstanceOf(OptimaService::class)
-        ->newQuery()
-        ->toBeInstanceOf(QueryBuilder::class)
-        ->toBeInstanceOf(Builder::class);
 });
 
 it('can parse multiple ids to flatten array', function () {
@@ -45,10 +45,10 @@ it('can parse multiple ids to flatten array', function () {
     expect($this->service->parseIds(1, 'test', '34', 0))
         ->toBeArray()
         ->toHaveCount(4)
-        ->toBe($ids);
+        ->toBe($ids)
+        ->and($this->service->parseIds($ids))
+            ->toBeArray()
+            ->toHaveCount(4)
+            ->toBe($ids);
 
-    expect($this->service->parseIds($ids))
-        ->toBeArray()
-        ->toHaveCount(4)
-        ->toBe($ids);
 });
