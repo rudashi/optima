@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Models;
 
-use Spatie\DataTransferObject\DataTransferObject;
+use Rudashi\Optima\Services\DTO;
 
-class Employee extends DataTransferObject
+class Employee extends DTO
 {
 
     public int $id;

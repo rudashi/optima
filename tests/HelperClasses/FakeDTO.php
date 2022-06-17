@@ -10,8 +10,8 @@ class FakeDTO extends DTO
 {
 
     public int $id;
-    public int $order_id;
-    public string $name;
-    public string $description;
+    public int|null $order_id;
+    public string|null $name;
+    public string|null $description;
 
 }

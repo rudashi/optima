@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Models;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Spatie\DataTransferObject\DataTransferObject;
+use Rudashi\Optima\Services\DTO;
 
-class Department extends DataTransferObject implements Arrayable
+class Department extends DTO
 {
 
     public int $id;

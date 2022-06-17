@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Models;
 
-use Spatie\DataTransferObject\DataTransferObject;
+use Rudashi\Optima\Services\DTO;
 
-class Customer extends DataTransferObject
+class Customer extends DTO
 {
     public int $id;
     public string $code;
