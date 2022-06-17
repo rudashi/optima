@@ -32,7 +32,11 @@ class OptimaService
 
     public function parseIds(...$ids): array
     {
-        return Arr::flatten($ids);
+        if (isset($ids[0]) && (is_array($ids[0]) || $ids[0] instanceof Collection)) {
+            $ids = $ids[0];
+        }
+
+        return $ids instanceof Collection ? $ids->modelKeys() : Arr::flatten($ids);
     }
 
 }
