@@ -51,22 +51,24 @@ class CustomerRepository
     private function queryCustomer(): QueryBuilder
     {
         return $this->service->newQuery()
-            ->from('CDN.Kontrahenci')
+            ->from('CDN.Kontrahenci as knt')
             ->select([
-                'Knt_KntId as id',
-                'Knt_Kod as code',
-                'Knt_Nazwa1 as company',
-                'Knt_Nazwa2 as name_line_two',
-                'Knt_Nazwa3 as name_line_three',
-                'Knt_Kraj as country',
-                'Knt_Miasto as city',
-                'Knt_KodPocztowy as postal_code',
-                'Knt_Ulica as street',
-                'Knt_NrDomu as building_number',
-                'Knt_NrLokalu as suite_number',
-                'Knt_Nip as nip',
-                'Knt_Nieaktywny as deleted',
-            ]);
+                'knt.Knt_KntId as id',
+                'knt.Knt_Kod as code',
+                'knt.Knt_Nazwa1 as company',
+                'knt.Knt_Nazwa2 as name_line_two',
+                'knt.Knt_Nazwa3 as name_line_three',
+                'knt.Knt_Kraj as country',
+                'knt.Knt_Miasto as city',
+                'knt.Knt_KodPocztowy as postal_code',
+                'knt.Knt_Ulica as street',
+                'knt.Knt_NrDomu as building_number',
+                'knt.Knt_NrLokalu as suite_number',
+                'knt.Knt_Nip as nip',
+                'par.email_magazyn as email_warehouse',
+                'knt.Knt_Nieaktywny as deleted',
+            ])
+            ->leftJoin('PBS.parKth as par', 'par.id_kontrahenta', 'knt.Knt_KntId');
     }
 
 }

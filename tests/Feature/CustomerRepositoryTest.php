@@ -13,19 +13,30 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-beforeEach(function () {
-    $this->repository = new CustomerRepository($this->service);
-});
+function repository(): CustomerRepository {
+    return app(CustomerRepository::class);
+}
 
 $customers = [
+    1 => [
+        [
+            'id' => 1,
+            'code' => '!NIEOKREŚLONY!',
+            'name' => '!NIEOKREŚLONY!',
+            'name_line_two' => null,
+            'name_line_three' => null,
+            'city' => null,
+            'suite_number' => null,
+        ]
+    ],
     4328 => [
         [
             'id' => 4328,
             'code' => 'TEST1',
             'name' => 'test1',
-            'name_line_two' => '',
-            'name_line_three' => '',
-            'city' => 'test',
+            'name_line_two' => null,
+            'name_line_three' => null,
+            'city' => 'Test',
             'suite_number' => null,
         ]
     ],
@@ -34,9 +45,9 @@ $customers = [
             'id' => 26820,
             'code' => 'TOTEM TEST!',
             'name' => 'totem',
-            'name_line_two' => '',
-            'name_line_three' => '',
-            'city' => '',
+            'name_line_two' => null,
+            'name_line_three' => null,
+            'city' => null,
             'suite_number' => null,
         ]
     ],
@@ -46,8 +57,8 @@ $customers = [
             'code' => 'TOTEM ZOO',
             'name' => 'TOTEM.COM.PL SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
             'name_line_two' => 'SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
-            'name_line_three' => '',
-            'city' => 'INOWROCŁAW',
+            'name_line_three' => null,
+            'city' => 'Inowrocław',
             'suite_number' => null,
         ]
     ],
@@ -56,16 +67,16 @@ $supplier = [
     'ANTALIS',
     [
         'name' => 'ANTALIS Poland Sp. z o.o.',
-        'name_line_two' => '',
-        'name_line_three' => '',
-        'city' => 'WARSZAWA',
+        'name_line_two' => null,
+        'name_line_three' => null,
+        'city' => 'Warszawa',
         'suite_number' => null,
     ]
 ];
 
 it('can find a customer by code', function (array $dataset) {
 
-    $data = $this->repository->findByCode($dataset['code']);
+    $data = repository()->findByCode($dataset['code']);
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
@@ -73,7 +84,7 @@ it('can find a customer by code', function (array $dataset) {
         ->toHaveProperty('code', $dataset['code'])
         ->toHaveProperty('name', $dataset['name'])
         ->toHaveProperty('name_line_two', $dataset['name_line_two'])
-        ->toHaveProperty('name_line_three', $dataset['name_line_three'])
+        ->toHaveProperty('name_line_three', null)
         ->toHaveProperty('city', $dataset['city'])
         ->toHaveProperty('suite_number', $dataset['suite_number'])
         ->toHaveProperties([
@@ -99,13 +110,13 @@ it('throws an exception when customer code not exists', function () {
 
     $this->expectExceptionMessage(__('Given code :code is invalid or not in the OPTIMA.', ['code' => '']));
 
-    $this->repository->findByCode('');
+    repository()->findByCode('');
 
 })->throws(RecordsNotFoundException::class);
 
 it('can find a grouped customer by code from group', function (string $code, array $dataset) {
 
-    $data = $this->repository->findByCode($code, CustomerType::SUPPLIER->value);
+    $data = repository()->findByCode($code, CustomerType::SUPPLIER->value);
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
@@ -135,7 +146,7 @@ it('can find a grouped customer by code from group', function (string $code, arr
 
 it('can find a grouped customer by code without group', function (string $code, array $dataset) {
 
-    $data = $this->repository->findByCode($code);
+    $data = repository()->findByCode($code);
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
@@ -167,17 +178,17 @@ it('throws an exception when grouped customer code is in other group', function 
 
     $this->expectExceptionMessage(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
 
-    $this->repository->findByCode($code, CustomerType::SUBCONTRACTOR->value);
+    repository()->findByCode($code, CustomerType::SUBCONTRACTOR->value);
 
 })->with([$supplier])->throws(RecordsNotFoundException::class);
 
 it('can find customers by ID', function (array $dataset) {
 
-    $data = $this->repository->find($dataset['id']);
+    $data = repository()->find($dataset['id']);
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
-        ->first()
+    ->and($data->first())
         ->toBeInstanceOf(Customer::class)
         ->toHaveProperty('id', $dataset['id'])
         ->toHaveProperty('code', $dataset['code'])
@@ -207,11 +218,11 @@ it('can find customers by ID', function (array $dataset) {
 
 it('can find multiple customers by ID', function () use ($customers) {
 
-    $data = $this->repository->find(array_keys($customers));
+    $data = repository()->find(array_keys($customers));
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
-        ->toHaveCount(3)
+        ->toHaveCount(4)
         ->sequence(function($item, $key) use ($customers) {
             $item->toBeInstanceOf(Customer::class)
                 ->toHaveProperty('id', $customers[$key->value][0]['id'])
@@ -244,6 +255,6 @@ it('throws an exception when customer id not exists', function () {
 
     $this->expectExceptionMessage(__('Given id is invalid or not in the OPTIMA.'));
 
-    $this->repository->find(null);
+    repository()->find(null);
 
 })->throws(RecordsNotFoundException::class);
