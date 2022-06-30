@@ -32,7 +32,7 @@ class DTO extends DataTransferObject implements Arrayable
 
     public function getAttributes(): array
     {
-        return $this->all();
+        return $this->toArray();
     }
 
 }
