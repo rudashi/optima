@@ -35,4 +35,11 @@ class DTO extends DataTransferObject implements Arrayable
         return $this->toArray();
     }
 
+    public function only(string ...$keys): static
+    {
+        $this->onlyKeys = [...$this->onlyKeys, ...$keys];
+
+        return $this;
+    }
+
 }
