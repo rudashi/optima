@@ -50,5 +50,4 @@ class Customer extends DTO
             ? $street
             : mb_convert_case($this->street, MB_CASE_TITLE, 'UTF-8');
     }
-
 }

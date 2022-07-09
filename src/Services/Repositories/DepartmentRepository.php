@@ -12,10 +12,10 @@ use Rudashi\Optima\Services\QueryBuilder;
 
 class DepartmentRepository
 {
-
     public function __construct(
         private readonly OptimaService $service
-    ) {}
+    ) {
+    }
 
     public function all(): Collection
     {
@@ -59,8 +59,6 @@ class DepartmentRepository
             ->where('CNT_Nieaktywny', 0)
             ->whereIn('PRI_Typ', [1, 2])
             ->where('PRI_Archiwalny', 0)
-            ->where('CNK_Rodzaj', 0)
-        ;
+            ->where('CNK_Rodzaj', 0);
     }
-
 }

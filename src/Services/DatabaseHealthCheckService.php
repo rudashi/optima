@@ -14,7 +14,8 @@ class DatabaseHealthCheckService
 
     public function __construct(
         protected DatabaseManager $db
-    ) {}
+    ) {
+    }
 
     public function status(): array
     {
@@ -35,7 +36,7 @@ class DatabaseHealthCheckService
         return [
             'status' => self::PROBLEM,
             'message' => $message,
-            'context' => $context
+            'context' => $context,
         ];
     }
 
@@ -43,7 +44,7 @@ class DatabaseHealthCheckService
     {
         return [
             'status' => self::OK,
-            'context' => $context
+            'context' => $context,
         ];
     }
 
@@ -56,5 +57,4 @@ class DatabaseHealthCheckService
             'file' => $e->getFile(),
         ];
     }
-
 }

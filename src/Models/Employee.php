@@ -8,7 +8,6 @@ use Rudashi\Optima\Services\DTO;
 
 class Employee extends DTO
 {
-
     public int $id;
     public string $code;
     public string $firstname;
@@ -20,5 +19,4 @@ class Employee extends DTO
     public string $company;
     public ?string $rcp = null;
     public bool $deleted;
-
 }

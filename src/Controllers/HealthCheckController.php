@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response as ResponseBase;
 
 class HealthCheckController extends Controller
 {
-
     public function __invoke(DatabaseHealthCheckService $check): Response
     {
         $health = $check->status();
@@ -29,5 +28,4 @@ class HealthCheckController extends Controller
 
         return new Response($body, $status);
     }
-
 }

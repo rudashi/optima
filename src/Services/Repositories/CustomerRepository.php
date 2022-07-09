@@ -13,16 +13,16 @@ use Rudashi\Optima\Services\QueryBuilder;
 
 class CustomerRepository
 {
-
     public function __construct(
         private readonly OptimaService $service
-    ) {}
+    ) {
+    }
 
     public function findByCode(string $code, string $group = null): Customer
     {
         $data = $this->queryCustomer()
             ->where('Knt_Kod', $code)
-            ->when($group, static function(QueryBuilder $query) use ($group) {
+            ->when($group, static function (QueryBuilder $query) use ($group) {
                 return $query->where('Knt_Grupa', CustomerType::from($group)->value);
             })
             ->first();
@@ -70,5 +70,4 @@ class CustomerRepository
             ])
             ->leftJoin('PBS.parKth as par', 'par.id_kontrahenta', 'knt.Knt_KntId');
     }
-
 }

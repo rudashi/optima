@@ -38,5 +38,4 @@ class OptimaService
 
         return $ids instanceof Collection ? $ids->modelKeys() : Arr::flatten($ids);
     }
-
 }

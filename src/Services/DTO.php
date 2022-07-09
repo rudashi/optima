@@ -9,7 +9,6 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class DTO extends DataTransferObject implements Arrayable
 {
-
     protected string $primaryKey = 'id';
 
     public function getKey(): mixed
@@ -27,6 +26,7 @@ class DTO extends DataTransferObject implements Arrayable
         if (property_exists($this, $key)) {
             return $this->{$key};
         }
+
         return null;
     }
 
@@ -41,5 +41,4 @@ class DTO extends DataTransferObject implements Arrayable
 
         return $this;
     }
-
 }

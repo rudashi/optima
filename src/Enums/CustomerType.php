@@ -6,8 +6,6 @@ namespace Rudashi\Optima\Enums;
 
 enum CustomerType: string
 {
-
     case SUPPLIER = 'DOSTAWCA';
     case SUBCONTRACTOR = 'PODWYKONAWCA';
-
 }
