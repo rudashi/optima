@@ -31,16 +31,12 @@ class Customer extends DTO
         $this->name = trim(implode(' ', [$this->company, $this->name_line_two, $this->name_line_three]));
         $this->name_line_two = $this->name_line_two ?: null;
         $this->name_line_three = $this->name_line_three ?: null;
-        $this->country = trim($this->country) ?: null;
-        $this->city = $this->city
-            ? ucfirst(mb_strtolower($this->city))
-            : null;
-        $this->postal_code = trim($this->postal_code) ?: null;
-        $this->street = $this->street
-            ? $this->parseStreet($this->street)
-            : null;
-        $this->building_number = trim($this->building_number) ?: null;
-        $this->suite_number = trim($this->suite_number) ?: null;
+        $this->country = $this->trimPropertyOrNull($this->country);
+        $this->city = $this->city ? ucfirst(mb_strtolower($this->city)) : null;
+        $this->postal_code = $this->trimPropertyOrNull($this->postal_code);
+        $this->street = $this->street ? $this->parseStreet($this->street) : null;
+        $this->building_number = $this->trimPropertyOrNull($this->building_number);
+        $this->suite_number = $this->trimPropertyOrNull($this->suite_number);
         $this->nip = $this->nip ?: null;
     }
 
@@ -49,5 +45,10 @@ class Customer extends DTO
         return str_starts_with($street, 'ul')
             ? $street
             : mb_convert_case($this->street, MB_CASE_TITLE, 'UTF-8');
+    }
+
+    private function trimPropertyOrNull(string|null $value): string|null
+    {
+        return $value ? trim($value) : null;
     }
 }
