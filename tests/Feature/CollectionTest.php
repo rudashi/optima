@@ -14,7 +14,7 @@ uses(TestCase::class);
 
 function makeArray(string $type = 'object', int $total = 3): array
 {
-    return array_map(function() use ($type){
+    return array_map(function () use ($type) {
         $array = [
             'id' => faker()->numberBetween(),
             'uuid' => faker()->uuid(),
@@ -25,7 +25,9 @@ function makeArray(string $type = 'object', int $total = 3): array
         return $array;
     }, range(0, $total - 1));
 }
-function dto(string $classname = FakeDTO::class): FakeDTO {
+
+function dto(string $classname = FakeDTO::class): FakeDTO
+{
     return new $classname(
         id: faker()->numberBetween(1, 10),
         order_id: faker()->numberBetween(11, 100),
@@ -35,34 +37,30 @@ function dto(string $classname = FakeDTO::class): FakeDTO {
 }
 
 it('can pluck multiple values from nested object', function (array $array) {
-
     $collection = (new Collection($array))->pluckAll(['uuid', 'email']);
 
     expect($collection)
         ->toBeArray()
         ->toHaveCount(6);
-})->with([fn() => makeArray()]);
+})->with([fn () => makeArray()]);
 
 it('can pluck multiple values from nested array', function (array $array) {
-
     $collection = (new Collection($array))->pluckAll(['uuid', 'email']);
 
     expect($collection)
         ->toBeArray()
         ->toHaveCount(6);
-})->with([fn() => makeArray('array')]);
+})->with([fn () => makeArray('array')]);
 
 it('can pluck multiple values without duplicates', function (array $array) {
-
     $collection = (new Collection($array))->pluckAll(['uuid', 'active']);
 
     expect($collection)
         ->toBeArray()
         ->toHaveCount(4);
-})->with([fn() => makeArray()]);
+})->with([fn () => makeArray()]);
 
 it('can get only model keys', function () {
-
     $first = dto();
     $second = dto(CustomPrimaryDTO::class);
     $third = dto();
@@ -72,4 +70,42 @@ it('can get only model keys', function () {
         ->toBeArray()
         ->toHaveCount(3)
         ->toMatchArray([$first->id, $second->order_id, $third->id]);
+});
+
+it('can attach to collection item', function () {
+    $collection = (new Collection(makeArray('array', 2)));
+
+    expect($collection)
+        ->sequence(
+            fn ($item) => $item->not->toHaveKey('y', 'new'),
+        );
+
+    $collection->attach(static function($item) {
+        $item['y'] = 'new';
+        return $item;
+    });
+
+    expect($collection)
+        ->sequence(
+            fn ($item) => $item->toHaveKey('y', 'new'),
+        );
+});
+
+it('can attach to collection item other filtered collection', function () {
+    $collection = (new Collection(makeArray('array')));
+    $second = (new Collection($collection->take(2)));
+
+    $collection->attach(function($item) use ($second) {
+        $item['x'] = $second
+            ->filter(static fn ($y) => $y['id'] === $item['id'])
+            ->pluckAll(['id', 'uuid']);
+        return $item;
+    });
+
+    expect($collection)
+        ->sequence(
+            fn ($item) => $item->x->toBeArray()->toHaveCount(2),
+            fn ($item) => $item->x->toBeArray()->toHaveCount(2),
+            fn ($item) => $item->x->toBeArray()->toBeEmpty(),
+        );
 });

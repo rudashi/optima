@@ -8,6 +8,15 @@ use Illuminate\Support\Collection as CollectionBase;
 
 class Collection extends CollectionBase
 {
+    public function attach(callable $callback): self
+    {
+        $this->items = $this->map(static function($item) use ($callback) {
+            return $callback($item);
+        })->all();
+
+        return $this;
+    }
+
     public function modelKeys(): array
     {
         return array_map(static fn (DTO $model) => $model->getKey(), $this->items);
