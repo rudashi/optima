@@ -4,12 +4,40 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
+use Closure;
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
-use Spatie\DataTransferObject\DataTransferObject;
+use ReflectionClass;
+use ReflectionProperty;
 
-class DTO extends DataTransferObject implements Arrayable
+abstract class DTO implements Arrayable
 {
     protected string $primaryKey = 'id';
+    protected array $onlyKeys = [];
+    protected array $casters = [];
+
+    public function __construct(...$args)
+    {
+        if (is_object($args[0] ?? null)) {
+            $args = (array) $args[0];
+        }
+        if (is_array($args[0] ?? null)) {
+            $args = $args[0];
+        }
+
+        $class = new ReflectionClass($this);
+
+        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+            if (! array_key_exists($property->getName(), $args)) {
+                if ($property->hasDefaultValue() || $property->getType()?->allowsNull()) {
+                    $property->setValue($this, $property->getDefaultValue());
+                }
+                continue;
+            }
+
+            $property->setValue($this, $this->castTo($property, $args));
+        }
+    }
 
     public function getKey(): mixed
     {
@@ -35,13 +63,12 @@ class DTO extends DataTransferObject implements Arrayable
         return $this->toArray();
     }
 
-    public function has(string $key, array $attributes = null): bool
+    public function filled(string $key, array|object $attributes = null): bool
     {
-        return isset($attributes[$key]);
-    }
+        if (is_object($attributes)) {
+            return property_exists($attributes, $key);
+        }
 
-    public function filled(string $key, array $attributes = null): bool
-    {
         return array_key_exists($key, $attributes ?? $this->all());
     }
 
@@ -50,5 +77,51 @@ class DTO extends DataTransferObject implements Arrayable
         $this->onlyKeys = [...$this->onlyKeys, ...$keys];
 
         return $this;
+    }
+
+    public function cast(string $property, $caster): static
+    {
+        $this->casters[$property] = $caster;
+
+        return $this;
+    }
+
+    public function all(): array
+    {
+        $data = [];
+
+        $class = new ReflectionClass(static::class);
+
+        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+            $data[$property->getName()] = $property->getValue($this);
+        }
+
+        return $data;
+    }
+
+    public function toArray(): array
+    {
+        if (count($this->onlyKeys) > 0) {
+            return array_intersect_key($this->all(), array_flip($this->onlyKeys));
+        }
+
+        return $this->all();
+    }
+
+    private function castTo(ReflectionProperty $property, array $args): mixed
+    {
+        $type = $property->getType()?->getName();
+        $value = $args[$property->getName()];
+        $cast = $this->casters[$property->getName()] ?? null;
+
+        return match (true) {
+            enum_exists(is_string($cast) ? $cast : '') => $cast::from($value),
+            $cast instanceof Closure => $cast($value),
+            is_string($cast) => new $cast($value),
+            default => match ($type) {
+                'DateTime', 'Carbon' => new Carbon($value),
+                default => $value
+            },
+        };
     }
 }

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests\Feature\DTOTest;
 
+use DateTime;
+use Rudashi\Optima\Services\DTO;
 use Rudashi\Optima\Tests\HelperClasses\CustomPrimaryDTO;
 use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
+use Rudashi\Optima\Tests\HelperClasses\FakeEnum;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
@@ -49,27 +52,75 @@ it('can get all attributes', function () {
         ]);
 });
 
-it('can determine whether an attribute is passed', function () {
+it('can create instance from Array', function () {
     $attributes = [
         'id' => 3,
         'order_id' => 10,
         'name' => null,
     ];
-    $dto = new FakeDTO(...$attributes);
+    $dto = new FakeDTO($attributes);
 
-    expect($dto)
-        ->has('id', $attributes)->toBeTrue()
-        ->has('order_id', $attributes)->toBeTrue()
-        ->has('name', $attributes)->toBeFalse()
-        ->has('description', $attributes)->toBeFalse();
+    expect($dto->getAttributes())
+        ->toMatchArray([
+            'id' => 3,
+            'order_id' => 10,
+            'name' => null,
+            'description' => null,
+        ]);
+});
+
+it('can create instance from Object', function () {
+    $attributes = (object) [
+        'id' => 3,
+        'order_id' => 10,
+        'name' => null,
+    ];
+    $dto = new FakeDTO($attributes);
+
+    expect($dto->getAttributes())
+        ->toMatchArray([
+            'id' => 3,
+            'order_id' => 10,
+            'name' => null,
+            'description' => null,
+        ]);
+});
+
+it('can cast property to other type', function () {
+    $dto = new class extends DTO {
+        public string $string;
+        public DateTime $date;
+        public FakeEnum $enum;
+        public bool $bool;
+
+        public function __construct(...$args)
+        {
+            $this->cast('enum', FakeEnum::class);
+            $this->cast('string', fn($v) => trim($v));
+
+            parent::__construct($args);
+        }
+    };
+
+    expect(new $dto(
+        bool: 3,
+        string: '  10   ',
+        date: '2022-02-21 13:42:20',
+        enum: 'D',
+    ))
+        ->bool->toBe(true)
+        ->string->toBe('10')
+        ->date->toBeInstanceOf(DateTime::class)
+        ->enum->toBe(FakeEnum::Diamonds);
 });
 
 it('can determine whether an attribute is filled', function () {
     $attributes = [
         'id' => 3,
-        'order_id' => 10,
+        'order_id' => 0,
         'name' => null,
     ];
+
     $dto = new FakeDTO(...$attributes);
 
     expect($dto)
@@ -77,5 +128,16 @@ it('can determine whether an attribute is filled', function () {
         ->filled('order_id', $attributes)->toBeTrue()
         ->filled('name', $attributes)->toBeTrue()
         ->filled('description', $attributes)->toBeFalse()
+        ->filled('id')->toBeTrue()
+        ->filled('order_id')->toBeTrue()
+        ->filled('name')->toBeTrue()
         ->filled('description')->toBeTrue();
+
+    $dto2 = new FakeDTO($attributes);
+
+    expect($dto2)
+        ->filled('id', (object) $attributes)->toBeTrue()
+        ->filled('order_id', (object) $attributes)->toBeTrue()
+        ->filled('name', (object) $attributes)->toBeTrue()
+        ->filled('description', (object) $attributes)->toBeFalse();
 });
