@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "pestphp/pest": "^v1.21.1"
+        "pestphp/pest": "^v1.22"
     },
     "autoload": {
         "psr-4": {

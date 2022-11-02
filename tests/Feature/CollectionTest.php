@@ -8,7 +8,6 @@ use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Tests\HelperClasses\CustomPrimaryDTO;
 use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
 use Rudashi\Optima\Tests\TestCase;
-use function Pest\Faker\faker;
 
 uses(TestCase::class);
 
@@ -16,9 +15,9 @@ function makeArray(string $type = 'object', int $total = 3): array
 {
     return array_map(function () use ($type) {
         $array = [
-            'id' => faker()->numberBetween(),
-            'uuid' => faker()->uuid(),
-            'email' => faker()->email(),
+            'id' => fake()->numberBetween(),
+            'uuid' => fake()->uuid(),
+            'email' => fake()->email(),
             'active' => 1
         ];
         settype($array, $type);
@@ -29,10 +28,10 @@ function makeArray(string $type = 'object', int $total = 3): array
 function dto(string $classname = FakeDTO::class): FakeDTO
 {
     return new $classname(
-        id: faker()->numberBetween(1, 10),
-        order_id: faker()->numberBetween(11, 100),
-        name: faker()->name(),
-        description: faker()->company()
+        id: fake()->numberBetween(1, 10),
+        order_id: fake()->numberBetween(11, 100),
+        name: fake()->name(),
+        description: fake()->company()
     );
 }
 

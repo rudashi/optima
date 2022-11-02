@@ -11,12 +11,11 @@ use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\QueryBuilder;
 use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
 use Rudashi\Optima\Tests\TestCase;
-use function Pest\Faker\faker;
 
 uses(TestCase::class);
 
 function dto(): FakeDTO {
-    return new FakeDTO(id: faker()->numberBetween(1, 100));
+    return new FakeDTO(id: fake()->numberBetween(1, 100));
 }
 
 test('can load database configuration', function () {
