@@ -14,6 +14,7 @@ abstract class DTO implements Arrayable
 {
     protected string $primaryKey = 'id';
     protected array $onlyKeys = [];
+    protected array $appends = [];
     protected array $casters = [];
 
     public function __construct(...$args)
@@ -36,6 +37,12 @@ abstract class DTO implements Arrayable
             }
 
             $property->setValue($this, $this->castTo($property, $args));
+        }
+
+        foreach ($this->appends as $property => $callback) {
+            if ($class->hasProperty($property)) {
+                $class->getProperty($property)->setValue($this, $callback());
+            }
         }
     }
 
@@ -63,15 +70,6 @@ abstract class DTO implements Arrayable
         return $this->toArray();
     }
 
-    public function filled(string $key, array|object $attributes = null): bool
-    {
-        if (is_object($attributes)) {
-            return property_exists($attributes, $key);
-        }
-
-        return array_key_exists($key, $attributes ?? $this->all());
-    }
-
     public function only(string ...$keys): static
     {
         $this->onlyKeys = [...$this->onlyKeys, ...$keys];
@@ -79,7 +77,14 @@ abstract class DTO implements Arrayable
         return $this;
     }
 
-    public function cast(string $property, $caster): static
+    public function append(string $property, Closure $callback): static
+    {
+        $this->appends[$property] = $callback;
+
+        return $this;
+    }
+
+    public function cast(string $property, mixed $caster): static
     {
         $this->casters[$property] = $caster;
 
@@ -108,6 +113,24 @@ abstract class DTO implements Arrayable
         return $this->all();
     }
 
+    public static function get(string $key, array|object $attributes): mixed
+    {
+        if (self::filled($key, $attributes) === false) {
+            return null;
+        }
+
+        return is_object($attributes) ? $attributes->{$key} : $attributes[$key];
+    }
+
+    public static function filled(string $key, array|object $attributes): bool
+    {
+        if (is_object($attributes)) {
+            return property_exists($attributes, $key);
+        }
+
+        return array_key_exists($key, $attributes);
+    }
+
     private function castTo(ReflectionProperty $property, array $args): mixed
     {
         $type = $property->getType()?->getName();
@@ -116,7 +139,7 @@ abstract class DTO implements Arrayable
 
         return match (true) {
             enum_exists(is_string($cast) ? $cast : '') => $cast::from($value),
-            $cast instanceof Closure => $cast($value),
+            $cast instanceof Closure => $cast($value, $args),
             is_string($cast) => new $cast($value),
             default => match ($type) {
                 'DateTime', 'Carbon' => new Carbon($value),

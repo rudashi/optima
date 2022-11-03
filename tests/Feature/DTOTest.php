@@ -115,29 +115,95 @@ it('can cast property to other type', function () {
 });
 
 it('can determine whether an attribute is filled', function () {
-    $attributes = [
-        'id' => 3,
-        'order_id' => 0,
-        'name' => null,
-    ];
+    $attributes = ['id' => 3, 'order_id' => 0, 'name' => null];
 
-    $dto = new FakeDTO(...$attributes);
-
-    expect($dto)
+    expect(new FakeDTO())
         ->filled('id', $attributes)->toBeTrue()
         ->filled('order_id', $attributes)->toBeTrue()
         ->filled('name', $attributes)->toBeTrue()
+        ->filled('description', $attributes)->toBeFalse();
+
+    $attributes = (object) $attributes;
+
+    expect(new FakeDTO())
+        ->filled('id', $attributes)->toBeTrue()
+        ->filled('order_id', $attributes)->toBeTrue()
         ->filled('description', $attributes)->toBeFalse()
-        ->filled('id')->toBeTrue()
-        ->filled('order_id')->toBeTrue()
-        ->filled('name')->toBeTrue()
-        ->filled('description')->toBeTrue();
+        ->filled('name', $attributes)->toBeTrue();
+});
 
-    $dto2 = new FakeDTO($attributes);
+it('can get from value from passed attributes', function () {
+    $attributes = ['id' => 3, 'order_id' => 0, 'name' => null];
 
-    expect($dto2)
-        ->filled('id', (object) $attributes)->toBeTrue()
-        ->filled('order_id', (object) $attributes)->toBeTrue()
-        ->filled('name', (object) $attributes)->toBeTrue()
-        ->filled('description', (object) $attributes)->toBeFalse();
+    expect(new FakeDTO())
+        ->get('id', $attributes)->toBe(3)
+        ->get('order_id', $attributes)->toBe(0)
+        ->get('name', $attributes)->toBe(null)
+        ->get('fake', $attributes)->toBe(null);
+
+    $attributes = (object) $attributes;
+
+    expect(new FakeDTO())
+        ->get('id', $attributes)->toBe(3)
+        ->get('order_id', $attributes)->toBe(0)
+        ->get('fake', $attributes)->toBe(null)
+        ->get('name', $attributes)->toBe(null);
+});
+
+it('can get the full object as an array', function () {
+    $attributes = [
+        'id' => 3,
+        'order_id' => 10,
+        'name' => null,
+    ];
+    $dto = new FakeDTO($attributes);
+
+    expect($dto->all())
+        ->toMatchArray([
+            'id' => 3,
+            'order_id' => 10,
+            'name' => null,
+            'description' => null,
+        ]);
+});
+
+it('can get some properties from an object as an array', function () {
+    $attributes = [
+        'id' => 3,
+        'order_id' => 10,
+        'name' => null,
+    ];
+    $dto = new FakeDTO($attributes);
+    $dto->only('id', 'name');
+
+    expect($dto->toArray())
+        ->toMatchArray([
+            'id' => 3,
+            'name' => null,
+        ]);
+});
+
+it('can append property', function () {
+    $dto = new class extends DTO {
+        public string $string;
+        public FakeEnum $enum;
+
+        public function __construct(...$args)
+        {
+            if (count($args)) {
+                $this->append('enum', fn() => FakeEnum::tryFrom((string) self::get('date', $args)));
+            }
+
+            parent::__construct($args);
+        }
+    };
+
+
+    expect(new $dto(
+        string: '10',
+        date: 'D',
+    ))
+        ->string->toBe('10')
+        ->not->toHaveProperty('date')
+        ->enum->toBe(FakeEnum::Diamonds);
 });
