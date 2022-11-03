@@ -12,9 +12,10 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-beforeEach(function () {
-    $this->repository = new DepartmentRepository($this->service);
-});
+function repository(): DepartmentRepository
+{
+    return app(DepartmentRepository::class);
+}
 
 $departments = [
     'DRUK',
@@ -25,7 +26,7 @@ $departments = [
 
 it('can get all departments', function() {
 
-    $data = $this->repository->all();
+    $data = repository()->all();
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
@@ -42,7 +43,7 @@ it('can get all departments', function() {
 
 it('can find a department by code', function (string $code) {
 
-    $data = $this->repository->findByCode($code);
+    $data = repository()->findByCode($code);
 
     expect($data)
         ->toBeInstanceOf(Department::class)
@@ -60,7 +61,7 @@ it('can find a department by code', function (string $code) {
 
 it('can find a department using alias method `find`', function (string $code) {
 
-    $data = $this->repository->find($code);
+    $data = repository()->find($code);
 
     expect($data)
         ->toBeInstanceOf(Department::class)
@@ -68,11 +69,10 @@ it('can find a department using alias method `find`', function (string $code) {
 
 })->with($departments);
 
-
 it('throws an exception when department is archived', function (string $code) {
 
     $this->expectExceptionMessage(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
 
-    $this->repository->findByCode($code);
+    repository()->findByCode($code);
 
 })->with(['KIEROWNICTWO PRODUKCJI'])->throws(RecordsNotFoundException::class);

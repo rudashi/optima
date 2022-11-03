@@ -11,9 +11,10 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-beforeEach(function () {
-    $this->repository = new EmployeeRepository($this->service);
-});
+function repository(): EmployeeRepository
+{
+    return app(EmployeeRepository::class);
+}
 
 $employee = [
     '023E',
@@ -35,7 +36,7 @@ $employees = [
 
 it('can find an employee by code', function (string $code, array $dataset) {
 
-    $data = $this->repository->findByCode($code);
+    $data = repository()->findByCode($code);
 
     expect($data)
         ->toBeInstanceOf(Employee::class)
@@ -61,7 +62,7 @@ it('can find an employee by code', function (string $code, array $dataset) {
 
 it('can find an employee using alias method `find`', function (string $code) {
 
-    $data = $this->repository->find($code);
+    $data = repository()->find($code);
 
     expect($data)
         ->toBeInstanceOf(Employee::class)
@@ -85,7 +86,7 @@ it('throws an exception when employee code not exists', function () {
 
     $this->expectExceptionMessage(__('Given acronym :code is invalid or not in the OPTIMA.', ['code' => '']));
 
-    $this->repository->findByCode('');
+    repository()->findByCode('');
 
 })->throws(RecordsNotFoundException::class);
 
@@ -93,6 +94,6 @@ it('throws an exception when employee is archived', function (string $code) {
 
     $this->expectExceptionMessage(__('Employee with given acronym :code is archived.', ['code' => $code]));
 
-    $this->repository->findByCode($code);
+    repository()->findByCode($code);
 
 })->with(['XXX'])->throws(RecordsNotFoundException::class);
