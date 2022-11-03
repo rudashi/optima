@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use ReflectionClass;
 use ReflectionProperty;
+use UnitEnum;
 
 abstract class DTO implements Arrayable
 {
@@ -133,18 +134,31 @@ abstract class DTO implements Arrayable
 
     private function castTo(ReflectionProperty $property, array $args): mixed
     {
-        $type = $property->getType()?->getName();
         $value = $args[$property->getName()];
         $cast = $this->casters[$property->getName()] ?? null;
 
-        return match (true) {
-            enum_exists(is_string($cast) ? $cast : '') => $cast::from($value),
-            $cast instanceof Closure => $cast($value, $args),
-            is_string($cast) => new $cast($value),
-            default => match ($type) {
-                'DateTime', 'Carbon' => new Carbon($value),
-                default => $value
-            },
+        if ($cast instanceof Closure) {
+            return $cast($value, $args);
+        }
+
+        if (is_string($cast)) {
+            if (enum_exists($cast)) {
+                /** @var UnitEnum $cast */
+                return $cast::from($value);
+            }
+
+            if (function_exists($cast)) {
+                return $cast($value);
+            }
+
+            return new $cast($value);
+        }
+
+        return match ($property->getType()?->getName()) {
+            'DateTime',
+            Carbon::class,
+            \Illuminate\Support\Carbon::class => $value ? new Carbon($value) : $property->getDefaultValue(),
+            default => $value
         };
     }
 }
