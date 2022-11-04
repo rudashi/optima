@@ -7,12 +7,15 @@ namespace Rudashi\Optima\Services;
 use Closure;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
 use ReflectionProperty;
 use UnitEnum;
 
 abstract class DTO implements Arrayable
 {
+    use Conditionable;
+
     protected string $primaryKey = 'id';
     protected array $onlyKeys = [];
     protected array $appends = [];
