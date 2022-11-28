@@ -32,6 +32,10 @@ abstract class DTO implements Arrayable
 
         $class = new ReflectionClass($this);
 
+        if ($class->hasMethod('preValidation')) {
+            static::preValidation($args);
+        }
+
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (! array_key_exists($property->getName(), $args)) {
                 if ($property->hasDefaultValue() || $property->getType()?->allowsNull()) {
