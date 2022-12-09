@@ -20,7 +20,7 @@ $employee = [
     '023E',
     [
         'firstname' => 'BORYS',
-        'job_title' => 'INŻYNIER OPROGRAMOWANIA',
+        'job_title' => 'STARSZY INŻYNIER OPROGRAMOWANIA',
         'department_id' => '37',
         'deleted' => false,
     ]
