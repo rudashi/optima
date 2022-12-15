@@ -51,7 +51,7 @@ class CustomerRepository
     private function queryCustomer(): QueryBuilder
     {
         return $this->service->newQuery()
-            ->from('CDN.Kontrahenci as knt')
+            ->from('CDN.Kontrahenci', 'knt')
             ->select([
                 'knt.Knt_KntId as id',
                 'knt.Knt_Kod as code',

@@ -30,7 +30,7 @@ class EmployeeRepository
     public function findByCode(string $code): Employee
     {
         $data = $this->service->newQuery()
-            ->from('CDN.Pracidx as employee')
+            ->from('CDN.Pracidx', 'employee')
             ->select([
                 'employee.PRI_PraId as id',
                 'employee.PRI_Kod as code',
