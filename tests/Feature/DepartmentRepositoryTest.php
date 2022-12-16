@@ -25,12 +25,11 @@ $departments = [
 ];
 
 it('can get all departments', function() {
-
     $data = repository()->all();
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
-        ->each(function($item) {
+        ->each(function ($item) {
             $item->toBeInstanceOf(Department::class)
                 ->toHaveProperties([
                     'id',
@@ -42,7 +41,6 @@ it('can get all departments', function() {
 });
 
 it('can find a department by code', function (string $code) {
-
     $data = repository()->findByCode($code);
 
     expect($data)
@@ -60,7 +58,6 @@ it('can find a department by code', function (string $code) {
 })->with($departments);
 
 it('can find a department using alias method `find`', function (string $code) {
-
     $data = repository()->find($code);
 
     expect($data)
@@ -70,9 +67,9 @@ it('can find a department using alias method `find`', function (string $code) {
 })->with($departments);
 
 it('throws an exception when department is archived', function (string $code) {
-
-    $this->expectExceptionMessage(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
-
-    repository()->findByCode($code);
-
-})->with(['KIEROWNICTWO PRODUKCJI'])->throws(RecordsNotFoundException::class);
+    expect(fn () => repository()->findByCode($code))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]),
+        );
+})->with(['KIEROWNICTWO PRODUKCJI']);

@@ -13,7 +13,8 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function repository(): CustomerRepository {
+function repository(): CustomerRepository
+{
     return app(CustomerRepository::class);
 }
 
@@ -27,7 +28,7 @@ $customers = [
             'name_line_three' => null,
             'city' => null,
             'suite_number' => null,
-        ]
+        ],
     ],
     4328 => [
         [
@@ -38,7 +39,7 @@ $customers = [
             'name_line_three' => null,
             'city' => 'Test',
             'suite_number' => null,
-        ]
+        ],
     ],
     26820 => [
         [
@@ -49,7 +50,7 @@ $customers = [
             'name_line_three' => null,
             'city' => null,
             'suite_number' => null,
-        ]
+        ],
     ],
     5160 => [
         [
@@ -60,7 +61,7 @@ $customers = [
             'name_line_three' => null,
             'city' => 'Inowrocław',
             'suite_number' => null,
-        ]
+        ],
     ],
 ];
 $supplier = [
@@ -71,11 +72,10 @@ $supplier = [
         'name_line_three' => null,
         'city' => 'Warszawa',
         'suite_number' => null,
-    ]
+    ],
 ];
 
 it('can find a customer by code', function (array $dataset) {
-
     $data = repository()->findByCode($dataset['code']);
 
     expect($data)
@@ -107,15 +107,14 @@ it('can find a customer by code', function (array $dataset) {
 })->with($customers);
 
 it('throws an exception when customer code not exists', function () {
-
-    $this->expectExceptionMessage(__('Given code :code is invalid or not in the OPTIMA.', ['code' => '']));
-
-    repository()->findByCode('');
-
-})->throws(RecordsNotFoundException::class);
+    expect(fn () => repository()->findByCode(''))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => '']),
+        );
+});
 
 it('can find a grouped customer by code from group', function (string $code, array $dataset) {
-
     $data = repository()->findByCode($code, CustomerType::SUPPLIER->value);
 
     expect($data)
@@ -145,7 +144,6 @@ it('can find a grouped customer by code from group', function (string $code, arr
 })->with([$supplier]);
 
 it('can find a grouped customer by code without group', function (string $code, array $dataset) {
-
     $data = repository()->findByCode($code);
 
     expect($data)
@@ -175,15 +173,14 @@ it('can find a grouped customer by code without group', function (string $code, 
 })->with([$supplier]);
 
 it('throws an exception when grouped customer code is in other group', function (string $code) {
-
-    $this->expectExceptionMessage(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
-
-    repository()->findByCode($code, CustomerType::SUBCONTRACTOR->value);
-
-})->with([$supplier])->throws(RecordsNotFoundException::class);
+    expect(fn () => repository()->findByCode($code, CustomerType::SUBCONTRACTOR->value))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]),
+        );
+})->with([$supplier]);
 
 it('can find customers by ID', function (array $dataset) {
-
     $data = repository()->find($dataset['id']);
 
     expect($data)
@@ -217,13 +214,12 @@ it('can find customers by ID', function (array $dataset) {
 })->with($customers);
 
 it('can find multiple customers by ID', function () use ($customers) {
-
     $data = repository()->find(array_keys($customers));
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(4)
-        ->sequence(function($item, $key) use ($customers) {
+        ->sequence(function ($item, $key) use ($customers) {
             $item->toBeInstanceOf(Customer::class)
                 ->toHaveProperty('id', $customers[$key->value][0]['id'])
                 ->toHaveProperty('code', $customers[$key->value][0]['code'])
@@ -252,9 +248,9 @@ it('can find multiple customers by ID', function () use ($customers) {
 });
 
 it('throws an exception when customer id not exists', function () {
-
-    $this->expectExceptionMessage(__('Given id is invalid or not in the OPTIMA.'));
-
-    repository()->find(null);
-
-})->throws(RecordsNotFoundException::class);
+    expect(fn () => repository()->find(null))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given id is invalid or not in the OPTIMA.'),
+        );
+});

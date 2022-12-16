@@ -18,9 +18,10 @@ function makeArray(string $type = 'object', int $total = 3): array
             'id' => fake()->numberBetween(),
             'uuid' => fake()->uuid(),
             'email' => fake()->email(),
-            'active' => 1
+            'active' => 1,
         ];
         settype($array, $type);
+
         return $array;
     }, range(0, $total - 1));
 }
@@ -79,7 +80,7 @@ it('can attach to collection item', function () {
             fn ($item) => $item->not->toHaveKey('y', 'new'),
         );
 
-    $collection->attach(static function($item) {
+    $collection->attach(static function ($item) {
         $item['y'] = 'new';
         return $item;
     });
@@ -94,7 +95,7 @@ it('can attach to collection item other filtered collection', function () {
     $collection = (new Collection(makeArray('array')));
     $second = (new Collection($collection->take(2)));
 
-    $collection->attach(function($item) use ($second) {
+    $collection->attach(function ($item) use ($second) {
         $item['x'] = $second
             ->filter(static fn ($y) => $y['id'] === $item['id'])
             ->pluckAll(['id', 'uuid']);

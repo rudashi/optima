@@ -23,7 +23,7 @@ $employee = [
         'job_title' => 'STARSZY INŻYNIER OPROGRAMOWANIA',
         'department_id' => '37',
         'deleted' => false,
-    ]
+    ],
 ];
 
 $employees = [
@@ -35,7 +35,6 @@ $employees = [
 ];
 
 it('can find an employee by code', function (string $code, array $dataset) {
-
     $data = repository()->findByCode($code);
 
     expect($data)
@@ -61,7 +60,6 @@ it('can find an employee by code', function (string $code, array $dataset) {
 })->with([$employee]);
 
 it('can find an employee using alias method `find`', function (string $code) {
-
     $data = repository()->find($code);
 
     expect($data)
@@ -83,17 +81,17 @@ it('can find an employee using alias method `find`', function (string $code) {
 })->with($employees);
 
 it('throws an exception when employee code not exists', function () {
-
-    $this->expectExceptionMessage(__('Given acronym :code is invalid or not in the OPTIMA.', ['code' => '']));
-
-    repository()->findByCode('');
-
-})->throws(RecordsNotFoundException::class);
+    expect(fn () => repository()->findByCode(''))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given acronym :code is invalid or not in the OPTIMA.', ['code' => '']),
+        );
+});
 
 it('throws an exception when employee is archived', function (string $code) {
-
-    $this->expectExceptionMessage(__('Employee with given acronym :code is archived.', ['code' => $code]));
-
-    repository()->findByCode($code);
-
-})->with(['XXX'])->throws(RecordsNotFoundException::class);
+    expect(fn () => repository()->findByCode($code))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => $code]),
+        );
+})->with(['XXX']);

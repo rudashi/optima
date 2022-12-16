@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
-use Closure;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
@@ -41,6 +41,7 @@ abstract class DTO implements Arrayable
                 if ($property->hasDefaultValue() || $property->getType()?->allowsNull()) {
                     $property->setValue($this, $property->getDefaultValue());
                 }
+
                 continue;
             }
 

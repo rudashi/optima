@@ -9,7 +9,6 @@ use Tests\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-
     public OptimaService $service;
 
     protected function setUp(): void
@@ -18,5 +17,4 @@ class TestCase extends BaseTestCase
 
         $this->service = app(OptimaService::class);
     }
-
 }

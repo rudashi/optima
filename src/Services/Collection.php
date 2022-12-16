@@ -10,9 +10,7 @@ class Collection extends CollectionBase
 {
     public function attach(callable $callback): self
     {
-        $this->items = $this->map(static function($item) use ($callback) {
-            return $callback($item);
-        })->all();
+        $this->items = $this->map(static fn ($item) => $callback($item))->all();
 
         return $this;
     }
@@ -24,8 +22,9 @@ class Collection extends CollectionBase
 
     public function pluckAll(array $values): array
     {
-        return $this->map(fn ($item) => array_map(static function ($value) use ($item) {
-            return is_array($item) ? $item[$value] : $item->{$value};
-        }, $values))->flatten()->unique()->filter()->all();
+        return $this->map(fn ($item) => array_map(static fn ($value) => is_array($item)
+            ? $item[$value]
+            : $item->{$value}, $values
+        ))->flatten()->unique()->filter()->all();
     }
 }

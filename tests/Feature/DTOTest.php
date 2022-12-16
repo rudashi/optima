@@ -87,7 +87,8 @@ it('can create instance from Object', function () {
 });
 
 it('can cast property to other type', function () {
-    $dto = new class extends DTO {
+    $dto = new class extends DTO
+    {
         public string $string;
         public DateTime $date;
         public FakeEnum $enum;
@@ -96,7 +97,7 @@ it('can cast property to other type', function () {
         public function __construct(...$args)
         {
             $this->cast('enum', FakeEnum::class);
-            $this->cast('string', fn($v) => trim($v));
+            $this->cast('string', fn ($v) => trim($v));
 
             parent::__construct($args);
         }
@@ -184,20 +185,20 @@ it('can get some properties from an object as an array', function () {
 });
 
 it('can append property', function () {
-    $dto = new class extends DTO {
+    $dto = new class extends DTO
+    {
         public string $string;
         public FakeEnum $enum;
 
         public function __construct(...$args)
         {
             if (count($args)) {
-                $this->append('enum', fn() => FakeEnum::tryFrom((string) self::get('date', $args)));
+                $this->append('enum', fn () => FakeEnum::tryFrom((string) self::get('date', $args)));
             }
 
             parent::__construct($args);
         }
     };
-
 
     expect(new $dto(
         string: '10',

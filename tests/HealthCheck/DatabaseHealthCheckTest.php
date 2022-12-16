@@ -10,7 +10,6 @@ use Tests\TestCase;
 uses(TestCase::class);
 
 it('shows problem when database driver is incorrect', function () {
-
     config(['database.connections.optima.driver' => 'sqlite']);
     $service = new DatabaseHealthCheckService(app('db'));
 
@@ -27,7 +26,6 @@ it('shows problem when database driver is incorrect', function () {
 });
 
 it('shows problem when driver is not installed on server', function () {
-
     config(['database.connections.optima.driver' => 'mariadb']);
     $service = new DatabaseHealthCheckService(app('db'));
 
@@ -45,7 +43,6 @@ it('shows problem when driver is not installed on server', function () {
 });
 
 it('can connect to optima database', function () {
-
     $service = new DatabaseHealthCheckService(app('db'));
 
     expect($service->status())
@@ -57,4 +54,3 @@ it('can connect to optima database', function () {
         ->toHaveKey('status', $service::OK)
         ->toHaveKey('context', []);
 });
-

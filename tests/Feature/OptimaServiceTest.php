@@ -14,37 +14,34 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function dto(): FakeDTO {
+function dto(): FakeDTO
+{
     return new FakeDTO(id: fake()->numberBetween(1, 100));
 }
 
 test('can load database configuration', function () {
-
     expect(app('db')->connection(OptimaService::$connection))
         ->toBeInstanceOf(SqlServerConnection::class);
 });
 
 it('get custom Query builder', function () {
-
     expect($this->service->newQuery())
         ->toBeInstanceOf(QueryBuilder::class)
         ->toBeInstanceOf(Builder::class);
 });
 
 it('can use helper function `optima`', function () {
-
     expect(optima())
         ->toBeInstanceOf(QueryBuilder::class)
         ->toBeInstanceOf(Builder::class)
     ->and(optima(false))
         ->toBeInstanceOf(OptimaService::class)
-        ->newQuery()
+    ->newQuery()
         ->toBeInstanceOf(QueryBuilder::class)
         ->toBeInstanceOf(Builder::class);
 });
 
 it('can parse multiple ids to flatten array', function () {
-
     $ids = [1, 'test', '34', 0];
 
     expect($this->service->parseIds(1, 'test', '34', 0))
@@ -54,7 +51,6 @@ it('can parse multiple ids to flatten array', function () {
 });
 
 it('can parse collection of models to array of model keys', function () {
-
     $first = dto();
     $second = dto();
     $third = dto();
