@@ -87,8 +87,7 @@ it('can create instance from Object', function () {
 });
 
 it('can cast property to other type', function () {
-    $dto = new class extends DTO
-    {
+    $dto = new class () extends DTO {
         public string $string;
         public DateTime $date;
         public FakeEnum $enum;
@@ -185,8 +184,7 @@ it('can get some properties from an object as an array', function () {
 });
 
 it('can append property', function () {
-    $dto = new class extends DTO
-    {
+    $dto = new class () extends DTO {
         public string $string;
         public FakeEnum $enum;
 

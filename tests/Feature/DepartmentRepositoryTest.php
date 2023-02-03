@@ -24,7 +24,7 @@ $departments = [
     'BIURO',
 ];
 
-it('can get all departments', function() {
+it('can get all departments', function () {
     $data = repository()->all();
 
     expect($data)
@@ -54,7 +54,6 @@ it('can find a department by code', function (string $code) {
             'parent_id',
             'user_code',
         ]);
-
 })->with($departments);
 
 it('can find a department using alias method `find`', function (string $code) {
@@ -63,7 +62,6 @@ it('can find a department using alias method `find`', function (string $code) {
     expect($data)
         ->toBeInstanceOf(Department::class)
         ->toHaveProperty('name', $code);
-
 })->with($departments);
 
 it('throws an exception when department is archived', function (string $code) {

@@ -103,7 +103,6 @@ it('can find a customer by code', function (array $dataset) {
             'nip',
             'deleted',
         ]);
-
 })->with($customers);
 
 it('throws an exception when customer code not exists', function () {
@@ -210,7 +209,6 @@ it('can find customers by ID', function (array $dataset) {
             'nip',
             'deleted',
         ]);
-
 })->with($customers);
 
 it('can find multiple customers by ID', function () use ($customers) {

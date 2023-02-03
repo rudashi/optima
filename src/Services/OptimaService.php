@@ -26,7 +26,9 @@ class OptimaService
     public function newQuery(): QueryBuilder
     {
         return new QueryBuilder(
-            $this->db, $this->db->getQueryGrammar(), $this->db->getPostProcessor()
+            connection: $this->db,
+            grammar: $this->db->getQueryGrammar(),
+            processor: $this->db->getPostProcessor()
         );
     }
 
