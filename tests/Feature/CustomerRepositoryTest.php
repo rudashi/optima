@@ -23,10 +23,12 @@ $customers = [
         [
             'id' => 1,
             'code' => '!NIEOKREŚLONY!',
+            'company' => '!NIEOKREŚLONY!',
             'name' => '!NIEOKREŚLONY!',
             'name_line_two' => null,
             'name_line_three' => null,
             'city' => null,
+            'country' => null,
             'suite_number' => null,
         ],
     ],
@@ -34,10 +36,14 @@ $customers = [
         [
             'id' => 4328,
             'code' => 'TEST1',
+            'company' => 'test1',
             'name' => 'test1',
             'name_line_two' => null,
             'name_line_three' => null,
             'city' => 'Test',
+            'street' => 'Test',
+            'postal_code' => '88-100',
+            'country' => 'Polska',
             'suite_number' => null,
         ],
     ],
@@ -45,10 +51,14 @@ $customers = [
         [
             'id' => 26820,
             'code' => 'TOTEM TEST!',
+            'company' => 'totem',
             'name' => 'totem',
             'name_line_two' => null,
             'name_line_three' => null,
             'city' => null,
+            'street' => 'Jacewska',
+            'country' => 'Polska',
+            'building_number' => '89',
             'suite_number' => null,
         ],
     ],
@@ -56,10 +66,16 @@ $customers = [
         [
             'id' => 5160,
             'code' => 'TOTEM ZOO',
+            'company' => 'TOTEM.COM.PL',
             'name' => 'TOTEM.COM.PL SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
             'name_line_two' => 'SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
             'name_line_three' => null,
             'city' => 'Inowrocław',
+            'street' => 'Jacewska',
+            'postal_code' => '88-100',
+            'country' => 'Polska',
+            'building_number' => '89',
+            'nip' => '5562753569',
             'suite_number' => null,
         ],
     ],
@@ -80,28 +96,23 @@ it('can find a customer by code', function (array $dataset) {
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
-        ->toHaveProperty('id', $dataset['id'])
-        ->toHaveProperty('code', $dataset['code'])
-        ->toHaveProperty('name', $dataset['name'])
-        ->toHaveProperty('name_line_two', $dataset['name_line_two'])
-        ->toHaveProperty('name_line_three', null)
-        ->toHaveProperty('city', $dataset['city'])
-        ->toHaveProperty('suite_number', $dataset['suite_number'])
-        ->toHaveProperties([
-            'id',
-            'code',
-            'company',
-            'name',
-            'name_line_two',
-            'name_line_three',
-            'country',
-            'city',
-            'postal_code',
-            'street',
-            'building_number',
-            'suite_number',
-            'nip',
-            'deleted',
+        ->toMatchArray([
+            'id' => $dataset['id'],
+            'code' => $dataset['code'],
+            'company' => $dataset['company'],
+            'name' => $dataset['name'],
+            'name_line_two' => $dataset['name_line_two'],
+            'name_line_three' => $dataset['name_line_three'],
+            'country' => $dataset['country'],
+            'city' => $dataset['city'],
+            'postal_code' => $dataset['postal_code'] ?? null,
+            'street' => $dataset['street'] ?? null,
+            'building_number' => $dataset['building_number'] ?? '',
+            'suite_number' => $dataset['suite_number'],
+            'nip' => $dataset['nip'] ?? null,
+            'email_warehouse' => null,
+            'shipping_notes' => null,
+            'deleted' => false,
         ]);
 })->with($customers);
 

@@ -22,6 +22,7 @@ class Customer extends DTO
     public string|null $suite_number;
     public string|null $nip;
     public string|null $email_warehouse;
+    public string|null $shipping_notes;
     public bool $deleted;
 
     public function __construct(...$args)
