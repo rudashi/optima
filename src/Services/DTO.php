@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
 use ReflectionProperty;
+use Rudashi\Optima\Exceptions\IncorrectValueException;
 use UnitEnum;
 
 abstract class DTO implements Arrayable
@@ -168,5 +169,10 @@ abstract class DTO implements Arrayable
             \Illuminate\Support\Carbon::class => $value ? new Carbon($value) : $property->getDefaultValue(),
             default => $value
         };
+    }
+
+    protected function throwIncorrectValue(string $message): void
+    {
+        throw new IncorrectValueException($message);
     }
 }
