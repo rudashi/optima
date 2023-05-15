@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests\Feature\DTOTest;
 
+use Carbon\Carbon;
 use DateTime;
 use Rudashi\Optima\Services\DTO;
 use Rudashi\Optima\Tests\HelperClasses\CustomPrimaryDTO;
@@ -110,8 +111,17 @@ it('can cast property to other type', function () {
     ))
         ->bool->toBe(true)
         ->string->toBe('10')
-        ->date->toBeInstanceOf(DateTime::class)
+        ->date->toBeInstanceOf(Carbon::class)
         ->enum->toBe(FakeEnum::Diamonds);
+});
+
+it('casts `\Illuminate\Support\Carbon` to self instance', function () {
+    $dto = new class () extends DTO {
+        public \Illuminate\Support\Carbon $date;
+    };
+
+    expect((new $dto(date: '2022-02-21 13:42:20'))->date)
+        ->toBeInstanceOf(\Illuminate\Support\Carbon::class);
 });
 
 it('can determine whether an attribute is filled', function () {

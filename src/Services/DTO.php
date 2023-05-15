@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Services;
 
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
@@ -163,10 +164,13 @@ abstract class DTO implements Arrayable
             return new $cast($value);
         }
 
-        return match ($property->getType()?->getName()) {
+        $type = $property->getType()?->getName();
+        return match ($type) {
             'DateTime',
+            'DateTimeInterface',
+            CarbonInterface::class => $value ? new Carbon($value) : $property->getDefaultValue(),
             Carbon::class,
-            \Illuminate\Support\Carbon::class => $value ? new Carbon($value) : $property->getDefaultValue(),
+            \Illuminate\Support\Carbon::class => $value ? new $type($value) : $property->getDefaultValue(),
             default => $value
         };
     }
