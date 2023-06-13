@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Services\Repositories;
 
 use Illuminate\Database\RecordsNotFoundException;
-use Rudashi\Optima\Enums\CustomerType;
+use Rudashi\Optima\Enums\CustomerGroup;
 use Rudashi\Optima\Models\Customer;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
@@ -23,7 +23,7 @@ class CustomerRepository
         $data = $this->queryCustomer()
             ->where('Knt_Kod', $code)
             ->when($group, static function (QueryBuilder $query) use ($group) {
-                return $query->where('Knt_Grupa', CustomerType::from($group)->value);
+                return $query->where('Knt_Grupa', CustomerGroup::from($group)->value);
             })
             ->first();
 

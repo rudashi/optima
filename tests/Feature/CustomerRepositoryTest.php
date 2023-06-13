@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Tests\Feature\CustomerRepositoryTest;
 
 use Illuminate\Database\RecordsNotFoundException;
-use Rudashi\Optima\Enums\CustomerType;
+use Rudashi\Optima\Enums\CustomerGroup;
 use Rudashi\Optima\Models\Customer;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
@@ -125,7 +125,7 @@ it('throws an exception when customer code not exists', function () {
 });
 
 it('can find a grouped customer by code from group', function (string $code, array $dataset) {
-    $data = repository()->findByCode($code, CustomerType::SUPPLIER->value);
+    $data = repository()->findByCode($code, CustomerGroup::SUPPLIER->value);
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
@@ -183,7 +183,7 @@ it('can find a grouped customer by code without group', function (string $code, 
 })->with([$supplier]);
 
 it('throws an exception when grouped customer code is in other group', function (string $code) {
-    expect(fn () => repository()->findByCode($code, CustomerType::SUBCONTRACTOR->value))
+    expect(fn () => repository()->findByCode($code, CustomerGroup::SUBCONTRACTOR->value))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]),
