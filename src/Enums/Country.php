@@ -27,6 +27,14 @@ enum Country: string
     case PORTUGAL = 'PT';
     case SWEDEN = 'SE';
     case UNITED_STATES = 'US';
+    case AUSTRIA = 'AT';
+    case GREECE = 'GR';
+    case ICELAND = 'IS';
+    case ITALY = 'IT';
+    case LITHUANIA = 'LT';
+    case SLOVAKIA = 'SK';
+    case SLOVENIA = 'SI';
+    case UKRAINE = 'UA';
     case NULL = '';
 
     public static function of(string|null $name = null): self
@@ -42,6 +50,42 @@ enum Country: string
         }
 
         return self::NULL;
+    }
+
+    public function currency(): string
+    {
+        return match ($this) {
+            self::POLAND => 'PLN',
+            self::BELGIUM,
+            self::SAINT_BARTHELEMY,
+            self::GERMANY,
+            self::ESTONIA,
+            self::FRANCE,
+            self::FINLAND,
+            self::SPAIN,
+            self::IRELAND,
+            self::LUXEMBOURG,
+            self::NETHERLANDS,
+            self::LATVIA,
+            self::AUSTRIA,
+            self::GREECE,
+            self::ITALY,
+            self::LITHUANIA,
+            self::SLOVAKIA,
+            self::SLOVENIA,
+            self::PORTUGAL => 'EUR',
+            self::BULGARIA => 'BGN',
+            self::SWITZERLAND => 'CHF',
+            self::CZECH_REPUBLIC => 'CZK',
+            self::DENMARK => 'DKK',
+            self::UNITED_KINGDOM => 'GBP',
+            self::NORWAY => 'NOK',
+            self::SWEDEN => 'SEK',
+            self::UNITED_STATES => 'USD',
+            self::ICELAND => 'ISK',
+            self::UKRAINE => 'UAH',
+            self::NULL => '',
+        };
     }
 
     public function description(): string
@@ -68,34 +112,14 @@ enum Country: string
             self::PORTUGAL => __('Portugal'),
             self::SWEDEN => __('Sweden'),
             self::UNITED_STATES => __('United States'),
-            self::NULL => '',
-        };
-    }
-
-    public function currency(): string
-    {
-        return match ($this) {
-            self::POLAND => 'PLN',
-            self::BELGIUM,
-            self::SAINT_BARTHELEMY,
-            self::GERMANY,
-            self::ESTONIA,
-            self::FRANCE,
-            self::FINLAND,
-            self::SPAIN,
-            self::IRELAND,
-            self::LUXEMBOURG,
-            self::NETHERLANDS,
-            self::LATVIA,
-            self::PORTUGAL => 'EUR',
-            self::BULGARIA => 'BGN',
-            self::SWITZERLAND => 'CHF',
-            self::CZECH_REPUBLIC => 'CZK',
-            self::DENMARK => 'DKK',
-            self::UNITED_KINGDOM => 'GBP',
-            self::NORWAY => 'NOK',
-            self::SWEDEN => 'SEK',
-            self::UNITED_STATES => 'USD',
+            self::AUSTRIA => __('Austria'),
+            self::GREECE => __('Greece'),
+            self::ICELAND => __('Iceland'),
+            self::ITALY => __('Italy'),
+            self::LITHUANIA => __('Lithuania'),
+            self::SLOVAKIA => __('Slovakia'),
+            self::SLOVENIA => __('Slovenia'),
+            self::UKRAINE => __('Ukraine'),
             self::NULL => '',
         };
     }
