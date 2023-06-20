@@ -10,7 +10,7 @@ Unofficial wrapper for ERP Comarch OPTIMA.
 ## General System Requirements
 
 - [PHP ^8.1](http://php.net/)
-- [Laravel ^9.0](https://github.com/laravel/framework)
+- [Laravel ^10.0](https://github.com/laravel/framework)
 - [SQL Server for PHP](https://docs.microsoft.com/en-us/sql/connect/php/overview-of-the-php-sql-driver?view=sql-server-ver15)
 
 ## Quick Installation
