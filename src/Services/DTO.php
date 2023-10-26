@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
+use BackedEnum;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
+use ReflectionNamedType;
 use ReflectionProperty;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
-use UnitEnum;
 
 abstract class DTO implements Arrayable
 {
@@ -34,8 +35,8 @@ abstract class DTO implements Arrayable
 
         $class = new ReflectionClass($this);
 
-        if ($class->hasMethod('preValidation')) {
-            static::preValidation($args);
+        if (method_exists($this, 'preValidation')) {
+            $this->preValidation($args);
         }
 
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
@@ -153,7 +154,7 @@ abstract class DTO implements Arrayable
 
         if (is_string($cast)) {
             if (enum_exists($cast)) {
-                /** @var UnitEnum $cast */
+                /** @var BackedEnum $cast */
                 return $cast::from($value);
             }
 
@@ -164,15 +165,22 @@ abstract class DTO implements Arrayable
             return new $cast($value);
         }
 
-        $type = $property->getType()?->getName();
-        return match ($type) {
-            'DateTime',
-            'DateTimeInterface',
-            CarbonInterface::class => $value ? new Carbon($value) : $property->getDefaultValue(),
-            Carbon::class,
-            \Illuminate\Support\Carbon::class => $value ? new $type($value) : $property->getDefaultValue(),
-            default => $value
-        };
+        $type = $property->getType();
+
+        if ($type instanceof ReflectionNamedType) {
+            $classType = $type->getName();
+
+            return match ($classType) {
+                'DateTime',
+                'DateTimeInterface',
+                CarbonInterface::class => $value ? new Carbon($value) : $property->getDefaultValue(),
+                Carbon::class,
+                \Illuminate\Support\Carbon::class => $value ? new $classType($value) : $property->getDefaultValue(),
+                default => $value
+            };
+        }
+
+        return $value;
     }
 
     protected function throwIncorrectValue(string $message): void

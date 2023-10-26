@@ -46,11 +46,15 @@ class EmployeeRepository
             ])
             ->leftJoin('CDN.Centra as department', 'department.CNT_CntId', 'employee.PRI_CntId')
             ->leftJoin('CDN.PracEtaty as work', static function (JoinClause $join) {
-                $join->on('work.PRE_PreId', new Expression('(SELECT MAX(PRE_PreId) FROM CDN.PracEtaty WHERE PRE_PraId = employee.PRI_PraId)'));
+                $join->on(
+                    first: 'work.PRE_PreId',
+                    operator: '=',
+                    second: new Expression('(SELECT MAX(PRE_PreId) FROM CDN.PracEtaty WHERE PRE_PraId = employee.PRI_PraId)')
+                );
             })
             ->leftJoin('CDN.DaneKadMod as hr', 'hr.DKM_DkmId', 'work.PRE_ETADkmIdStanowisko')
             ->leftJoin('CDN.PracKartyRcp as rcp', static function (JoinClause $join) {
-                $join->on('rcp.PKR_PrcId', 'employee.PRI_PraId')
+                $join->on('rcp.PKR_PrcId', '=', 'employee.PRI_PraId')
                     ->whereDate('rcp.PKR_OkresDo', '>=', today());
             })
             ->whereIn('employee.PRI_Typ', [self::EMPLOYEE, self::OWNER])
