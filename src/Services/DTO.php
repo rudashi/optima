@@ -15,7 +15,7 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
 
-abstract class DTO implements Arrayable
+abstract class DTO implements ValueObject, Arrayable
 {
     use Conditionable;
 
