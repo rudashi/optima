@@ -24,7 +24,7 @@ interface ValueObject
 
     public function all(): array;
 
-    /***
+    /**
      * @template TWhenReturnType
      *
      * @param  (\Closure($this): TWhenReturnType)|bool  $value
