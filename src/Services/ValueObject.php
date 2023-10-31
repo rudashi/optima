@@ -26,13 +26,14 @@ interface ValueObject
 
     /**
      * @template TWhenReturnType
+     * @template TWhenParameter
      *
-     * @param  (\Closure($this): TWhenReturnType)|bool  $value
-     * @param  (callable($this): TWhenReturnType)|null  $callback
-     * @param  (callable($this): TWhenReturnType)|null  $default
-     * @return $this|TWhenReturnType
+     * @param  (Closure($this): TWhenParameter)|bool  $value
+     * @param  (callable($this, TWhenParameter): TWhenReturnType)|null  $callback
+     * @param  (callable($this, TWhenParameter): TWhenReturnType)|null  $default
+     * @return static
      */
-    public function when($value, callable $callback = null, callable $default = null);
+    public function when(Closure|bool $value, callable $callback = null, callable $default = null): static;
 
     public static function get(string $key, array|object $attributes): mixed;
 

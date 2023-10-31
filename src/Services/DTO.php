@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Closure;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Traits\Conditionable;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
@@ -17,8 +16,6 @@ use Rudashi\Optima\Exceptions\IncorrectValueException;
 
 abstract class DTO implements ValueObject, Arrayable
 {
-    use Conditionable;
-
     protected string $primaryKey = 'id';
     protected array $onlyKeys = [];
     protected array $appends = [];
@@ -123,6 +120,21 @@ abstract class DTO implements ValueObject, Arrayable
         }
 
         return $this->all();
+    }
+
+    public function when(Closure|bool $value, callable $callback = null, callable $default = null): static
+    {
+        $value = $value instanceof Closure ? $value($this) : $value;
+
+        if ($value) {
+            return $callback($this, $value) ?? $this;
+        }
+
+        if ($default) {
+            return $default($this, $value) ?? $this;
+        }
+
+        return $this;
     }
 
     public static function get(string $key, array|object $attributes): mixed
