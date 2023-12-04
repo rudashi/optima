@@ -37,7 +37,7 @@ abstract class DTO implements ValueObject, Arrayable
         }
 
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-            if (! array_key_exists($property->getName(), $args)) {
+            if (!array_key_exists($property->getName(), $args)) {
                 if ($property->hasDefaultValue() || $property->getType()?->allowsNull()) {
                     $property->setValue($this, $property->getDefaultValue());
                 }
