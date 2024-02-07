@@ -14,7 +14,7 @@ use Rudashi\Optima\Services\QueryBuilder;
 class CustomerRepository
 {
     public function __construct(
-        private readonly OptimaService $service
+        protected readonly OptimaService $service
     ) {
     }
 
@@ -48,7 +48,7 @@ class CustomerRepository
         return $data->map(fn ($item) => new Customer((array) $item));
     }
 
-    private function queryCustomer(): QueryBuilder
+    protected function queryCustomer(): QueryBuilder
     {
         return $this->service->newQuery()
             ->from('CDN.Kontrahenci', 'knt')
