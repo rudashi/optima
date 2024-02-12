@@ -86,7 +86,7 @@ abstract class DTO implements ValueObject, Arrayable
         return $this;
     }
 
-    public function append(string $property, Closure $callback): static
+    public function append(string $property, callable $callback): static
     {
         $this->appends[$property] = $callback;
 

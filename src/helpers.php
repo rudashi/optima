@@ -9,6 +9,7 @@ if (! function_exists('optima')) {
     function optima(bool $query = true): QueryBuilder|OptimaService
     {
         $service = app(OptimaService::class);
+
         if ($query) {
             return $service->newQuery();
         }

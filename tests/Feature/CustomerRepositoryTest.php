@@ -110,8 +110,6 @@ it('can find a customer by code', function (array $dataset) {
             'building_number' => $dataset['building_number'] ?? '',
             'suite_number' => $dataset['suite_number'],
             'nip' => $dataset['nip'] ?? null,
-            'email_warehouse' => null,
-            'shipping_notes' => null,
             'deleted' => false,
         ]);
 })->with($customers);
@@ -228,15 +226,15 @@ it('can find multiple customers by ID', function () use ($customers) {
     expect($data)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(4)
-        ->sequence(function ($item, $key) use ($customers) {
+        ->sequence(function ($item) use ($customers) {
             $item->toBeInstanceOf(Customer::class)
-                ->toHaveProperty('id', $customers[$key->value][0]['id'])
-                ->toHaveProperty('code', $customers[$key->value][0]['code'])
-                ->toHaveProperty('name', $customers[$key->value][0]['name'])
-                ->toHaveProperty('name_line_two', $customers[$key->value][0]['name_line_two'])
-                ->toHaveProperty('name_line_three', $customers[$key->value][0]['name_line_three'])
-                ->toHaveProperty('city', $customers[$key->value][0]['city'])
-                ->toHaveProperty('suite_number', $customers[$key->value][0]['suite_number'])
+                ->toHaveProperty('id', $customers[$item->value->id][0]['id'])
+                ->toHaveProperty('code', $customers[$item->value->id][0]['code'])
+                ->toHaveProperty('name', $customers[$item->value->id][0]['name'])
+                ->toHaveProperty('name_line_two', $customers[$item->value->id][0]['name_line_two'])
+                ->toHaveProperty('name_line_three', $customers[$item->value->id][0]['name_line_three'])
+                ->toHaveProperty('city', $customers[$item->value->id][0]['city'])
+                ->toHaveProperty('suite_number', $customers[$item->value->id][0]['suite_number'])
                 ->toHaveProperties([
                     'id',
                     'code',

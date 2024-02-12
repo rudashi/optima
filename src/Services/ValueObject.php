@@ -18,7 +18,7 @@ interface ValueObject
 
     public function only(string ...$keys): static;
 
-    public function append(string $property, Closure $callback): static;
+    public function append(string $property, callable $callback): static;
 
     public function cast(string $property, mixed $caster): static;
 

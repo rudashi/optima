@@ -21,35 +21,37 @@ class Customer extends DTO
     public string|null $building_number;
     public string|null $suite_number;
     public string|null $nip;
-    public string|null $email_warehouse;
-    public string|null $shipping_notes;
     public bool $deleted;
 
-    public function __construct(...$args)
+    public function __construct($args)
     {
-        parent::__construct(...$args);
+        $this->append('name', fn () => $this->parseName($args));
+        $this->cast('name_line_two', static fn ($v) => $v ?: null);
+        $this->cast('name_line_three', static fn ($v) => $v ?: null);
+        $this->cast('country', static fn ($v) => $v ? trim($v) : null);
+        $this->cast('city', static fn ($v) => $v ? ucfirst(mb_strtolower($v)) : null);
+        $this->cast('postal_code', static fn ($v) => $v ? trim($v) : null);
+        $this->cast('street', fn ($v) => $v ? $this->parseStreet($v) : null);
+        $this->cast('building_number', static fn ($v) => $v ? trim($v) : null);
+        $this->cast('suite_number', static fn ($v) => $v ? trim($v) : null);
+        $this->cast('nip', static fn ($v) => $v ?: null);
 
-        $this->name = trim(implode(' ', [$this->company, $this->name_line_two, $this->name_line_three]));
-        $this->name_line_two = $this->name_line_two ?: null;
-        $this->name_line_three = $this->name_line_three ?: null;
-        $this->country = $this->trimPropertyOrNull($this->country);
-        $this->city = $this->city ? ucfirst(mb_strtolower($this->city)) : null;
-        $this->postal_code = $this->trimPropertyOrNull($this->postal_code);
-        $this->street = $this->street ? $this->parseStreet($this->street) : null;
-        $this->building_number = $this->trimPropertyOrNull($this->building_number);
-        $this->suite_number = $this->trimPropertyOrNull($this->suite_number);
-        $this->nip = $this->nip ?: null;
+        parent::__construct($args);
+    }
+
+    private function parseName(array|object $args): string
+    {
+        return trim(implode(' ', [
+            DTO::get('company', $args),
+            DTO::get('name_line_two', $args),
+            DTO::get('name_line_three', $args),
+        ]));
     }
 
     private function parseStreet(string $street): string
     {
         return str_starts_with($street, 'ul')
             ? $street
-            : mb_convert_case($this->street, MB_CASE_TITLE, 'UTF-8');
-    }
-
-    private function trimPropertyOrNull(string|null $value): string|null
-    {
-        return $value ? trim($value) : null;
+            : mb_convert_case($street, MB_CASE_TITLE, 'UTF-8');
     }
 }

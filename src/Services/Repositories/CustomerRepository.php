@@ -38,8 +38,7 @@ class CustomerRepository
     {
         $data = $this->queryCustomer()
             ->whereIn('Knt_KntId', $this->service->parseIds($ids))
-            ->get()
-            ->keyBy('id');
+            ->get();
 
         if ($data->isEmpty()) {
             throw new RecordsNotFoundException(__('Given id is invalid or not in the OPTIMA.'));
@@ -65,10 +64,7 @@ class CustomerRepository
                 'knt.Knt_NrDomu as building_number',
                 'knt.Knt_NrLokalu as suite_number',
                 'knt.Knt_Nip as nip',
-                'par.email_magazyn as email_warehouse',
-                'par.uwagi_dostaw as shipping_notes',
                 'knt.Knt_Nieaktywny as deleted',
-            ])
-            ->leftJoin('PBS.parKth as par', 'par.id_kontrahenta', 'knt.Knt_KntId');
+            ]);
     }
 }
