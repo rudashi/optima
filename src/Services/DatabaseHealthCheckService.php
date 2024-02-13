@@ -20,7 +20,7 @@ class DatabaseHealthCheckService
     public function status(): array
     {
         try {
-            $this->db->connection(OptimaService::$connection)->getPdo();
+            $this->db->connection(OptimaService::$connection)->getReadPdo();
         } catch (Exception $e) {
             return $this->problem('Could not connect to db', [
                 'connection' => OptimaService::$connection,
