@@ -31,12 +31,17 @@ it('get custom Query builder', function () {
 });
 
 it('can use helper function `optima`', function () {
-    expect(optima())
+    $builder = optima();
+
+    expect($builder)
         ->toBeInstanceOf(QueryBuilder::class)
-        ->toBeInstanceOf(Builder::class)
-    ->and(optima(false))
+        ->toBeInstanceOf(Builder::class);
+
+   $service = optima(false);
+
+    expect($service)
         ->toBeInstanceOf(OptimaService::class)
-    ->newQuery()
+        ->newQuery()
         ->toBeInstanceOf(QueryBuilder::class)
         ->toBeInstanceOf(Builder::class);
 });
@@ -60,4 +65,23 @@ it('can parse collection of models to array of model keys', function () {
         ->toBeArray()
         ->toHaveCount(3)
         ->toMatchArray([$first->id, $second->id, $third->id]);
+});
+
+it('can switch connection', function () {
+    config(['database.connections.optima_second' => [
+        'driver' => 'sqlite',
+        'host' => '192.168.0.0',
+        'port' => '3307',
+        'database' => 'database',
+        'username' => 'user',
+        'password' => 'pass',
+    ]]);
+
+    expect($this->service->getConnection())
+        ->getDriverName()->toBe('sqlsrv');
+
+    $this->service->setConnectionName('optima_second');
+
+    expect($this->service->getConnection())
+        ->getDriverName()->toBe('sqlite');
 });

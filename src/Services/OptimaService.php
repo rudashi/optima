@@ -4,31 +4,47 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
-use Illuminate\Database\Connection;
-use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Arr;
 
 class OptimaService
 {
     public static string $connection = 'optima';
-    protected Connection $db;
+    protected ?string $connectionName = null;
+    protected ConnectionResolverInterface $resolver;
 
-    public function __construct(DatabaseManager $db)
+    public function __construct(ConnectionResolverInterface $resolver, string $connection = null)
     {
-        $this->db = $db->connection(static::$connection);
+        $this->resolver = $resolver;
+        $this->connectionName = $connection ?? static::$connection;
     }
 
-    public function query(): QueryBuilder
+    public function getConnectionName(): string
     {
-        return $this->newQuery();
+        return $this->connectionName;
+    }
+
+    public function getConnection(): ConnectionInterface
+    {
+        return $this->resolver->connection($this->getConnectionName());
+    }
+
+    public function setConnectionName($name): static
+    {
+        $this->connectionName = $name;
+
+        return $this;
     }
 
     public function newQuery(): QueryBuilder
     {
+        $connection = $this->getConnection();
+
         return new QueryBuilder(
-            connection: $this->db,
-            grammar: $this->db->getQueryGrammar(),
-            processor: $this->db->getPostProcessor()
+            connection: $connection,
+            grammar: $connection->getQueryGrammar(),
+            processor: $connection->getPostProcessor()
         );
     }
 
