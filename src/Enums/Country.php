@@ -35,6 +35,14 @@ enum Country: string
     case SLOVAKIA = 'SK';
     case SLOVENIA = 'SI';
     case UKRAINE = 'UA';
+    case JAPAN = 'JP';
+    case HUNGARY = 'HU';
+    case AUSTRALIA = 'AU';
+    case CANADA = 'CA';
+    case ISRAEL = 'IL';
+    case CHINA = 'CN';
+    case VIRGIN_ISLANDS_BRITISH = 'VG';
+    case QATAR = 'QA';
     case NULL = '';
 
     public static function of(string|null $name = null): self
@@ -45,6 +53,21 @@ enum Country: string
 
         foreach (self::cases() as $case) {
             if ($case->description() === $name) {
+                return $case;
+            }
+        }
+
+        return self::NULL;
+    }
+
+    public static function fromCurrency(string|null $currency = null): self
+    {
+        if (! $currency) {
+            return self::NULL;
+        }
+
+        foreach (self::cases() as $case) {
+            if ($case->currency() === $currency) {
                 return $case;
             }
         }
@@ -73,6 +96,7 @@ enum Country: string
             self::LITHUANIA,
             self::SLOVAKIA,
             self::SLOVENIA,
+            self::HUNGARY,
             self::PORTUGAL => 'EUR',
             self::BULGARIA => 'BGN',
             self::SWITZERLAND => 'CHF',
@@ -81,9 +105,16 @@ enum Country: string
             self::UNITED_KINGDOM => 'GBP',
             self::NORWAY => 'NOK',
             self::SWEDEN => 'SEK',
+            self::VIRGIN_ISLANDS_BRITISH,
             self::UNITED_STATES => 'USD',
             self::ICELAND => 'ISK',
             self::UKRAINE => 'UAH',
+            self::JAPAN => 'JPY',
+            self::AUSTRALIA => 'AUD',
+            self::CANADA => 'CAD',
+            self::ISRAEL => 'ILS',
+            self::CHINA => 'CNY',
+            self::QATAR => 'QAR',
             self::NULL => '',
         };
     }
@@ -120,6 +151,14 @@ enum Country: string
             self::SLOVAKIA => __('Slovakia'),
             self::SLOVENIA => __('Slovenia'),
             self::UKRAINE => __('Ukraine'),
+            self::JAPAN => __('Japan'),
+            self::HUNGARY => __('Hungary'),
+            self::AUSTRALIA => __('Australia'),
+            self::CANADA => __('Canada'),
+            self::ISRAEL => __('Israel'),
+            self::CHINA => __('China'),
+            self::VIRGIN_ISLANDS_BRITISH => __('Virgin Islands, British'),
+            self::QATAR => __('Qatar'),
             self::NULL => '',
         };
     }
