@@ -15,11 +15,11 @@ enum CustomerType: int
     public function description(): string
     {
         return match($this) {
-            self::RECIPIENT => __('recipient'),
-            self::SUPPLIER => __('supplier'),
-            self::COMPETITION => __('competition'),
-            self::PARTNER => __('partner'),
-            self::POTENTIAL => __('potential'),
+            self::RECIPIENT => __('Recipient'),
+            self::SUPPLIER => __('Supplier'),
+            self::COMPETITION => __('Competition'),
+            self::PARTNER => __('Partner'),
+            self::POTENTIAL => __('Potential'),
         };
     }
 
