@@ -60,21 +60,6 @@ enum Country: string
         return self::NULL;
     }
 
-    public static function fromCurrency(string|null $currency = null): self
-    {
-        if (! $currency) {
-            return self::NULL;
-        }
-
-        foreach (self::cases() as $case) {
-            if ($case->currency() === $currency) {
-                return $case;
-            }
-        }
-
-        return self::NULL;
-    }
-
     public function currency(): string
     {
         return match ($this) {
