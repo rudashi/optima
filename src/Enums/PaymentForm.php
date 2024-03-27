@@ -27,7 +27,7 @@ enum PaymentForm: int
 
     public static function for(Country $country): array
     {
-        return match($country) {
+        return match ($country) {
             Country::POLAND => [
                 self::CASH_PL,
                 self::PREPAYMENT_PL,
@@ -42,5 +42,16 @@ enum PaymentForm: int
                 self::BANK_TRANSFER,
             ],
         };
+    }
+
+    public static function toSelect(): array
+    {
+        return array_map(
+            callback: static fn ($item) => [
+                'name' => $item->description(),
+                'value' => $item->value,
+            ],
+            array: self::cases()
+        );
     }
 }

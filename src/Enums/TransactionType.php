@@ -34,4 +34,15 @@ enum TransactionType: int
             self::OSS => 'Procedura OSS',
         };
     }
+
+    public static function toSelect(): array
+    {
+        return array_map(
+            callback: static fn ($item) => [
+                'name' => $item->description(),
+                'value' => $item->value,
+            ],
+            array: self::cases()
+        );
+    }
 }
