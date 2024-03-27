@@ -154,6 +154,7 @@ enum Country: string
             callback: static fn ($item) => [
                 'code' => $item->value,
                 'name' => $item->description(),
+                'currency' => $item->currency(),
             ],
             array: self::cases()
         );

@@ -18,9 +18,7 @@ it('can return list of Countries', function () {
         ->toContain([
             'code' => Country::POLAND->value,
             'name' => Country::POLAND->description(),
+            'currency' => Country::POLAND->currency(),
         ])
-        ->not->toContain([
-            'code' => Country::GERMANY->value,
-            'name' => Country::POLAND->description(),
-        ]);
+        ->each->toHaveKeys(['code', 'name', 'currency']);
 });
