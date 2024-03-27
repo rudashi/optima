@@ -47,7 +47,7 @@ enum Country: string
 
     public static function of(string|null $name = null): self
     {
-        if (! $name) {
+        if (!$name) {
             return self::NULL;
         }
 
@@ -146,5 +146,16 @@ enum Country: string
             self::QATAR => __('Qatar'),
             self::NULL => '',
         };
+    }
+
+    public static function toSelect(): array
+    {
+        return array_map(
+            callback: static fn ($item) => [
+                'code' => $item->value,
+                'name' => $item->description(),
+            ],
+            array: self::cases()
+        );
     }
 }
