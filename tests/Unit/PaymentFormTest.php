@@ -16,11 +16,9 @@ it('can return list of Payments', function () {
         ->toBeArray()
         ->toHaveCount(6)
         ->toContain([
-            'name' => PaymentForm::BANK_TRANSFER_PL->description(),
-            'value' => PaymentForm::BANK_TRANSFER_PL->value,
+            'name' => PaymentForm::BANK_TRANSFER_PLN->description(),
+            'currency' => PaymentForm::BANK_TRANSFER_PLN->currency(),
+            'value' => PaymentForm::BANK_TRANSFER_PLN->value,
         ])
-        ->not->toContain([
-            'name' => PaymentForm::CASH_PL->description(),
-            'value' => PaymentForm::BANK_TRANSFER_PL->value,
-        ]);
+        ->each->toHaveKeys(['value', 'name', 'currency']);
 });

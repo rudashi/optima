@@ -6,22 +6,32 @@ namespace Rudashi\Optima\Enums;
 
 enum PaymentForm: int
 {
-    case CASH_PL = 1;
-    case PREPAYMENT_PL = 19;
+    case CASH_PLN = 1;
+    case PREPAYMENT_PLN = 19;
     case PREPAYMENT = 46;
-    case BANK_TRANSFER_SKK = 28;
+    case BANK_TRANSFER_SEK = 28;
     case BANK_TRANSFER = 36;
-    case BANK_TRANSFER_PL = 44;
+    case BANK_TRANSFER_PLN = 44;
 
     public function description(): string
     {
         return match ($this) {
-            self::CASH_PL => 'gotówka',
-            self::PREPAYMENT_PL => 'przedpłata',
+            self::CASH_PLN => 'gotówka',
+            self::PREPAYMENT_PLN => 'przedpłata',
             self::PREPAYMENT => 'prepayment',
-            self::BANK_TRANSFER_PL => 'przelew bankowy',
+            self::BANK_TRANSFER_PLN => 'przelew bankowy',
             self::BANK_TRANSFER => 'bank transfer',
-            self::BANK_TRANSFER_SKK => 'överföring',
+            self::BANK_TRANSFER_SEK => 'överföring',
+        };
+    }
+
+    public function currency(): string
+    {
+        return match ($this) {
+            self::CASH_PLN,
+            self::PREPAYMENT_PLN,
+            self::BANK_TRANSFER_PLN => Country::POLAND->currency(),
+            default => '',
         };
     }
 
@@ -29,13 +39,13 @@ enum PaymentForm: int
     {
         return match ($country) {
             Country::POLAND => [
-                self::CASH_PL,
-                self::PREPAYMENT_PL,
-                self::BANK_TRANSFER_PL,
+                self::CASH_PLN,
+                self::PREPAYMENT_PLN,
+                self::BANK_TRANSFER_PLN,
             ],
             Country::SWEDEN => [
                 self::PREPAYMENT,
-                self::BANK_TRANSFER_SKK,
+                self::BANK_TRANSFER_SEK,
             ],
             default => [
                 self::PREPAYMENT,
@@ -49,6 +59,7 @@ enum PaymentForm: int
         return array_map(
             callback: static fn ($item) => [
                 'name' => $item->description(),
+                'currency' => $item->currency(),
                 'value' => $item->value,
             ],
             array: self::cases()
