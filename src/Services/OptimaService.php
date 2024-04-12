@@ -41,11 +41,8 @@ class OptimaService
     {
         $connection = $this->getConnection();
 
-        return new QueryBuilder(
-            connection: $connection,
-            grammar: $connection->getQueryGrammar(),
-            processor: $connection->getPostProcessor()
-        );
+        /** @phpstan-ignore-next-line  */
+        return new QueryBuilder($connection, $connection->getQueryGrammar(), $connection->getPostProcessor());
     }
 
     public function parseIds(...$ids): array
