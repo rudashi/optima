@@ -6,6 +6,10 @@ namespace Rudashi\Optima\Services;
 
 use Illuminate\Support\Collection as CollectionBase;
 
+/**
+ * @method self map(callable $callback)
+ * @method self mapWithKeys(callable $callback)
+ */
 class Collection extends CollectionBase
 {
     public function attach(callable $callback): self
