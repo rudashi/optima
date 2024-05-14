@@ -19,9 +19,15 @@ class Collection extends CollectionBase
         return $this;
     }
 
-    public function modelKeys(): array
+    public function modelKeys(string $primaryKey = 'id'): array
     {
-        return array_map(static fn (DTO $model) => $model->getKey(), $this->items);
+        return array_map(static function ($model) use ($primaryKey) {
+            if ($model instanceof DTO) {
+                return $model->getKey();
+            }
+
+            return $model->$primaryKey;
+        }, $this->items);
     }
 
     public function pluckAll(array $values): array
