@@ -10,7 +10,7 @@ use Rudashi\Optima\Tests\TestCase;
 uses(TestCase::class);
 
 it('can return list of Transactions', function () {
-    $data = TransactionType::toSelect();
+    $data = TransactionType::toArray();
 
     expect($data)
         ->toBeArray()

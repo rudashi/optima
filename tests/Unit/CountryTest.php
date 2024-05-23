@@ -10,7 +10,7 @@ use Rudashi\Optima\Tests\TestCase;
 uses(TestCase::class);
 
 it('can return list of Countries', function () {
-    $data = Country::toSelect();
+    $data = Country::toArray();
 
     expect($data)
         ->toBeArray()

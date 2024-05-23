@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Enums;
 
-enum Country: string
+use Rudashi\Optima\Contracts\Arrayable;
+use Rudashi\Optima\Contracts\Describable;
+
+enum Country: string implements Arrayable, Describable
 {
     case POLAND = 'PL';
     case BELGIUM = 'BE';
@@ -148,7 +151,7 @@ enum Country: string
         };
     }
 
-    public static function toSelect(): array
+    public static function toArray(): array
     {
         return array_map(
             callback: static fn ($item) => [

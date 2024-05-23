@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Enums;
 
-enum PaymentForm: int
+use Rudashi\Optima\Contracts\Arrayable;
+use Rudashi\Optima\Contracts\Describable;
+
+enum PaymentForm: int implements Arrayable, Describable
 {
     case CASH_PLN = 1;
     case PREPAYMENT_PLN = 19;
@@ -54,7 +57,7 @@ enum PaymentForm: int
         };
     }
 
-    public static function toSelect(): array
+    public static function toArray(): array
     {
         return array_map(
             callback: static fn ($item) => [

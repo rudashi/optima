@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Enums;
 
-enum CustomerType: int
+use Rudashi\Optima\Contracts\Describable;
+
+enum CustomerType: int implements Describable
 {
     case RECIPIENT = 0;
     case SUPPLIER = 1;

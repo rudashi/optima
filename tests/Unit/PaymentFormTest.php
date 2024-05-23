@@ -10,7 +10,7 @@ use Rudashi\Optima\Tests\TestCase;
 uses(TestCase::class);
 
 it('can return list of Payments', function () {
-    $data = PaymentForm::toSelect();
+    $data = PaymentForm::toArray();
 
     expect($data)
         ->toBeArray()

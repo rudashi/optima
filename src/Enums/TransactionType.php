@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Enums;
 
-enum TransactionType: int
+use Rudashi\Optima\Contracts\Arrayable;
+use Rudashi\Optima\Contracts\Describable;
+
+enum TransactionType: int implements Arrayable, Describable
 {
     case NATIONAL = 0;
     case NON_EU = 1;
@@ -35,7 +38,7 @@ enum TransactionType: int
         };
     }
 
-    public static function toSelect(): array
+    public static function toArray(): array
     {
         return array_map(
             callback: static fn ($item) => [
