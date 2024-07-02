@@ -17,6 +17,12 @@ class QueryBuilder extends Builder
 {
     protected array $relations = [];
 
+    /**
+     * Execute the query as a "select" statement.
+     *
+     * @param  array  $columns
+     * @return Collection
+     */
     public function get($columns = ['*']): Collection
     {
         $models = new Collection($this->onceWithColumns(Arr::wrap($columns), function () {
