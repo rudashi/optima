@@ -8,6 +8,11 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Rudashi\Optima\Contracts\Relation;
 
+/**
+ * @template TKey of array-key
+ *
+ * @template-covariant TValue
+ */
 class QueryBuilder extends Builder
 {
     protected array $relations = [];
@@ -23,6 +28,19 @@ class QueryBuilder extends Builder
         }
 
         return $models;
+    }
+
+    /**
+     * Get items and run a map over each of the items.
+     *
+     * @template TMapValue
+     *
+     * @param  callable(TValue, TKey): TMapValue  $callback
+     * @return Collection<TKey, TMapValue>
+     */
+    public function getTo(callable $callback): Collection
+    {
+        return $this->get()->map($callback);
     }
 
     public function with(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
