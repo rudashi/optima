@@ -6,7 +6,6 @@ namespace Rudashi\Optima\Services;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
-use Rudashi\Optima\Contracts\Relation;
 
 /**
  * @template TKey of array-key
@@ -15,6 +14,9 @@ use Rudashi\Optima\Contracts\Relation;
  */
 class QueryBuilder extends Builder
 {
+    /**
+     * @var array<array-key, RelationBuilder>
+     */
     protected array $relations = [];
 
     /**
@@ -51,35 +53,24 @@ class QueryBuilder extends Builder
 
     public function with(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
     {
-        $this->relations[$relation] = [$ownerKey, $foreignKey, $related];
+        $this->relations[] = new RelationBuilder(
+            name: $relation,
+            relationClass: $related,
+            ownerKey: $ownerKey,
+            foreignKey: $foreignKey
+        );
 
         return $this;
     }
 
     protected function loadRelations(Collection $models): Collection
     {
-        foreach ($this->relations as $name => $relation) {
-            [$ownerKey, $foreignKey, $relation] = $relation;
+        foreach ($this->relations as $relation) {
+            $related = $relation->init($models);
 
-            $related = $this->getRelation($models->modelKeys($ownerKey), app($relation), $foreignKey);
-
-            $models->attach(
-                fn (object $item) => $this->setRelation($item, $name, $related[$item->{$ownerKey}] ?? null)
-            );
+            $models->attach(fn (object $item) => $relation->match($item, $related));
         }
 
         return $models;
-    }
-
-    protected function getRelation(array $ownerKeys, Relation $relation, string $foreignKey): array
-    {
-        return $relation->fetch($ownerKeys, $foreignKey)->all();
-    }
-
-    protected function setRelation(object $item, string $name, Collection|null $relation = null): object
-    {
-        $item->{$name} = $relation ?? new Collection();
-
-        return $item;
     }
 }
