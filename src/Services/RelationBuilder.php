@@ -31,17 +31,39 @@ class RelationBuilder
         return $items instanceof Collection ? $items->all() : $items;
     }
 
-    public function match(object $model, object|array $related): object
+    public function match(object|array $relatedModels, Collection $models): Collection
     {
-        $model->{$this->name} = is_array($related)
-            ? $this->getRelationItems($related, $model->{$this->ownerKey})
-            : $related;
+        $dictionary = $this->buildDictionary($relatedModels, $this->foreignKey);
 
-        return $model;
+        foreach ($models as $model) {
+            $attribute = $model->{$this->ownerKey};
+
+            if (isset($dictionary[$attribute])) {
+                $model->{$this->name} = $dictionary[$attribute];
+            }
+        }
+
+        return $models;
     }
 
-    public function getRelationItems(array $related, string $ownerKey): Collection
+    private function buildDictionary(object|array $models, string $key): array
     {
-        return $related[$ownerKey] ?? new Collection();
+        $dictionary = [];
+
+        if (is_array($models)) {
+            foreach ($models as $relation) {
+                $attribute = is_iterable($relation) ? $relation->get(0)?->{$key} : $relation->{$key};
+
+                $dictionary[$attribute][] = $relation;
+            }
+        }
+
+        if (is_object($models)) {
+            $attribute = $models->{$key};
+
+            $dictionary[$attribute] = $models;
+        }
+
+        return $dictionary;
     }
 }

@@ -66,9 +66,7 @@ class QueryBuilder extends Builder
     protected function loadRelations(Collection $models): Collection
     {
         foreach ($this->relations as $relation) {
-            $related = $relation->init($models);
-
-            $models->attach(fn (object $item) => $relation->match($item, $related));
+            $models = $relation->match($relation->init($models), $models);
         }
 
         return $models;
