@@ -6,5 +6,5 @@ namespace Rudashi\Optima\Contracts;
 
 interface Relation
 {
-    public function fetch(iterable $relationId, string $localKey): object;
+    public function handle(iterable $relationId): object;
 }

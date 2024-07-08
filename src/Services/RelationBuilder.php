@@ -16,7 +16,7 @@ class RelationBuilder
         private readonly string $ownerKey,
         private readonly string $foreignKey,
     ) {
-        $this->relation = app($this->relationClass);
+        $this->relation = $this->newRelationInstance();
     }
 
     public function getKeyName(): string
@@ -26,7 +26,7 @@ class RelationBuilder
 
     public function init(Collection $models): array|object
     {
-        $items = $this->relation->fetch($models->modelKeys($this->ownerKey), $this->foreignKey);
+        $items = $this->relation->handle($models->modelKeys($this->ownerKey));
 
         return $items instanceof Collection ? $items->all() : $items;
     }
@@ -46,7 +46,12 @@ class RelationBuilder
         return $models;
     }
 
-    private function buildDictionary(object|array $models, string $key): array
+    public function newRelationInstance(): Relation
+    {
+        return resolve($this->relationClass);
+    }
+
+    protected function buildDictionary(object|array $models, string $key): array
     {
         $dictionary = [];
 

@@ -51,14 +51,16 @@ class QueryBuilder extends Builder
         return $this->get()->map($callback);
     }
 
+    public function hasOne(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
+    {
+        $this->relations[] = new RelationHasOneBuilder($relation, $related, $ownerKey, $foreignKey);
+
+        return $this;
+    }
+
     public function with(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
     {
-        $this->relations[] = new RelationBuilder(
-            name: $relation,
-            relationClass: $related,
-            ownerKey: $ownerKey,
-            foreignKey: $foreignKey
-        );
+        $this->relations[] = new RelationBuilder($relation, $related, $ownerKey, $foreignKey);
 
         return $this;
     }
