@@ -16,7 +16,7 @@ enum CustomerType: int implements Describable
 
     public function description(): string
     {
-        return match($this) {
+        return match ($this) {
             self::RECIPIENT => __('Recipient'),
             self::SUPPLIER => __('Supplier'),
             self::COMPETITION => __('Competition'),

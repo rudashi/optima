@@ -50,7 +50,7 @@ enum Country: string implements Arrayable, Describable
 
     public static function of(string|null $name = null): self
     {
-        if (!$name) {
+        if (! $name) {
             return self::NULL;
         }
 
