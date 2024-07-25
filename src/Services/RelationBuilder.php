@@ -28,6 +28,10 @@ class RelationBuilder
     {
         $items = $this->relation->handle($models->modelKeys($this->ownerKey));
 
+        foreach ($models as $model) {
+            $model->{$this->name} = $this->defaultRelation();
+        }
+
         return $items instanceof Collection ? $items->all() : $items;
     }
 
@@ -70,5 +74,10 @@ class RelationBuilder
         }
 
         return $dictionary;
+    }
+
+    protected function defaultRelation(): mixed
+    {
+        return [];
     }
 }

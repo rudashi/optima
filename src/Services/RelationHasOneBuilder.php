@@ -22,4 +22,9 @@ class RelationHasOneBuilder extends RelationBuilder
 
         return parent::buildDictionary($models, $key);
     }
+
+    protected function defaultRelation(): null
+    {
+        return null;
+    }
 }
