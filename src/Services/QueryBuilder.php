@@ -58,7 +58,7 @@ class QueryBuilder extends Builder
         return $this;
     }
 
-    public function with(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
+    public function hasMany(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
     {
         $this->relations[] = new RelationBuilder($relation, $related, $ownerKey, $foreignKey);
 
