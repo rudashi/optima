@@ -22,7 +22,8 @@ class QueryBuilder extends Builder
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  array  $columns
+     * @param  array<array-key, string>  $columns
+     *
      * @return Collection
      */
     public function get($columns = ['*']): Collection
@@ -44,6 +45,7 @@ class QueryBuilder extends Builder
      * @template TMapValue
      *
      * @param  callable(TValue, TKey): TMapValue  $callback
+     *
      * @return Collection<TKey, TMapValue>
      */
     public function getTo(callable $callback): Collection
@@ -51,14 +53,14 @@ class QueryBuilder extends Builder
         return $this->get()->map($callback);
     }
 
-    public function hasOne(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
+    public function hasOne(string $related, string $ownerKey, string $foreignKey, string $relation): self
     {
         $this->relations[] = new RelationHasOneBuilder($relation, $related, $ownerKey, $foreignKey);
 
         return $this;
     }
 
-    public function hasMany(string $related, string $ownerKey, string $foreignKey, string $relation): QueryBuilder
+    public function hasMany(string $related, string $ownerKey, string $foreignKey, string $relation): self
     {
         $this->relations[] = new RelationBuilder($relation, $related, $ownerKey, $foreignKey);
 
