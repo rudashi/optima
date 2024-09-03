@@ -67,6 +67,22 @@ class QueryBuilder extends Builder
         return $this;
     }
 
+    public function hasManyThrough(
+        string $related,
+        string $through,
+        string $ownerKey,
+        string $foreignKey,
+        string $localKey,
+        string $firstKey,
+        string $relation
+    ): self {
+        $this->relations[] = new RelationHasManyThroughBuilder(
+            $relation, $related, $through, $ownerKey, $localKey, $firstKey, $foreignKey
+        );
+
+        return $this;
+    }
+
     protected function loadRelations(Collection $models): Collection
     {
         foreach ($this->relations as $relation) {

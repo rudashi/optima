@@ -8,15 +8,15 @@ use Rudashi\Optima\Contracts\Relation;
 
 class RelationBuilder
 {
-    private readonly Relation $relation;
+    protected readonly Relation $relation;
 
     public function __construct(
-        private readonly string $name,
-        private readonly string $relationClass,
-        private readonly string $ownerKey,
-        private readonly string $foreignKey,
+        protected readonly string $name,
+        string $relationClass,
+        protected readonly string $ownerKey,
+        protected readonly string $foreignKey,
     ) {
-        $this->relation = $this->newRelationInstance();
+        $this->relation = $this->newRelationInstance($relationClass);
     }
 
     public function getKeyName(): string
@@ -26,7 +26,7 @@ class RelationBuilder
 
     public function init(Collection $models): array|object
     {
-        $items = $this->relation->handle($models->modelKeys($this->ownerKey));
+        $items = $this->handleRelation($models);
 
         foreach ($models as $model) {
             $model->{$this->name} = $this->defaultRelation();
@@ -50,9 +50,20 @@ class RelationBuilder
         return $models;
     }
 
-    public function newRelationInstance(): Relation
+    /**
+     * @template TClass
+     *
+     * @param  string|class-string<TClass>  $relationClass
+     * @return TClass
+     */
+    public function newRelationInstance(string $relationClass)
     {
-        return resolve($this->relationClass);
+        return resolve($relationClass);
+    }
+
+    protected function handleRelation(Collection $models): array|object
+    {
+        return $this->relation->handle($models->modelKeys($this->ownerKey));
     }
 
     protected function buildDictionary(object|array $models, string $key): array
