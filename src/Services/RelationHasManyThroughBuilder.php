@@ -7,13 +7,13 @@ namespace Rudashi\Optima\Services;
 class RelationHasManyThroughBuilder extends RelationBuilder
 {
     public function __construct(
-        string $name,
         string $relationClass,
         private readonly string $through,
         string $ownerKey,
         private readonly string $localKey,
         private readonly string $firstKey,
-        string $foreignKey
+        string $foreignKey,
+        string $name
     ) {
         parent::__construct($name, $relationClass, $ownerKey, $foreignKey);
     }

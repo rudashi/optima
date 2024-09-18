@@ -71,14 +71,12 @@ class QueryBuilder extends Builder
         string $related,
         string $through,
         string $ownerKey,
-        string $foreignKey,
         string $localKey,
         string $firstKey,
+        string $foreignKey,
         string $relation
     ): self {
-        $this->relations[] = new RelationHasManyThroughBuilder(
-            $relation, $related, $through, $ownerKey, $localKey, $firstKey, $foreignKey
-        );
+        $this->relations[] = new RelationHasManyThroughBuilder(...func_get_args());
 
         return $this;
     }
