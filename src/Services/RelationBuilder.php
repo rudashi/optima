@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
+use Illuminate\Support\Enumerable;
 use Rudashi\Optima\Contracts\Relation;
 
 class RelationBuilder
@@ -32,7 +33,7 @@ class RelationBuilder
             $model->{$this->name} = $this->defaultRelation();
         }
 
-        return $items instanceof Collection ? $items->all() : $items;
+        return $items instanceof Enumerable ? $items->all() : $items;
     }
 
     public function match(object|array $relatedModels, Collection $models): Collection
