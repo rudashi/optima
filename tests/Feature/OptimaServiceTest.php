@@ -76,7 +76,7 @@ it('can switch connection', function () {
             'database' => 'database',
             'username' => 'user',
             'password' => 'pass',
-        ]
+        ],
     ]);
 
     expect($this->service->getConnection())
