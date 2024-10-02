@@ -81,6 +81,11 @@ class QueryBuilder extends Builder
         return $this;
     }
 
+    public function noLock(): self
+    {
+        return $this->lock('WITH (NOLOCK)');
+    }
+
     protected function loadRelations(Collection $models): Collection
     {
         foreach ($this->relations as $relation) {
