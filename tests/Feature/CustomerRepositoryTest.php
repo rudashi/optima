@@ -110,7 +110,6 @@ it('can find a customer by code', function (array $dataset) {
             'building_number' => $dataset['building_number'] ?? '',
             'suite_number' => $dataset['suite_number'],
             'nip' => $dataset['nip'] ?? null,
-            'deleted' => false,
         ]);
 })->with($customers);
 

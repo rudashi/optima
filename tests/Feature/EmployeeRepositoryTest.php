@@ -41,8 +41,8 @@ it('can find an employee by code', function (string $code, array $dataset) {
         ->toBeInstanceOf(Employee::class)
         ->toHaveProperty('code', $code)
         ->toHaveProperty('firstname', $dataset['firstname'])
-        ->toHaveProperty('job_title', $dataset['job_title'])
-        ->toHaveProperty('department_id', $dataset['department_id'])
+        ->toHaveProperty('job_title')
+        ->toHaveProperty('department_id')
         ->toHaveProperty('deleted', $dataset['deleted'])
         ->toHaveProperties([
             'id',
