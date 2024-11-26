@@ -14,6 +14,9 @@ interface ValueObject
 
     public function getAttribute(string $key): mixed;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function getAttributes(): array;
 
     public function only(string ...$keys): static;
@@ -22,6 +25,9 @@ interface ValueObject
 
     public function cast(string $property, mixed $caster): static;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     public function all(): array;
 
     /**
@@ -31,11 +37,18 @@ interface ValueObject
      * @param  (Closure($this): TWhenParameter)|bool  $value
      * @param  (callable($this, TWhenParameter): TWhenReturnType)|null  $callback
      * @param  (callable($this, TWhenParameter): TWhenReturnType)|null  $default
+     *
      * @return static
      */
     public function when(Closure|bool $value, callable $callback = null, callable $default = null): static;
 
+    /**
+     * @param  array<array-key, mixed>|object  $attributes
+     */
     public static function get(string $key, array|object $attributes): mixed;
 
+    /**
+     * @param  array<array-key, mixed>|object  $attributes
+     */
     public static function filled(string $key, array|object $attributes): bool;
 }
