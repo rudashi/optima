@@ -6,6 +6,9 @@ use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\QueryBuilder;
 
 if (! function_exists('optima')) {
+    /**
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>|\Rudashi\Optima\Services\OptimaService
+     */
     function optima(bool $query = true): QueryBuilder|OptimaService
     {
         $service = app(OptimaService::class);
