@@ -30,7 +30,7 @@ class OptimaService
         return $this->resolver->connection($this->getConnectionName());
     }
 
-    public function setConnectionName($name): static
+    public function setConnectionName(string $name): static
     {
         $this->connectionName = $name;
 
