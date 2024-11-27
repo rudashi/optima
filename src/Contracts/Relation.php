@@ -6,5 +6,8 @@ namespace Rudashi\Optima\Contracts;
 
 interface Relation
 {
+    /**
+     * @param  iterable<int>  $relationId
+     */
     public function handle(iterable $relationId): object;
 }

@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Contracts;
 
-/**
- * @template TKey of array-key
- * @template TValue
- */
 interface Arrayable
 {
-    /***
-     * @return array<TKey, TValue>
+    /**
+     * @return array<array-key, mixed>
      */
     public static function toArray(): array;
 }
