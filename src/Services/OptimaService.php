@@ -37,14 +37,22 @@ class OptimaService
         return $this;
     }
 
+    /**
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>
+     */
     public function newQuery(): QueryBuilder
     {
         $connection = $this->getConnection();
 
-        /** @phpstan-ignore-next-line  */
+        /** @phpstan-ignore-next-line */
         return new QueryBuilder($connection, $connection->getQueryGrammar(), $connection->getPostProcessor());
     }
 
+    /**
+     * @param  mixed  ...$ids
+     *
+     * @return array<int, int|string>
+     */
     public function parseIds(...$ids): array
     {
         if (isset($ids[0]) && (is_array($ids[0]) || $ids[0] instanceof Collection)) {

@@ -39,6 +39,9 @@ class Customer extends DTO
         parent::__construct($args);
     }
 
+    /**
+     * @param  array<string, mixed>|object  $args
+     */
     private function parseName(array|object $args): string
     {
         return trim(implode(' ', [

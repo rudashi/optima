@@ -38,6 +38,9 @@ enum PaymentForm: int implements Arrayable, Describable
         };
     }
 
+    /**
+     * @return array<int, \Rudashi\Optima\Enums\PaymentForm>
+     */
     public static function for(Country $country): array
     {
         return match ($country) {

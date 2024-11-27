@@ -14,6 +14,9 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
 
+/**
+ * @implements \Illuminate\Contracts\Support\Arrayable<string, mixed>
+ */
 abstract class DTO implements ValueObject, Arrayable
 {
     protected string $primaryKey = 'id';
@@ -21,6 +24,9 @@ abstract class DTO implements ValueObject, Arrayable
     protected array $appends = [];
     protected array $casters = [];
 
+    /**
+     * @param  mixed  ...$args
+     */
     public function __construct(...$args)
     {
         if (is_object($args[0] ?? null)) {

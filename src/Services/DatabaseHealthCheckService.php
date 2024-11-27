@@ -17,6 +17,9 @@ class DatabaseHealthCheckService
     ) {
     }
 
+    /**
+     * @return array{status: string, message?: string, context: array<array-key, mixed>}
+     */
     public function status(): array
     {
         try {
@@ -31,6 +34,11 @@ class DatabaseHealthCheckService
         return $this->okay();
     }
 
+    /**
+     * @param  array<array-key, mixed>  $context
+     *
+     * @return array{status: string, message: string, context: array<array-key, mixed>}
+     */
     public function problem(string $message = '', array $context = []): array
     {
         return [
@@ -40,6 +48,11 @@ class DatabaseHealthCheckService
         ];
     }
 
+    /**
+     * @param  array<array-key, mixed>  $context
+     *
+     * @return array{status: string, context: array<array-key, mixed>}
+     */
     public function okay(array $context = []): array
     {
         return [
@@ -48,6 +61,9 @@ class DatabaseHealthCheckService
         ];
     }
 
+    /**
+     * @return array{error: string, class: string, line: int, file: string}
+     */
     private function exceptionContext(Exception $e): array
     {
         return [

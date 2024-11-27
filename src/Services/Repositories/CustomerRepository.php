@@ -34,6 +34,11 @@ class CustomerRepository
         return new Customer((array) $data);
     }
 
+    /**
+     * @param  int|string  ...$ids
+     *
+     * @return \Rudashi\Optima\Services\Collection<int, \Rudashi\Optima\Models\Customer>
+     */
     public function find(...$ids): Collection
     {
         $data = $this->queryCustomer()
@@ -47,6 +52,9 @@ class CustomerRepository
         return $data->map(fn ($item) => new Customer((array) $item));
     }
 
+    /**
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>
+     */
     protected function queryCustomer(): QueryBuilder
     {
         return $this->service->newQuery()

@@ -17,6 +17,9 @@ class DepartmentRepository
     ) {
     }
 
+    /**
+     * @return \Rudashi\Optima\Services\Collection<int, \Rudashi\Optima\Models\Department>
+     */
     public function all(): Collection
     {
         return $this->queryDepartment()
@@ -43,6 +46,9 @@ class DepartmentRepository
         return new Department((array) $data);
     }
 
+    /**
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>
+     */
     private function queryDepartment(): QueryBuilder
     {
         return $this->service->newQuery()
