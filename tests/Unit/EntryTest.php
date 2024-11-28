@@ -37,3 +37,19 @@ it('get float or null', function ($payload, $value): void {
     'float when empty string' => ['', 0.0],
     'null when null' => [null, null],
 ]);
+
+it('get Date or null', function ($payload, $value): void {
+    expect(Entry::date($payload))
+        ->when(
+            condition: $payload !== null,
+            callback: fn ($exp) => $exp->format('Y-m-d')->toBe($value)
+        )
+        ->when(
+            condition: $payload === null,
+            callback: fn ($exp) => $exp->toBeNull()
+        );
+})->with([
+    'date when string' => ['2022-01-31 20:03:11', '2022-01-31'],
+    'date when empty string' => ['', now()->format('Y-m-d')],
+    'null when null' => [null, null],
+]);

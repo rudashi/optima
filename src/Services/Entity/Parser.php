@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services\Entity;
 
+use Carbon\CarbonInterface;
 use Closure;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
 
 /**
- * @template TValue
+ * @template TValue of mixed
  */
 class Parser
 {
@@ -20,6 +21,9 @@ class Parser
     ) {
     }
 
+    /**
+     * @return self<TValue>
+     */
     public static function for(object $item, string $key, mixed $default = null): self
     {
         return new self(
@@ -35,22 +39,27 @@ class Parser
         return $callback($this->value) ?? $default;
     }
 
-    public function int(mixed $default = null): int|null
+    public function date(?CarbonInterface $default = null): CarbonInterface|null
+    {
+        return Entry::date($this->value) ?? $default;
+    }
+
+    public function int(?int $default = null): int|null
     {
         return Entry::int($this->value) ?? $default;
     }
 
-    public function float(mixed $default = null): float|null
+    public function float(?float $default = null): float|null
     {
         return Entry::float($this->value) ?? $default;
     }
 
-    public function string(mixed $default = null): string|null
+    public function string(?string $default = null): string|null
     {
         return $this->value ?? $default;
     }
 
-    public function trim(mixed $default = null): string|null
+    public function trim(?string $default = null): string|null
     {
         return Entry::trim($this->value) ?? $default;
     }

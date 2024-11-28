@@ -59,6 +59,22 @@ it('get float or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
+it('get Date or null', function ($payload, $value): void {
+    expect((new Parser($payload))->date())
+        ->when(
+            condition: $payload !== null,
+            callback: fn ($exp) => $exp->format('Y-m-d')->toBe($value)
+        )
+        ->when(
+            condition: $payload === null,
+            callback: fn ($exp) => $exp->toBeNull()
+        );
+})->with([
+    'date when string' => ['2022-01-31 20:03:11', '2022-01-31'],
+    'date when empty string' => ['', now()->format('Y-m-d')],
+    'null when null' => [null, null],
+]);
+
 it('throws an exception on condition', function (): void {
     $parser = new Parser('');
 

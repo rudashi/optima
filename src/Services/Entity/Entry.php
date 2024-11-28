@@ -4,8 +4,20 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services\Entity;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
+
 class Entry
 {
+    public static function date(mixed $value): ?CarbonInterface
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return new Carbon($value);
+    }
+
     /**
      * Parse the property to an int or returns null.
      */
