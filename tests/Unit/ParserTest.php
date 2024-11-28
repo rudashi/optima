@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests\Unit;
 
+use Rudashi\Optima\Exceptions\IncorrectValueException;
 use Rudashi\Optima\Services\Entity\Parser;
 use Rudashi\Optima\Tests\TestCase;
 
@@ -12,7 +13,9 @@ uses(TestCase::class);
 mutates(Parser::class);
 
 it('create Parser instance', function ($value) {
-    expect(array_values((array) new Parser($value)))
+    $parser = new Parser($value);
+
+    expect(array_values((array) $parser))
         ->toMatchArray([$value]);
 })->with([
     'string' => fake()->name(),
@@ -23,8 +26,9 @@ it('create Parser instance', function ($value) {
 
 it('create Parser from object', function () {
     $value = fake()->name();
+    $parser = Parser::for((object) ['key' => $value], 'key');
 
-    expect(array_values((array) Parser::for((object) ['key' => $value], 'key')))
+    expect(array_values((array) $parser))
         ->toMatchArray([$value]);
 });
 
@@ -54,3 +58,30 @@ it('get float or null', function ($payload, $value): void {
     'float when empty string' => ['', 0.0],
     'null when null' => [null, null],
 ]);
+
+it('throws an exception on condition', function (): void {
+    $parser = new Parser('');
+
+    expect(fn () => $parser->throwWhen(fn () => true))
+        ->toThrow(
+            exception: IncorrectValueException::class,
+            exceptionMessage: 'Incorrect value',
+        );
+});
+
+it('throws an exception with custom message', function (): void {
+    $parser = new Parser('');
+
+    expect(fn () => $parser->throwWhen(fn () => true, 'Custom message'))
+        ->toThrow(
+            exception: IncorrectValueException::class,
+            exceptionMessage: 'Custom message',
+        );
+});
+
+it('not throws an exception on condition', function (): void {
+    $parser = new Parser('');
+
+    expect(fn () => $parser->throwWhen(fn ($v) => $v === null))
+        ->not->toThrow(IncorrectValueException::class);
+});

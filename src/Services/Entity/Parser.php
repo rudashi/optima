@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Services\Entity;
 
 use Closure;
+use Rudashi\Optima\Exceptions\IncorrectValueException;
 
 /**
  * @template TValue
@@ -27,7 +28,7 @@ class Parser
     }
 
     /**
-     * @param  \Closure<TValue>  $callback
+     * @param  \Closure(TValue): mixed  $callback
      */
     public function call(Closure $callback, mixed $default = null): mixed
     {
@@ -52,5 +53,15 @@ class Parser
     public function trim(mixed $default = null): string|null
     {
         return Entry::trim($this->value) ?? $default;
+    }
+
+    /**
+     * @param  \Closure(TValue): bool  $callback
+     */
+    public function throwWhen(Closure $callback, string $message = 'Incorrect value'): void
+    {
+        if ($callback($this->value)) {
+            throw new IncorrectValueException($message);
+        }
     }
 }
