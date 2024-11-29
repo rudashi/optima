@@ -162,5 +162,3 @@ it('runs callback on non null value', function ($payload, $expectation): void {
     'negative' => [-1, false],
     'null' => [null, null],
 ]);
-
-
