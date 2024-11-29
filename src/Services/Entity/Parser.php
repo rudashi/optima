@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services\Entity;
 
+use BackedEnum;
 use Carbon\CarbonInterface;
 use Closure;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
@@ -31,6 +32,11 @@ class Parser
         );
     }
 
+    public function bool(bool $default = false): bool
+    {
+        return Entry::bool($this->value) ?? $default;
+    }
+
     /**
      * @param  \Closure(TValue): mixed  $callback
      */
@@ -44,6 +50,21 @@ class Parser
         return Entry::date($this->value) ?? $default;
     }
 
+    /**
+     * @template TEnum of \BackedEnum
+     *
+     * @param  class-string<TEnum>  $enum
+     * @return TEnum|null
+     */
+    public function enum(string $enum, BackedEnum|null $default = null): mixed
+    {
+        if (is_string($this->value) || is_int($this->value)) {
+            return $enum::tryFrom($this->value) ?? $default;
+        }
+
+        return $default;
+    }
+
     public function int(?int $default = null): int|null
     {
         return Entry::int($this->value) ?? $default;
@@ -54,9 +75,14 @@ class Parser
         return Entry::float($this->value) ?? $default;
     }
 
+    public function return(): mixed
+    {
+        return $this->value;
+    }
+
     public function string(?string $default = null): string|null
     {
-        return $this->value ?? $default;
+        return $this->value !== null ? (string) $this->value : $default;
     }
 
     public function trim(?string $default = null): string|null
@@ -72,5 +98,17 @@ class Parser
         if ($callback($this->value)) {
             throw new IncorrectValueException($message);
         }
+    }
+
+    /**
+     * @param  \Closure(TValue): mixed  $callback
+     */
+    public function whenNull(Closure $callback, mixed $default = null): mixed
+    {
+        if ($this->value !== null) {
+            return $callback($this->value) ?? $default;
+        }
+
+        return $this->value;
     }
 }
