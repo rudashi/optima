@@ -7,6 +7,7 @@ namespace Rudashi\Optima\Services;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class OptimaService
 {
@@ -18,6 +19,11 @@ class OptimaService
     {
         $this->resolver = $resolver;
         $this->connectionName = $connection ?? static::$connection;
+    }
+
+    public static function connection(): ConnectionInterface
+    {
+        return DB::connection(self::$connection);
     }
 
     public function getConnectionName(): string
