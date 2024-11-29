@@ -9,6 +9,15 @@ use Carbon\CarbonInterface;
 
 class Entry
 {
+    public static function bool(mixed $value): ?bool
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return (bool) $value;
+    }
+
     public static function date(mixed $value): ?CarbonInterface
     {
         if ($value === null) {

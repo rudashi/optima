@@ -11,6 +11,15 @@ uses(TestCase::class);
 
 mutates(Entry::class);
 
+it('get bool or null', function ($payload, $value): void {
+    expect(Entry::bool($payload))
+        ->toBe($value);
+})->with([
+    'true when string' => [' some value   ', true],
+    'false when empty string' => ['', false],
+    'null when null' => [null, null],
+]);
+
 it('trim data', function ($payload, $value): void {
     expect(Entry::trim($payload))
         ->toBe($value);
