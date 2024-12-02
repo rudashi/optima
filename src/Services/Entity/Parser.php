@@ -69,9 +69,13 @@ class Parser
      * @param  class-string<TEnum>  $enum
      * @return TEnum|null
      */
-    public function enum(string $enum, BackedEnum|null $default = null): mixed
+    public function enum(string $enum, mixed $default = null): mixed
     {
         if (is_string($this->value) || is_int($this->value)) {
+            if (is_int($enum::cases()[0]->value)) {
+                return $enum::tryFrom((int) $this->value) ?? $default;
+            }
+
             return $enum::tryFrom($this->value) ?? $default;
         }
 
