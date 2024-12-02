@@ -11,6 +11,9 @@ class RelationBuilder
 {
     protected readonly Relation $relation;
 
+    /**
+     * @param  class-string<\Rudashi\Optima\Contracts\Relation>  $relationClass
+     */
     public function __construct(
         protected readonly string $name,
         string $relationClass,
@@ -25,6 +28,14 @@ class RelationBuilder
         return $this->ownerKey;
     }
 
+    /**
+     * @template TKey of array-key
+     * @template TValue of \stdClass
+     *
+     * @param  \Rudashi\Optima\Services\Collection<TKey, TValue>  $models
+     *
+     * @return array<TKey, TValue>|object
+     */
     public function init(Collection $models): array|object
     {
         $items = $this->handleRelation($models);
@@ -36,6 +47,12 @@ class RelationBuilder
         return $items instanceof Enumerable ? $items->all() : $items;
     }
 
+    /**
+     * @param  array<array-key, object>|object  $relatedModels
+     * @param  \Rudashi\Optima\Services\Collection<array-key, object>  $models
+     *
+     * @return \Rudashi\Optima\Services\Collection<array-key, object>
+     */
     public function match(object|array $relatedModels, Collection $models): Collection
     {
         $dictionary = $this->buildDictionary($relatedModels, $this->foreignKey);
@@ -54,7 +71,8 @@ class RelationBuilder
     /**
      * @template TClass
      *
-     * @param  string|class-string<TClass>  $relationClass
+     * @param  class-string<TClass>  $relationClass
+     *
      * @return TClass
      */
     public function newRelationInstance(string $relationClass)
@@ -62,11 +80,21 @@ class RelationBuilder
         return resolve($relationClass);
     }
 
+    /**
+     * @param  \Rudashi\Optima\Services\Collection<array-key, \stdClass>  $models
+     *
+     * @return array<array-key, object>|object
+     */
     protected function handleRelation(Collection $models): array|object
     {
         return $this->relation->handle($models->modelKeys($this->ownerKey));
     }
 
+    /**
+     * @param  array<array-key, object>  $models
+     *
+     * @return array<string, mixed>
+     */
     protected function buildDictionary(object|array $models, string $key): array
     {
         $dictionary = [];
