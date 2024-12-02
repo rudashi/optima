@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services\Entity;
 
-use BackedEnum;
 use Carbon\CarbonInterface;
 use Closure;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
@@ -28,8 +27,22 @@ class Parser
     public static function for(object $item, string $key, mixed $default = null): self
     {
         return new self(
-            value: property_exists($item, $key) ? $item->{$key} : $default
+            value: self::has($item, $key) ? $item->{$key} : $default
         );
+    }
+
+    public static function has(object $item, string $key): bool
+    {
+        return property_exists($item, $key);
+    }
+
+    public static function isEqual(object $item, string $key, mixed $value): bool
+    {
+        if (self::has($item, $key)) {
+            return $item->{$key} === $value;
+        }
+
+        return false;
     }
 
     public function bool(bool $default = false): bool

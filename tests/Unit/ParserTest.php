@@ -162,3 +162,28 @@ it('runs callback on non null value', function ($payload, $expectation): void {
     'negative' => [-1, false],
     'null' => [null, null],
 ]);
+
+it('checks if the key exists in the object', function ($key, $expectation): void {
+    $object = (object) ['foo' => 'bar'];
+
+    $result = Parser::has($object, $key);
+
+    expect($result)
+        ->toBe($expectation);
+})->with([
+    'true' => ['foo', true],
+    'false' => ['bar', false],
+]);
+
+it('checks if the key is equal to value', function ($value, $expectation): void {
+    $object = (object) ['foo' => 'bar'];
+
+    $result = Parser::isEqual($object, 'foo', $value);
+
+    expect($result)
+        ->toBe($expectation);
+})->with([
+    'true' => ['bar', true],
+    'false' => ['foo', false],
+    'null' => [null, false],
+]);
