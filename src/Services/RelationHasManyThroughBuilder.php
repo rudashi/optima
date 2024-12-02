@@ -23,7 +23,7 @@ class RelationHasManyThroughBuilder extends RelationBuilder
         $through = $models->map(fn ($item) => $item->{$this->through})->flatten();
         $constraints = $through->map(fn ($item) => $item->{$this->localKey});
 
-        $items = $this->relation->handle($constraints->all(), $through->all());
+        $items = $this->relation->handle($constraints->all());
 
         foreach ($items as $item) {
             $item->{$this->foreignKey} = array_unique($through
