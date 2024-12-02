@@ -153,7 +153,7 @@ it('not throws an exception on condition', function (): void {
 it('runs callback on non null value', function ($payload, $expectation): void {
     $parser = new Parser($payload);
 
-    $result = $parser->whenNull(fn ($value) => $value === 1);
+    $result = $parser->whenNotNull(fn ($value) => $value === 1);
 
     expect($result)
         ->toBe($expectation);

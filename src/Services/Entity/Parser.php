@@ -103,7 +103,7 @@ class Parser
     /**
      * @param  \Closure(TValue): mixed  $callback
      */
-    public function whenNull(Closure $callback, mixed $default = null): mixed
+    public function whenNotNull(Closure $callback, mixed $default = null): mixed
     {
         if ($this->value !== null) {
             return $callback($this->value) ?? $default;
