@@ -8,9 +8,7 @@ use Illuminate\Support\Collection as CollectionBase;
 
 /**
  * @template TKey of array-key
- * @template TValue of mixed
- *
- * @template-covariant TValue
+ * @template TValue
  *
  * @extends \Illuminate\Support\Collection<TKey, TValue>
  */
