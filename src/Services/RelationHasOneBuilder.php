@@ -12,7 +12,7 @@ class RelationHasOneBuilder extends RelationBuilder
             $dictionary = [];
 
             foreach ($models as $relation) {
-                $attribute = is_iterable($relation) ? $relation->get(0)?->{$key} : $relation->{$key};
+                $attribute = $this->getAttribute($relation, $key);
 
                 $dictionary[$attribute] = $relation;
             }

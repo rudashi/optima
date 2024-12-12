@@ -40,7 +40,7 @@ class RelationHasManyThroughBuilder extends RelationBuilder
         $dictionary = [];
 
         foreach ($models as $relation) {
-            $attributes = is_iterable($relation) ? $relation->get(0)?->{$key} : $relation->{$key};
+            $attributes = $this->getAttribute($relation, $key);
 
             foreach ($attributes as $attribute) {
                 $dictionary[$attribute][] = $relation;

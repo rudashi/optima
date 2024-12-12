@@ -101,7 +101,7 @@ class RelationBuilder
 
         if (is_array($models)) {
             foreach ($models as $relation) {
-                $attribute = is_iterable($relation) ? $relation->get(0)?->{$key} : $relation->{$key};
+                $attribute = $this->getAttribute($relation, $key);
 
                 $dictionary[$attribute][] = $relation;
             }
@@ -114,6 +114,13 @@ class RelationBuilder
         }
 
         return $dictionary;
+    }
+
+    protected function getAttribute(object $relation, string $key): mixed
+    {
+        return is_iterable($relation) && method_exists($relation, 'get')
+            ? $relation->get(0)?->{$key}
+            : $relation->{$key};
     }
 
     protected function defaultRelation(): mixed
