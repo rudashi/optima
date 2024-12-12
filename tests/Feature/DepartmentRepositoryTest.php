@@ -12,20 +12,19 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function repository(): DepartmentRepository
-{
-    return app(DepartmentRepository::class);
-}
-
-$departments = [
+dataset('departments', [
     'DRUK',
     'INTROLIGATORNIA',
     'PREPRESS',
     'BIURO',
-];
+]);
+
+beforeEach(function () {
+    $this->repository = resolve(DepartmentRepository::class);
+});
 
 it('can get all departments', function () {
-    $data = repository()->all();
+    $data = $this->repository->all();
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
@@ -41,7 +40,7 @@ it('can get all departments', function () {
 });
 
 it('can find a department by code', function (string $code) {
-    $data = repository()->findByCode($code);
+    $data = $this->repository->findByCode($code);
 
     expect($data)
         ->toBeInstanceOf(Department::class)
@@ -54,18 +53,18 @@ it('can find a department by code', function (string $code) {
             'parent_id',
             'user_code',
         ]);
-})->with($departments);
+})->with('departments');
 
 it('can find a department using alias method `find`', function (string $code) {
-    $data = repository()->find($code);
+    $data = $this->repository->find($code);
 
     expect($data)
         ->toBeInstanceOf(Department::class)
         ->toHaveProperty('name', $code);
-})->with($departments);
+})->with('departments');
 
 it('throws an exception when department is archived', function (string $code) {
-    expect(fn () => repository()->findByCode($code))
+    expect(fn () => $this->repository->findByCode($code))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]),

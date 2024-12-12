@@ -24,8 +24,7 @@ class DepartmentRepository
     {
         return $this->queryDepartment()
             ->orderBy('CNT_CntId')
-            ->get()
-            ->map(fn ($item) => new Department((array) $item));
+            ->getTo(fn ($item) => Department::make($item));
     }
 
     public function find(string $code): Department
@@ -43,7 +42,7 @@ class DepartmentRepository
             throw new RecordsNotFoundException(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
         }
 
-        return new Department((array) $data);
+        return Department::make($data);
     }
 
     /**
