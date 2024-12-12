@@ -34,10 +34,6 @@ class Collection extends CollectionBase
     public function modelKeys(string $primaryKey = 'id'): array
     {
         return array_map(static function ($model) use ($primaryKey) {
-            if ($model instanceof DTO) {
-                return $model->getKey();
-            }
-
             if (method_exists($model, 'primaryKey')) {
                 return $model->primaryKey();
             }
