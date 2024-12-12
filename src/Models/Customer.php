@@ -4,57 +4,50 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Models;
 
-use Rudashi\Optima\Services\DTO;
+use Rudashi\Optima\Services\Entity\Parser;
 
-class Customer extends DTO
+class Customer
 {
-    public int $id;
-    public string $code;
-    public string $company;
-    public string|null $name_line_two;
-    public string|null $name_line_three;
-    public ?string $name;
-    public string|null $country;
-    public string|null $city;
-    public string|null $postal_code;
-    public string|null $street;
-    public string|null $building_number;
-    public string|null $suite_number;
-    public string|null $nip;
-    public bool $deleted;
-
-    public function __construct($args)
-    {
-        $this->append('name', fn () => $this->parseName($args));
-        $this->cast('name_line_two', static fn ($v) => $v ?: null);
-        $this->cast('name_line_three', static fn ($v) => $v ?: null);
-        $this->cast('country', static fn ($v) => $v ? trim($v) : null);
-        $this->cast('city', static fn ($v) => $v ? ucfirst(mb_strtolower($v)) : null);
-        $this->cast('postal_code', static fn ($v) => $v ? trim($v) : null);
-        $this->cast('street', fn ($v) => $v ? $this->parseStreet($v) : null);
-        $this->cast('building_number', static fn ($v) => $v ? trim($v) : null);
-        $this->cast('suite_number', static fn ($v) => $v ? trim($v) : null);
-        $this->cast('nip', static fn ($v) => $v ?: null);
-
-        parent::__construct($args);
+    public function __construct(
+        public readonly int $id,
+        public readonly string $code,
+        public readonly string $company,
+        public readonly string|null $name_line_two,
+        public readonly string|null $name_line_three,
+        public readonly string|null $name,
+        public readonly string|null $country,
+        public readonly string|null $city,
+        public readonly string|null $postal_code,
+        public readonly string|null $street,
+        public readonly string|null $building_number,
+        public readonly string|null $suite_number,
+        public readonly string|null $nip,
+        public readonly bool $deleted,
+    ) {
     }
 
-    /**
-     * @param  array<string, mixed>|object  $args
-     */
-    private function parseName(array|object $args): string
+    public static function make(object $data): self
     {
-        return trim(implode(' ', [
-            DTO::get('company', $args),
-            DTO::get('name_line_two', $args),
-            DTO::get('name_line_three', $args),
-        ]));
-    }
+        $name_2 = Parser::for($data, 'name_line_two')->string();
+        $name_3 = Parser::for($data, 'name_line_three')->string();
 
-    private function parseStreet(string $street): string
-    {
-        return str_starts_with($street, 'ul')
-            ? $street
-            : mb_convert_case($street, MB_CASE_TITLE, 'UTF-8');
+        return new self(
+            id: (int) $data->id,
+            code: $data->code,
+            company: $data->company,
+            name_line_two: $name_2,
+            name_line_three: $name_3,
+            name: trim(implode(' ', [$data->company, $name_2, $name_3])),
+            country: Parser::for($data, 'country')->trim(),
+            city: Parser::for($data, 'city')->whenNotNull(fn ($value) => ucfirst(mb_strtolower($value))),
+            postal_code: Parser::for($data, 'postal_code')->trim(),
+            street: Parser::for($data, 'street')->whenNotNull(
+                fn ($value) => str_starts_with($value, 'ul') ? $value : mb_convert_case($value, MB_CASE_TITLE, 'UTF-8')
+            ),
+            building_number: Parser::for($data, 'building_number')->trim(),
+            suite_number: Parser::for($data, 'suite_number')->trim(),
+            nip: Parser::for($data, 'nip')->string(),
+            deleted: (bool) $data->deleted,
+        );
     }
 }

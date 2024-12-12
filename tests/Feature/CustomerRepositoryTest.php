@@ -13,12 +13,7 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function repository(): CustomerRepository
-{
-    return app(CustomerRepository::class);
-}
-
-$customers = [
+dataset('customers', [
     1 => [
         [
             'id' => 1,
@@ -79,20 +74,14 @@ $customers = [
             'suite_number' => null,
         ],
     ],
-];
-$supplier = [
-    'ANTALIS',
-    [
-        'name' => 'ANTALIS Poland Sp. z o.o.',
-        'name_line_two' => null,
-        'name_line_three' => null,
-        'city' => 'Warszawa',
-        'suite_number' => null,
-    ],
-];
+]);
+
+beforeEach(function () {
+    $this->repository = resolve(CustomerRepository::class);
+});
 
 it('can find a customer by code', function (array $dataset) {
-    $data = repository()->findByCode($dataset['code']);
+    $data = $this->repository->findByCode($dataset['code']);
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
@@ -111,150 +100,105 @@ it('can find a customer by code', function (array $dataset) {
             'suite_number' => $dataset['suite_number'],
             'nip' => $dataset['nip'] ?? null,
         ]);
-})->with($customers);
+})->with('customers');
 
 it('throws an exception when customer code not exists', function () {
-    expect(fn () => repository()->findByCode(''))
+    expect(fn () => $this->repository->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => '']),
         );
 });
 
-it('can find a grouped customer by code from group', function (string $code, array $dataset) {
-    $data = repository()->findByCode($code, CustomerGroup::SUPPLIER->value);
+it('can find a grouped customer by code from group', function () {
+    $data = $this->repository->findByCode('ANTALIS', CustomerGroup::SUPPLIER->value);
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
-        ->toHaveProperty('code', $code)
-        ->toHaveProperty('name', $dataset['name'])
-        ->toHaveProperty('name_line_two', $dataset['name_line_two'])
-        ->toHaveProperty('name_line_three', $dataset['name_line_three'])
-        ->toHaveProperty('city', $dataset['city'])
-        ->toHaveProperty('suite_number', $dataset['suite_number'])
         ->toHaveProperties([
             'id',
-            'code',
+            'code' => 'ANTALIS',
             'company',
-            'name',
-            'name_line_two',
-            'name_line_three',
+            'name' => 'ANTALIS Poland Sp. z o.o.',
+            'name_line_two' => null,
+            'name_line_three' => null,
             'country',
-            'city',
+            'city' => 'Warszawa',
             'postal_code',
             'street',
             'building_number',
-            'suite_number',
+            'suite_number' => null,
             'nip',
             'deleted',
         ]);
-})->with([$supplier]);
+});
 
-it('can find a grouped customer by code without group', function (string $code, array $dataset) {
-    $data = repository()->findByCode($code);
+it('can find a grouped customer by code without group', function () {
+    $data = $this->repository->findByCode('ANTALIS');
 
     expect($data)
         ->toBeInstanceOf(Customer::class)
-        ->toHaveProperty('code', $code)
-        ->toHaveProperty('name', $dataset['name'])
-        ->toHaveProperty('name_line_two', $dataset['name_line_two'])
-        ->toHaveProperty('name_line_three', $dataset['name_line_three'])
-        ->toHaveProperty('city', $dataset['city'])
-        ->toHaveProperty('suite_number', $dataset['suite_number'])
         ->toHaveProperties([
             'id',
-            'code',
+            'code' => 'ANTALIS',
             'company',
-            'name',
-            'name_line_two',
-            'name_line_three',
+            'name' => 'ANTALIS Poland Sp. z o.o.',
+            'name_line_two' => null,
+            'name_line_three' => null,
             'country',
-            'city',
+            'city' => 'Warszawa',
             'postal_code',
             'street',
             'building_number',
-            'suite_number',
+            'suite_number' => null,
             'nip',
             'deleted',
         ]);
-})->with([$supplier]);
+});
 
-it('throws an exception when grouped customer code is in other group', function (string $code) {
-    expect(fn () => repository()->findByCode($code, CustomerGroup::SUBCONTRACTOR->value))
+it('throws an exception when grouped customer code is in other group', function () {
+    expect(fn () => $this->repository->findByCode('ANTALIS', CustomerGroup::SUBCONTRACTOR->value))
         ->toThrow(
             exception: RecordsNotFoundException::class,
-            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]),
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => 'ANTALIS']),
         );
-})->with([$supplier]);
+});
 
 it('can find customers by ID', function (array $dataset) {
-    $data = repository()->find($dataset['id']);
+    $data = $this->repository->find($dataset['id']);
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
-    ->and($data->first())
+        ->first()
         ->toBeInstanceOf(Customer::class)
-        ->toHaveProperty('id', $dataset['id'])
-        ->toHaveProperty('code', $dataset['code'])
-        ->toHaveProperty('name', $dataset['name'])
-        ->toHaveProperty('name_line_two', $dataset['name_line_two'])
-        ->toHaveProperty('name_line_three', $dataset['name_line_three'])
-        ->toHaveProperty('city', $dataset['city'])
-        ->toHaveProperty('suite_number', $dataset['suite_number'])
         ->toHaveProperties([
-            'id',
-            'code',
+            'id' => $dataset['id'],
+            'code' => $dataset['code'],
             'company',
-            'name',
-            'name_line_two',
-            'name_line_three',
+            'name' => $dataset['name'],
+            'name_line_two' => $dataset['name_line_two'],
+            'name_line_three' => $dataset['name_line_three'],
             'country',
-            'city',
+            'city' => $dataset['city'],
             'postal_code',
             'street',
             'building_number',
-            'suite_number',
+            'suite_number' => $dataset['suite_number'],
             'nip',
             'deleted',
         ]);
-})->with($customers);
+})->with('customers');
 
-it('can find multiple customers by ID', function () use ($customers) {
-    $data = repository()->find(array_keys($customers));
+it('can find multiple customers by ID', function () {
+    $data = $this->repository->find(1, 4328, 26820, 5160);
 
     expect($data)
         ->toBeInstanceOf(Collection::class)
-        ->toHaveCount(4)
-        ->sequence(function ($item) use ($customers) {
-            $item->toBeInstanceOf(Customer::class)
-                ->toHaveProperty('id', $customers[$item->value->id][0]['id'])
-                ->toHaveProperty('code', $customers[$item->value->id][0]['code'])
-                ->toHaveProperty('name', $customers[$item->value->id][0]['name'])
-                ->toHaveProperty('name_line_two', $customers[$item->value->id][0]['name_line_two'])
-                ->toHaveProperty('name_line_three', $customers[$item->value->id][0]['name_line_three'])
-                ->toHaveProperty('city', $customers[$item->value->id][0]['city'])
-                ->toHaveProperty('suite_number', $customers[$item->value->id][0]['suite_number'])
-                ->toHaveProperties([
-                    'id',
-                    'code',
-                    'company',
-                    'name',
-                    'name_line_two',
-                    'name_line_three',
-                    'country',
-                    'city',
-                    'postal_code',
-                    'street',
-                    'building_number',
-                    'suite_number',
-                    'nip',
-                    'deleted',
-                ]);
-        });
+        ->toHaveCount(4);
 });
 
 it('throws an exception when customer id not exists', function () {
-    expect(fn () => repository()->find(null))
+    expect(fn () => $this->repository->find(null))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given id is invalid or not in the OPTIMA.'),

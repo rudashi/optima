@@ -28,14 +28,15 @@ class CustomerRepository
             ->first();
 
         if ($data === null) {
-            throw new RecordsNotFoundException(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
+            throw new RecordsNotFoundException(__('Given code :code is invalid or not in the OPTIMA.',
+                ['code' => $code]));
         }
 
-        return new Customer((array) $data);
+        return Customer::make($data);
     }
 
     /**
-     * @param  int|string  ...$ids
+     * @param int|string ...$ids
      *
      * @return \Rudashi\Optima\Services\Collection<int, \Rudashi\Optima\Models\Customer>
      */
@@ -49,7 +50,7 @@ class CustomerRepository
             throw new RecordsNotFoundException(__('Given id is invalid or not in the OPTIMA.'));
         }
 
-        return $data->map(fn ($item) => new Customer((array) $item));
+        return $data->map(fn ($item) => Customer::make($item));
     }
 
     /**
