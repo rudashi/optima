@@ -11,87 +11,74 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function repository(): EmployeeRepository
-{
-    return app(EmployeeRepository::class);
-}
+beforeEach(function () {
+    $this->repository = resolve(EmployeeRepository::class);
+});
 
-$employee = [
-    '023E',
-    [
-        'firstname' => 'BORYS',
-        'job_title' => 'STARSZY INŻYNIER OPROGRAMOWANIA',
-        'department_id' => '73',
-        'deleted' => false,
-    ],
-];
+it('can find an employee by code', function () {
+    $data = $this->repository->findByCode('023E');
 
-$employees = [
+    expect($data)
+        ->toBeInstanceOf(Employee::class)
+        ->toHaveProperty('code', '023E')
+        ->toHaveProperty('firstname', 'BORYS')
+        ->toHaveProperty('job_title')
+        ->toHaveProperty('department_id')
+        ->toHaveProperty('deleted', false)
+        ->toHaveProperties([
+            'id',
+            'code',
+            'firstname',
+            'lastname',
+            'email',
+            'job_title',
+            'department_id',
+            'department_name',
+            'company',
+            'rcp',
+            'deleted',
+        ]);
+});
+
+it('can find an employee using alias method `find`', function (string $code) {
+    $data = $this->repository->find($code);
+
+    expect($data)
+        ->toBeInstanceOf(Employee::class)
+        ->toHaveProperty('code', $code)
+        ->toHaveProperties([
+            'id',
+            'code',
+            'firstname',
+            'lastname',
+            'email',
+            'job_title',
+            'department_id',
+            'department_name',
+            'company',
+            'rcp',
+            'deleted',
+        ]);
+})->with([
     '130E',
     '012E',
     '019E',
     '023E',
     '074E_DOT_1_2_1CBR',
-];
-
-it('can find an employee by code', function (string $code, array $dataset) {
-    $data = repository()->findByCode($code);
-
-    expect($data)
-        ->toBeInstanceOf(Employee::class)
-        ->toHaveProperty('code', $code)
-        ->toHaveProperty('firstname', $dataset['firstname'])
-        ->toHaveProperty('job_title')
-        ->toHaveProperty('department_id')
-        ->toHaveProperty('deleted', $dataset['deleted'])
-        ->toHaveProperties([
-            'id',
-            'code',
-            'firstname',
-            'lastname',
-            'email',
-            'job_title',
-            'department_id',
-            'department_name',
-            'company',
-            'rcp',
-            'deleted',
-        ]);
-})->with([$employee]);
-
-it('can find an employee using alias method `find`', function (string $code) {
-    $data = repository()->find($code);
-
-    expect($data)
-        ->toBeInstanceOf(Employee::class)
-        ->toHaveProperty('code', $code)
-        ->toHaveProperties([
-            'id',
-            'code',
-            'firstname',
-            'lastname',
-            'email',
-            'job_title',
-            'department_id',
-            'department_name',
-            'company',
-            'rcp',
-            'deleted',
-        ]);
-})->with($employees);
+]);
 
 it('throws an exception when employee code not exists', function () {
-    expect(fn () => repository()->findByCode(''))
+    expect(fn () => $this->repository->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given acronym :code is invalid or not in the OPTIMA.', ['code' => '']),
         );
 });
 
-it('throws an exception when employee is archived', function (string $code) {
-    expect(fn () => repository()->findByCode($code))
+it('throws an exception when employee is archived', function () {
+    expect(fn () => $this->repository->findByCode('XXX'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
-            exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => $code]),
+            exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => 'XXX']),
         );
-})->with(['XXX']);
+});

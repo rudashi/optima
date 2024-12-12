@@ -69,6 +69,6 @@ class EmployeeRepository
             throw new RecordsNotFoundException(__('Employee with given acronym :code is archived.', ['code' => $code]));
         }
 
-        return new Employee((array) $data);
+        return Employee::make($data);
     }
 }
