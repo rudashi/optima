@@ -28,8 +28,7 @@ class CustomerRepository
             ->first();
 
         if ($data === null) {
-            throw new RecordsNotFoundException(__('Given code :code is invalid or not in the OPTIMA.',
-                ['code' => $code]));
+            throw new RecordsNotFoundException(__('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]));
         }
 
         return Customer::make($data);
