@@ -31,6 +31,14 @@ class Parser
         );
     }
 
+    /**
+     * @return self<TValue>
+     */
+    public static function of(mixed $value): self
+    {
+        return new self($value);
+    }
+
     public static function has(object $item, string $key): bool
     {
         return property_exists($item, $key);

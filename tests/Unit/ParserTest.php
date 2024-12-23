@@ -33,6 +33,14 @@ it('create Parser from object', function () {
         ->toMatchArray([$value]);
 });
 
+it('create Parser statically', function () {
+    $value = fake()->name();
+    $parser = Parser::of($value);
+
+    expect(array_values((array) $parser))
+        ->toMatchArray([$value]);
+});
+
 it('get bool or null', function ($payload, $value): void {
     expect((new Parser($payload))->bool())
         ->toBe($value);
