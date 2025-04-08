@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
+use Closure;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
+use Rudashi\Optima\Contracts\Relation;
 
 /**
  * @template TKey of array-key
@@ -22,7 +24,7 @@ class QueryBuilder extends Builder
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  array<array-key, string>  $columns
+     * @param array<array-key, string> $columns
      *
      * @return \Rudashi\Optima\Services\Collection<array-key, \stdClass>
      */
@@ -44,7 +46,7 @@ class QueryBuilder extends Builder
      *
      * @template TMapValue
      *
-     * @param  callable(TValue, TKey): TMapValue  $callback
+     * @param callable(TValue, TKey): TMapValue $callback
      *
      * @return \Rudashi\Optima\Services\Collection<array-key, TMapValue>
      */
@@ -66,9 +68,14 @@ class QueryBuilder extends Builder
     /**
      * @return self<array-key, object>
      */
-    public function hasMany(string $related, string $ownerKey, string $foreignKey, string $relation): self
+    public function hasMany(string|callable $related, string $ownerKey, string $foreignKey, string $relation): self
     {
-        $this->relations[] = new RelationBuilder($relation, $related, $ownerKey, $foreignKey);
+        $this->relations[] = new RelationBuilder(
+            name: $relation,
+            relationClass: is_callable($related) ? $this->makeRelation($related) : $related,
+            ownerKey: $ownerKey,
+            foreignKey: $foreignKey
+        );
 
         return $this;
     }
@@ -99,7 +106,7 @@ class QueryBuilder extends Builder
     }
 
     /**
-     * @param  \Rudashi\Optima\Services\Collection<array-key, \stdClass>  $models
+     * @param \Rudashi\Optima\Services\Collection<array-key, \stdClass> $models
      *
      * @return \Rudashi\Optima\Services\Collection<array-key, \stdClass>
      */
@@ -110,5 +117,21 @@ class QueryBuilder extends Builder
         }
 
         return $models;
+    }
+
+    private function makeRelation(callable $related): object
+    {
+        return new class ($this, $related) implements Relation {
+            public function __construct(
+                private readonly QueryBuilder $queryBuilder,
+                private readonly Closure $callable,
+            ) {
+            }
+
+            public function handle(iterable $relationId): Collection
+            {
+                return ($this->callable)($this->queryBuilder->newQuery(), (array) $relationId)->get();
+            }
+        };
     }
 }

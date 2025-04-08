@@ -12,11 +12,11 @@ class RelationBuilder
     protected readonly Relation $relation;
 
     /**
-     * @param  class-string<\Rudashi\Optima\Contracts\Relation>  $relationClass
+     * @param  class-string<\Rudashi\Optima\Contracts\Relation>|\Rudashi\Optima\Contracts\Relation  $relationClass
      */
     public function __construct(
         protected readonly string $name,
-        string $relationClass,
+        string|Relation $relationClass,
         protected readonly string $ownerKey,
         protected readonly string $foreignKey,
     ) {
@@ -68,16 +68,13 @@ class RelationBuilder
         return $models;
     }
 
-    /**
-     * @template TClass
-     *
-     * @param  class-string<TClass>  $relationClass
-     *
-     * @return TClass
-     */
-    public function newRelationInstance(string $relationClass)
+    public function newRelationInstance(string|Relation $relationClass): Relation
     {
-        return resolve($relationClass);
+        if (is_string($relationClass)) {
+            return resolve($relationClass);
+        }
+
+        return $relationClass;
     }
 
     /**
