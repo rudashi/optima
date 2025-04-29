@@ -14,7 +14,7 @@ it('can return list of Countries', function () {
 
     expect($data)
         ->toBeArray()
-        ->toBeGreaterThanOrEqual(38)
+        ->toHaveCount(37)
         ->toContain([
             'code' => Country::POLAND->value,
             'name' => Country::POLAND->description(),

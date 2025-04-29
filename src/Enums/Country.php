@@ -153,13 +153,19 @@ enum Country: string implements Arrayable, Describable
 
     public static function toArray(): array
     {
-        return array_map(
-            callback: static fn ($item) => [
+        $result = [];
+        foreach (self::cases() as $item) {
+            if ($item === self::NULL) {
+                continue;
+            }
+
+            $result[] = [
                 'code' => $item->value,
                 'name' => $item->description(),
                 'currency' => $item->currency(),
-            ],
-            array: self::cases()
-        );
+            ];
+        }
+
+        return $result;
     }
 }
