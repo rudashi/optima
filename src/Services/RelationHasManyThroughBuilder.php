@@ -27,7 +27,7 @@ class RelationHasManyThroughBuilder extends RelationBuilder
 
         foreach ($items as $item) {
             $item->{$this->foreignKey} = array_unique($through
-                ->where($this->localKey, '=', $item->{$this->ownerKey})
+                ->where($this->localKey, '=', $item->{$this->firstKey})
                 ->pluck($this->foreignKey)
                 ->all());
         }
