@@ -34,11 +34,11 @@ class QueryBuilder extends Builder
             return $this->processor->processSelect($this, $this->runSelect());
         }));
 
-        if ($models->count() > 0) {
-            $this->loadRelations($models);
-        }
+        $this->loadRelations($models);
 
-        return $models;
+        return $this->applyAfterQueryCallbacks(
+            isset($this->groupLimit) ? $this->withoutGroupLimitKeys($models) : $models
+        );
     }
 
     /**
@@ -112,8 +112,10 @@ class QueryBuilder extends Builder
      */
     protected function loadRelations(Collection $models): Collection
     {
-        foreach ($this->relations as $relation) {
-            $models = $relation->match($relation->init($models), $models);
+        if ($models->count() > 0) {
+            foreach ($this->relations as $relation) {
+                $models = $relation->match($relation->init($models), $models);
+            }
         }
 
         return $models;
