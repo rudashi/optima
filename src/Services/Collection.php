@@ -49,7 +49,7 @@ class Collection extends CollectionBase
      */
     public function pluckAll(array $values): array
     {
-        return $this->map(fn ($item) => array_map(static fn ($v) => is_array($item) ? $item[$v] : $item->{$v}, $values))
+        return $this->map(fn ($item) => array_map(static fn ($v) => is_array($item) ? ($item[$v] ?? null) : $item->{$v}, $values))
             ->flatten()
             ->unique()
             ->filter()

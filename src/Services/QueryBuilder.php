@@ -124,12 +124,18 @@ class QueryBuilder extends Builder
     private function makeRelation(callable $related): object
     {
         return new class ($this, $related) implements Relation {
+            /**
+             * @param \Rudashi\Optima\Services\QueryBuilder<int, object> $queryBuilder
+             */
             public function __construct(
                 private readonly QueryBuilder $queryBuilder,
                 private readonly Closure $callable,
             ) {
             }
 
+            /**
+             * @return \Rudashi\Optima\Services\Collection<int, \stdClass>
+             */
             public function handle(iterable $relationId): Collection
             {
                 return ($this->callable)($this->queryBuilder->newQuery(), (array) $relationId)->get();
