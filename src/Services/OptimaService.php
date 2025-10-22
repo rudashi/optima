@@ -8,6 +8,7 @@ use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\ConnectionResolverInterface;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use PDOException;
 
 class OptimaService
 {
@@ -34,6 +35,17 @@ class OptimaService
     public function getConnection(): ConnectionInterface
     {
         return $this->resolver->connection($this->getConnectionName());
+    }
+
+    public function hasConnection(): bool
+    {
+        try {
+            $this->getConnection()->getPdo();
+
+            return true;
+        } catch (PDOException) {
+            return false;
+        }
     }
 
     public function setConnectionName(string $name): static
