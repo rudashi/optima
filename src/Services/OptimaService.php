@@ -40,7 +40,7 @@ class OptimaService
     public function hasConnection(): bool
     {
         try {
-            $this->getConnection()->getPdo();
+            $this->getConnection()->getReadPDO();
 
             return true;
         } catch (PDOException) {
