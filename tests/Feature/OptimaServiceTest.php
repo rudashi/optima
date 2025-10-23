@@ -87,3 +87,8 @@ it('can switch connection', function () {
     expect($this->service->getConnection())
         ->getDriverName()->toBe('sqlite');
 });
+
+it('can check connection', function () {
+    expect(optima()->hasConnection())
+        ->toBeTrue();
+});

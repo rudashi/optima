@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Database\ConnectionResolverInterface;
+use Illuminate\Database\Connection;
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use PDOException;
@@ -14,15 +14,15 @@ class OptimaService
 {
     public static string $connection = 'optima';
     protected ?string $connectionName = null;
-    protected ConnectionResolverInterface $resolver;
+    protected DatabaseManager $resolver;
 
-    public function __construct(ConnectionResolverInterface $resolver, string $connection = null)
+    public function __construct(DatabaseManager $resolver, string $connection = null)
     {
         $this->resolver = $resolver;
         $this->connectionName = $connection ?? static::$connection;
     }
 
-    public static function connection(): ConnectionInterface
+    public static function connection(): Connection
     {
         return DB::connection(self::$connection);
     }
@@ -32,7 +32,7 @@ class OptimaService
         return $this->connectionName;
     }
 
-    public function getConnection(): ConnectionInterface
+    public function getConnection(): Connection
     {
         return $this->resolver->connection($this->getConnectionName());
     }
@@ -40,7 +40,7 @@ class OptimaService
     public function hasConnection(): bool
     {
         try {
-            $this->getConnection()->getReadPDO();
+            $this->getConnection()->getReadPdo();
 
             return true;
         } catch (PDOException) {
@@ -62,7 +62,6 @@ class OptimaService
     {
         $connection = $this->getConnection();
 
-        /** @phpstan-ignore-next-line */
         return new QueryBuilder($connection, $connection->getQueryGrammar(), $connection->getPostProcessor());
     }
 
