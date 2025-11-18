@@ -46,7 +46,7 @@ class DepartmentRepository
     }
 
     /**
-     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, \stdClass>
      */
     private function queryDepartment(): QueryBuilder
     {

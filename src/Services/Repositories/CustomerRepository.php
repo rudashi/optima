@@ -53,7 +53,7 @@ class CustomerRepository
     }
 
     /**
-     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, \stdClass>
      */
     protected function queryCustomer(): QueryBuilder
     {
