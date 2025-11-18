@@ -56,7 +56,7 @@ class OptimaService
     }
 
     /**
-     * @return \Rudashi\Optima\Services\QueryBuilder<int, object>
+     * @return \Rudashi\Optima\Services\QueryBuilder<int, \stdClass>
      */
     public function newQuery(): QueryBuilder
     {

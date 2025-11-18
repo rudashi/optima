@@ -8,11 +8,12 @@ use Closure;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Rudashi\Optima\Contracts\Relation;
+use stdClass;
 
 /**
  * @template TKey of array-key
  *
- * @template-covariant TValue
+ * @template-covariant TValue of \stdClass
  */
 class QueryBuilder extends Builder
 {
@@ -42,6 +43,14 @@ class QueryBuilder extends Builder
     }
 
     /**
+     * @param string[]|string $columns
+     */
+    public function first($columns = ['*']): stdClass|null
+    {
+        return parent::first($columns);
+    }
+
+    /**
      * Get items and run a map over each of the items.
      *
      * @template TMapValue
@@ -56,7 +65,7 @@ class QueryBuilder extends Builder
     }
 
     /**
-     * @return self<array-key, object>
+     * @return self<array-key, \stdClass>
      */
     public function hasOne(string $related, string $ownerKey, string $foreignKey, string $relation): self
     {
@@ -66,7 +75,7 @@ class QueryBuilder extends Builder
     }
 
     /**
-     * @return self<array-key, object>
+     * @return self<array-key, \stdClass>
      */
     public function hasMany(string|callable $related, string $ownerKey, string $foreignKey, string $relation): self
     {
@@ -81,7 +90,7 @@ class QueryBuilder extends Builder
     }
 
     /**
-     * @return self<array-key, object>
+     * @return self<array-key, \stdClass>
      */
     public function hasManyThrough(
         string $related,
@@ -98,7 +107,7 @@ class QueryBuilder extends Builder
     }
 
     /**
-     * @return self<array-key, object>
+     * @return self<array-key, \stdClass>
      */
     public function noLock(): self
     {
@@ -123,13 +132,13 @@ class QueryBuilder extends Builder
 
     private function makeRelation(callable $related): object
     {
-        return new class ($this, $related) implements Relation {
+        return new readonly class ($this, $related) implements Relation {
             /**
-             * @param \Rudashi\Optima\Services\QueryBuilder<int, object> $queryBuilder
+             * @param \Rudashi\Optima\Services\QueryBuilder<int, \stdClass> $queryBuilder
              */
             public function __construct(
-                private readonly QueryBuilder $queryBuilder,
-                private readonly Closure $callable,
+                private QueryBuilder $queryBuilder,
+                private Closure $callable,
             ) {
             }
 
