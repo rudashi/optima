@@ -11,10 +11,10 @@ use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\QueryBuilder;
 
-class CustomerRepository
+readonly class CustomerRepository
 {
     public function __construct(
-        protected readonly OptimaService $service
+        protected OptimaService $service
     ) {
     }
 
@@ -43,13 +43,13 @@ class CustomerRepository
     {
         $data = $this->queryCustomer()
             ->whereIn('Knt_KntId', $this->service->parseIds($ids))
-            ->get();
+            ->getTo(fn ($item) => Customer::make($item));
 
         if ($data->isEmpty()) {
             throw new RecordsNotFoundException(__('Given id is invalid or not in the OPTIMA.'));
         }
 
-        return $data->map(fn ($item) => Customer::make($item));
+        return $data;
     }
 
     /**
