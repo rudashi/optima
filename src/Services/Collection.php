@@ -17,7 +17,7 @@ class Collection extends CollectionBase
     /**
      * @template TMapValue of TValue
      *
-     * @param  callable(TValue): TMapValue  $callback
+     * @param callable(TValue): TMapValue $callback
      *
      * @return self<TKey, TMapValue>
      */
@@ -33,9 +33,9 @@ class Collection extends CollectionBase
      */
     public function modelKeys(string $primaryKey = 'id'): array
     {
-        return array_map(static function ($model) use ($primaryKey) {
+        return array_map(static function (mixed $model) use ($primaryKey) {
             if (method_exists($model, 'primaryKey')) {
-                return $model->primaryKey();
+                return $model->primaryKey(); // @phpstan-ignore method.nonObject
             }
 
             return $model->$primaryKey;
@@ -43,13 +43,15 @@ class Collection extends CollectionBase
     }
 
     /**
-     * @param  array<int, string>  $values
+     * @param array<int, string> $values
      *
      * @return array<TKey, mixed>
      */
     public function pluckAll(array $values): array
     {
-        return $this->map(fn ($item) => array_map(static fn ($v) => is_array($item) ? ($item[$v] ?? null) : $item->{$v}, $values))
+        $callback = static fn ($item, string $v) => is_array($item) ? ($item[$v] ?? null) : $item->{$v};
+
+        return $this->map(static fn ($item) => array_map(static fn ($v) => $callback($item, $v), $values))
             ->flatten()
             ->unique()
             ->filter()

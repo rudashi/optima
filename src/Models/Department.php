@@ -6,21 +6,22 @@ namespace Rudashi\Optima\Models;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Rudashi\Optima\Services\Entity\Parser;
+use stdClass;
 
 /**
  * @implements \Illuminate\Contracts\Support\Arrayable<string, int|string|null>
  */
-class Department implements Arrayable
+readonly class Department implements Arrayable
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $name,
-        public readonly string $user_code,
-        public readonly ?int $parent_id = null,
+        public int $id,
+        public string $name,
+        public string $user_code,
+        public ?int $parent_id = null,
     ) {
     }
 
-    public static function make(object $data): self
+    public static function make(stdClass $data): self
     {
         return new self(
             id: (int) $data->id,

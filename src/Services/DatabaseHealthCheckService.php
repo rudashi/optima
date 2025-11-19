@@ -9,8 +9,8 @@ use Illuminate\Database\DatabaseManager;
 
 class DatabaseHealthCheckService
 {
-    public const PROBLEM = 'problem';
-    public const OK = 'ok';
+    public const string PROBLEM = 'problem';
+    public const string OK = 'ok';
 
     public function __construct(
         protected DatabaseManager $db
@@ -18,7 +18,7 @@ class DatabaseHealthCheckService
     }
 
     /**
-     * @return array{status: string, message?: string, context: array<array-key, mixed>}
+     * @return array{status: string, message: string, context: array<array-key, mixed>}
      */
     public function status(): array
     {
@@ -51,12 +51,13 @@ class DatabaseHealthCheckService
     /**
      * @param  array<array-key, mixed>  $context
      *
-     * @return array{status: string, context: array<array-key, mixed>}
+     * @return array{status: string, message: string, context: array<array-key, mixed>}
      */
     public function okay(array $context = []): array
     {
         return [
             'status' => self::OK,
+            'message' => 'Database connection is okay',
             'context' => $context,
         ];
     }

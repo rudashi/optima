@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Services;
 
-use Illuminate\Support\Enumerable;
 use Rudashi\Optima\Contracts\Relation;
 
 class RelationBuilder
@@ -12,7 +11,7 @@ class RelationBuilder
     protected readonly Relation $relation;
 
     /**
-     * @param  class-string<\Rudashi\Optima\Contracts\Relation>|\Rudashi\Optima\Contracts\Relation  $relationClass
+     * @param class-string<\Rudashi\Optima\Contracts\Relation>|\Rudashi\Optima\Contracts\Relation $relationClass
      */
     public function __construct(
         protected readonly string $name,
@@ -29,14 +28,11 @@ class RelationBuilder
     }
 
     /**
-     * @template TKey of array-key
-     * @template TValue of \stdClass
+     * @param \Rudashi\Optima\Services\Collection<array-key, \stdClass> $models
      *
-     * @param  \Rudashi\Optima\Services\Collection<TKey, TValue>  $models
-     *
-     * @return array<TKey, TValue>|object
+     * @return array<array-key, \stdClass>
      */
-    public function init(Collection $models): array|object
+    public function init(Collection $models): array
     {
         $items = $this->handleRelation($models);
 
@@ -44,14 +40,14 @@ class RelationBuilder
             $model->{$this->name} = $this->defaultRelation();
         }
 
-        return $items instanceof Enumerable ? $items->all() : $items;
+        return $items->all();
     }
 
     /**
-     * @param  array<array-key, object>|object  $relatedModels
-     * @param  \Rudashi\Optima\Services\Collection<array-key, object>  $models
+     * @param array<array-key, \stdClass>|\stdClass $relatedModels
+     * @param \Rudashi\Optima\Services\Collection<array-key, \stdClass> $models
      *
-     * @return \Rudashi\Optima\Services\Collection<array-key, object>
+     * @return \Rudashi\Optima\Services\Collection<array-key, \stdClass>
      */
     public function match(object|array $relatedModels, Collection $models): Collection
     {
@@ -78,17 +74,17 @@ class RelationBuilder
     }
 
     /**
-     * @param  \Rudashi\Optima\Services\Collection<array-key, \stdClass>  $models
+     * @param \Rudashi\Optima\Services\Collection<array-key, \stdClass> $models
      *
-     * @return array<array-key, object>|object
+     * @return \Rudashi\Optima\Services\Collection<array-key, \stdClass>
      */
-    protected function handleRelation(Collection $models): array|object
+    protected function handleRelation(Collection $models): Collection
     {
         return $this->relation->handle($models->modelKeys($this->ownerKey));
     }
 
     /**
-     * @param  array<array-key, object>  $models
+     * @param array<array-key, \stdClass>|\stdClass $models
      *
      * @return array<string, mixed>
      */

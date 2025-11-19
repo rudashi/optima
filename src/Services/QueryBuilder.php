@@ -47,6 +47,7 @@ class QueryBuilder extends Builder
      */
     public function first($columns = ['*']): stdClass|null
     {
+        /** @var \stdClass|null */
         return parent::first($columns);
     }
 
@@ -55,7 +56,7 @@ class QueryBuilder extends Builder
      *
      * @template TMapValue
      *
-     * @param callable(TValue, TKey): TMapValue $callback
+     * @param callable(stdClass, array-key): TMapValue $callback
      *
      * @return \Rudashi\Optima\Services\Collection<array-key, TMapValue>
      */
@@ -65,6 +66,8 @@ class QueryBuilder extends Builder
     }
 
     /**
+     * @param class-string<\Rudashi\Optima\Contracts\Relation> $related
+     *
      * @return self<array-key, \stdClass>
      */
     public function hasOne(string $related, string $ownerKey, string $foreignKey, string $relation): self
@@ -75,13 +78,15 @@ class QueryBuilder extends Builder
     }
 
     /**
+     * @param \Closure|class-string<\Rudashi\Optima\Contracts\Relation> $related
+     *
      * @return self<array-key, \stdClass>
      */
-    public function hasMany(string|callable $related, string $ownerKey, string $foreignKey, string $relation): self
+    public function hasMany(Closure|string $related, string $ownerKey, string $foreignKey, string $relation): self
     {
         $this->relations[] = new RelationBuilder(
             name: $relation,
-            relationClass: is_callable($related) ? $this->makeRelation($related) : $related,
+            relationClass: $related instanceof Closure ? $this->makeRelation($related) : $related,
             ownerKey: $ownerKey,
             foreignKey: $foreignKey
         );
@@ -90,6 +95,8 @@ class QueryBuilder extends Builder
     }
 
     /**
+     * @param class-string<\Rudashi\Optima\Contracts\Relation> $related
+     *
      * @return self<array-key, \stdClass>
      */
     public function hasManyThrough(
@@ -130,7 +137,10 @@ class QueryBuilder extends Builder
         return $models;
     }
 
-    private function makeRelation(callable $related): object
+    /**
+     * @return \Rudashi\Optima\Contracts\Relation
+     */
+    private function makeRelation(Closure $related): object
     {
         return new readonly class ($this, $related) implements Relation {
             /**

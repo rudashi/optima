@@ -5,25 +5,26 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Models;
 
 use Rudashi\Optima\Services\Entity\Parser;
+use stdClass;
 
-class Employee
+readonly class Employee
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $code,
-        public readonly string $firstname,
-        public readonly string $lastname,
-        public readonly string $email,
-        public readonly ?string $job_title,
-        public readonly int $department_id,
-        public readonly string $department_name,
-        public readonly string $company,
-        public readonly ?string $rcp,
-        public readonly bool $deleted,
+        public int $id,
+        public string $code,
+        public string $firstname,
+        public string $lastname,
+        public string $email,
+        public ?string $job_title,
+        public int $department_id,
+        public string $department_name,
+        public string $company,
+        public ?string $rcp,
+        public bool $deleted,
     ) {
     }
 
-    public static function make(object $data): self
+    public static function make(stdClass $data): self
     {
         return new self(
             id: (int) $data->id,

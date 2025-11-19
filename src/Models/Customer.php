@@ -5,28 +5,29 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Models;
 
 use Rudashi\Optima\Services\Entity\Parser;
+use stdClass;
 
-class Customer
+readonly class Customer
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $code,
-        public readonly string $company,
-        public readonly string|null $name_line_two,
-        public readonly string|null $name_line_three,
-        public readonly string|null $name,
-        public readonly string|null $country,
-        public readonly string|null $city,
-        public readonly string|null $postal_code,
-        public readonly string|null $street,
-        public readonly string|null $building_number,
-        public readonly string|null $suite_number,
-        public readonly string|null $nip,
-        public readonly bool $deleted,
+        public int $id,
+        public string $code,
+        public string $company,
+        public string|null $name_line_two,
+        public string|null $name_line_three,
+        public string|null $name,
+        public string|null $country,
+        public string|null $city,
+        public string|null $postal_code,
+        public string|null $street,
+        public string|null $building_number,
+        public string|null $suite_number,
+        public string|null $nip,
+        public bool $deleted,
     ) {
     }
 
-    public static function make(object $data): self
+    public static function make(stdClass $data): self
     {
         $name_2 = Parser::for($data, 'name_line_two')->string();
         $name_3 = Parser::for($data, 'name_line_three')->string();
