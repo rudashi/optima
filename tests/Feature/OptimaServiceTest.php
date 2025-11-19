@@ -89,6 +89,6 @@ it('can switch connection', function () {
 });
 
 it('can check connection', function () {
-    expect(optima()->hasConnection())
+    expect(optima(false)->hasConnection())
         ->toBeTrue();
 });
