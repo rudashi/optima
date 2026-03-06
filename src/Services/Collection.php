@@ -29,6 +29,18 @@ class Collection extends CollectionBase
     }
 
     /**
+     * @template TMergeValue
+     *
+     * @param  self<TKey, TMergeValue>  $items
+     *
+     * @return self<TKey, TValue|TMergeValue>
+     */
+    public function merge($items): self
+    {
+        return parent::merge($items);
+    }
+
+    /**
      * @return array<int, int|string>
      */
     public function modelKeys(string $primaryKey = 'id'): array
