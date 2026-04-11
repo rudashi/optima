@@ -1,7 +1,7 @@
-<p align="center"><img src="./art/logo-mock.svg" width="400" alt=""></p>
+# Comarch Optima wrapper
+<!-- markdownlint-disable MD013 -->
 
-Comarch Optima wrapper
-================
+![logo](./art/logo-mock.svg)
 
 ![Twitter Follow](https://img.shields.io/twitter/follow/rudashi?style=social)
 
@@ -46,12 +46,15 @@ MS_SOCKET=
 ## Usage
 
 To get access to optima query you can use it:
+
 ```php
 optima()->from('table')->get();
 ```
 
 ### Customers | Kontrahenci
+
 To get information about customer you can use one of two methods:
+
 ```php
 (new CustomerRepository(optima(false)))->findByCode('TEST!');
 
@@ -60,4 +63,5 @@ To get information about customer you can use one of two methods:
 
 ## Authors
 
-* **Borys Żmuda** - Lead designer - [LinkedIn](https://www.linkedin.com/in/boryszmuda/), [Portfolio](https://rudashi.github.io/)
+- **Borys Żmuda** - Lead designer - [LinkedIn](https://www.linkedin.com/in/boryszmuda/)  
+    [Portfolio](https://rudashi.github.io/)
