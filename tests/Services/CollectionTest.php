@@ -11,6 +11,8 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
+mutates(Collection::class);
+
 function makeArray(string $type = 'object', int $total = 3): array
 {
     return array_map(function () use ($type) {

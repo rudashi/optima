@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit\CountryTest;
+namespace Rudashi\Optima\Tests\Enums\PaymentFormTest;
 
 use Rudashi\Optima\Enums\PaymentForm;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
+
+mutates(PaymentForm::class);
 
 it('can return list of Payments', function () {
     $data = PaymentForm::toArray();

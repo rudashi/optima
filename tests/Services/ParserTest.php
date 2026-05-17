@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit;
+namespace Rudashi\Optima\Tests\Services\ParserTest;
 
 use Rudashi\Optima\Exceptions\IncorrectValueException;
 use Rudashi\Optima\Services\Entity\Parser;

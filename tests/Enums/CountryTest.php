@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit\CountryTest;
+namespace Rudashi\Optima\Tests\Enums\CountryTest;
 
 use Rudashi\Optima\Enums\Country;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
+
+mutates(Country::class);
 
 it('can return list of Countries', function () {
     $data = Country::toArray();

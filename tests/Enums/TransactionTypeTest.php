@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit\CountryTest;
+namespace Rudashi\Optima\Tests\Enums\TransactionTypeTest;
 
 use Rudashi\Optima\Enums\TransactionType;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
+
+mutates(TransactionType::class);
 
 it('can return list of Transactions', function () {
     $data = TransactionType::toArray();
