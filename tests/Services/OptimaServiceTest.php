@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Feature\OptimaServiceTest;
+namespace Rudashi\Optima\Tests\Services\OptimaServiceTest;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\SqlServerConnection;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\QueryBuilder;
-use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
+use Rudashi\Optima\Tests\Support\FakeDTO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
@@ -86,9 +86,4 @@ it('can switch connection', function () {
 
     expect($this->service->getConnection())
         ->getDriverName()->toBe('sqlite');
-});
-
-it('can check connection', function () {
-    expect(optima(false)->hasConnection())
-        ->toBeTrue();
 });

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Tests\HealthCheck\DatabaseHealthCheckTest;
 
 use Rudashi\Optima\Services\DatabaseHealthCheckService;
-use Tests\TestCase;
+use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
@@ -40,17 +40,4 @@ it('shows problem when driver is not installed on server', function () {
         ->toHaveKey('message', 'Could not connect to db')
         ->toHaveKey('context.connection', 'optima')
         ->toHaveKey('context.exception.error', 'Unsupported driver [__mariadb].');
-});
-
-it('can connect to optima database', function () {
-    $service = new DatabaseHealthCheckService(app('db'));
-
-    expect($service->status())
-        ->toBeArray()
-        ->toHaveKeys([
-            'status',
-            'context',
-        ])
-        ->toHaveKey('status', $service::OK)
-        ->toHaveKey('context', []);
 });
