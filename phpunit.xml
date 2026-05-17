@@ -15,7 +15,6 @@
             <directory>./tests</directory>
             <exclude>./tests/Integration</exclude>
             <exclude>./tests/Arch</exclude>
-            <exclude>./tests/Feature</exclude>
         </testsuite>
         <testsuite name="integration">
             <directory>./tests/Integration</directory>
