@@ -1,6 +1,24 @@
 -- Minimal test schema for rudashi/optima integration tests.
 -- Contains only the columns referenced in repository source code.
+-- Idempotent: safe to run multiple times (drops and recreates all objects).
 -- Run with: sqlcmd -S localhost -U sa -P "..." -C -i schema.sql
+
+IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = 'optima_test')
+    CREATE DATABASE optima_test;
+GO
+
+USE optima_test;
+GO
+
+-- Drop tables in dependency order before recreating
+DROP TABLE IF EXISTS [CDN].[PracKartyRcp];
+DROP TABLE IF EXISTS [CDN].[PracEtaty];
+DROP TABLE IF EXISTS [CDN].[DaneKadMod];
+DROP TABLE IF EXISTS [CDN].[CentraKierownicy];
+DROP TABLE IF EXISTS [CDN].[Pracidx];
+DROP TABLE IF EXISTS [CDN].[Centra];
+DROP TABLE IF EXISTS [CDN].[Kontrahenci];
+GO
 
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'CDN')
     EXEC('CREATE SCHEMA CDN');
@@ -95,7 +113,7 @@ GO
 INSERT INTO [CDN].[Centra]
     ([CNT_CntId], [CNT_Nazwa], [CNT_Kod], [CNT_ParentId], [CNT_Nieaktywny])
 VALUES
-    (1, NULL,     'ROOT',   NULL, 0),
+    (1, '',       'ROOT',   NULL, 0),
     (2, 'WYDZIAŁ A', 'WYDA', 1,    0),
     (3, 'WYDZIAŁ B', 'WYDB', 1,    0);
 GO
