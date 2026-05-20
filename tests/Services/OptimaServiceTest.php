@@ -16,6 +16,10 @@ uses(TestCase::class);
 
 mutates(OptimaService::class);
 
+beforeEach(function () {
+    $this->service = app(OptimaService::class);
+});
+
 function dto(): FakeDTO
 {
     return new FakeDTO(id: fake()->numberBetween(1, 100));

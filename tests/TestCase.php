@@ -6,12 +6,9 @@ namespace Rudashi\Optima\Tests;
 
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Rudashi\Optima\OptimaServiceProvider;
-use Rudashi\Optima\Services\OptimaService;
 
 class TestCase extends BaseTestCase
 {
-    public OptimaService $service;
-
     protected function getPackageProviders($app): array
     {
         return [OptimaServiceProvider::class];
@@ -29,12 +26,5 @@ class TestCase extends BaseTestCase
             'password' => env('OPTIMA_DB_PASSWORD', ''),
             'encrypt'  => 'no',
         ]);
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->service = app(OptimaService::class);
     }
 }
