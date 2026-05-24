@@ -11,7 +11,6 @@ use PDOException;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\QueryBuilder;
-use Rudashi\Optima\Tests\Support\FakeDTO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
@@ -21,11 +20,6 @@ mutates(OptimaService::class);
 beforeEach(function () {
     $this->service = app(OptimaService::class);
 });
-
-function dto(): FakeDTO
-{
-    return new FakeDTO(id: fake()->numberBetween(1, 100));
-}
 
 test('can load database configuration', function () {
     expect(app('db')->connection(OptimaService::$connection))

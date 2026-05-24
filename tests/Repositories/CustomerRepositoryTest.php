@@ -13,30 +13,10 @@ use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
 use Rudashi\Optima\Tests\TestCase;
-use stdClass;
 
 uses(TestCase::class);
 
 mutates(CustomerRepository::class);
-
-function fakeCustomerRow(array $override = []): stdClass
-{
-    return (object) array_merge([
-        'id'              => fake()->numberBetween(1, 9999),
-        'code'            => fake()->lexify('????'),
-        'company'         => fake()->company(),
-        'name_line_two'   => null,
-        'name_line_three' => null,
-        'country'         => null,
-        'city'            => null,
-        'postal_code'     => null,
-        'street'          => null,
-        'building_number' => null,
-        'suite_number'    => null,
-        'nip'             => null,
-        'deleted'         => 0,
-    ], $override);
-}
 
 beforeEach(function () {
     $real = app('db')->connection('optima');

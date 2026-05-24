@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Tests\Integration\Schema\ConnectionTest;
 
 use Illuminate\Support\Facades\DB;
+use PDO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
 it('resolves optima connection', function () {
     expect(DB::connection('optima')->getPdo())
-        ->toBeInstanceOf(\PDO::class);
+        ->toBeInstanceOf(PDO::class);
 });
 
 it('Kontrahenci table has expected columns', function () {

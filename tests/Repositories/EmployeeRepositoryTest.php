@@ -11,28 +11,10 @@ use Rudashi\Optima\Models\Employee;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\Repositories\EmployeeRepository;
 use Rudashi\Optima\Tests\TestCase;
-use stdClass;
 
 uses(TestCase::class);
 
 mutates(EmployeeRepository::class);
-
-function fakeEmployeeRow(array $override = []): stdClass
-{
-    return (object) array_merge([
-        'id'              => fake()->numberBetween(1, 9999),
-        'code'            => fake()->lexify('???E'),
-        'firstname'       => fake()->firstName(),
-        'lastname'        => fake()->lastName(),
-        'email'           => fake()->email(),
-        'job_title'       => fake()->jobTitle(),
-        'department_id'   => fake()->numberBetween(1, 50),
-        'department_name' => strtoupper(fake()->word()),
-        'company'         => fake()->company(),
-        'rcp'             => null,
-        'deleted'         => 0,
-    ], $override);
-}
 
 beforeEach(function () {
     $real = app('db')->connection('optima');

@@ -12,21 +12,10 @@ use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\Repositories\DepartmentRepository;
 use Rudashi\Optima\Tests\TestCase;
-use stdClass;
 
 uses(TestCase::class);
 
 mutates(DepartmentRepository::class);
-
-function fakeDepartmentRow(array $override = []): stdClass
-{
-    return (object) array_merge([
-        'id'        => fake()->numberBetween(1, 999),
-        'name'      => strtoupper(fake()->word()),
-        'user_code' => fake()->lexify('???'),
-        'parent_id' => fake()->numberBetween(1, 20),
-    ], $override);
-}
 
 beforeEach(function () {
     $real = app('db')->connection('optima');

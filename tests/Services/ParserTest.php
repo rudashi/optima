@@ -20,10 +20,10 @@ it('create Parser instance', function ($value) {
     expect(array_values((array) $parser))
         ->toMatchArray([$value]);
 })->with([
-    'string' => fake()->name(),
-    'int' => fake()->imei(),
-    'float' => fake()->latitude(),
-    'null' => null,
+    'string' => fn () => fake()->name(),
+    'int'    => fn () => fake()->imei(),
+    'float'  => fn () => fake()->latitude(),
+    'null'   => null,
 ]);
 
 it('create Parser from object', function () {
