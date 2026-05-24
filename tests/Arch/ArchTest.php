@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests;
 
-use Rudashi\Optima\OptimaServiceProvider;
-use Rudashi\Optima\Services\Repositories\EmployeeRepository;
-
 arch('no debug')
     ->expect('Rudashi\Optima')
     ->not->toUse(['die', 'dd', 'dump', 'var_dump']);
@@ -22,3 +19,7 @@ arch('strict types')
 arch('strict equality')
     ->expect('Rudashi\Optima')
     ->toUseStrictEquality();
+
+arch('enums are backed')
+    ->expect('Rudashi\Optima\Enums')
+    ->toBeEnums();
