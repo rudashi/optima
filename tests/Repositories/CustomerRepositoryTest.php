@@ -127,3 +127,63 @@ it('throws RecordsNotFoundException when no customers found by id', function () 
             exceptionMessage: __('Given id is invalid or not in the OPTIMA.'),
         );
 });
+
+it('selects all required customer columns in SQL', function () {
+    $row = fakeCustomerRow();
+
+    $this->connection->shouldReceive('select')
+        ->once()
+        ->withArgs(fn ($sql) =>
+            str_contains($sql, 'Knt_KntId') &&
+            str_contains($sql, 'Knt_Kod] as [code]') &&
+            str_contains($sql, 'Knt_Nazwa1') &&
+            str_contains($sql, 'Knt_Nazwa2') &&
+            str_contains($sql, 'Knt_Nazwa3') &&
+            str_contains($sql, 'Knt_Kraj') &&
+            str_contains($sql, 'Knt_Miasto') &&
+            str_contains($sql, 'Knt_KodPocztowy') &&
+            str_contains($sql, 'Knt_Ulica') &&
+            str_contains($sql, 'Knt_NrDomu') &&
+            str_contains($sql, 'Knt_NrLokalu') &&
+            str_contains($sql, 'Knt_Nip') &&
+            str_contains($sql, 'Knt_Nieaktywny')
+        )
+        ->andReturn([$row]);
+
+    $this->repository->findByCode($row->code);
+});
+
+it('maps all fields from the database row', function () {
+    $row = fakeCustomerRow([
+        'id'              => 100,
+        'code'            => 'TEST1',
+        'company'         => 'Totem',
+        'name_line_two'   => 'Line 2',
+        'name_line_three' => 'Line 3',
+        'country'         => 'PL',
+        'city'            => 'Warsaw',
+        'postal_code'     => '00-001',
+        'street'          => 'ul. Marszałkowska',
+        'building_number' => '10',
+        'suite_number'    => '5A',
+        'nip'             => '1234567890',
+        'deleted'         => 0,
+    ]);
+
+    $this->connection->shouldReceive('select')->once()->andReturn([$row]);
+
+    expect($this->repository->findByCode('TEST1'))
+        ->id->toBe(100)
+        ->code->toBe('TEST1')
+        ->company->toBe('Totem')
+        ->name_line_two->toBe('Line 2')
+        ->name_line_three->toBe('Line 3')
+        ->country->toBe('PL')
+        ->city->toBe('Warsaw')
+        ->postal_code->toBe('00-001')
+        ->street->toBe('ul. Marszałkowska')
+        ->building_number->toBe('10')
+        ->suite_number->toBe('5A')
+        ->nip->toBe('1234567890')
+        ->deleted->toBeFalse();
+});

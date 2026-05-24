@@ -16,7 +16,7 @@ class OptimaService
     protected ?string $connectionName = null;
     protected DatabaseManager $resolver;
 
-    public function __construct(DatabaseManager $resolver, string $connection = null)
+    public function __construct(DatabaseManager $resolver, ?string $connection = null)
     {
         $this->resolver = $resolver;
         $this->connectionName = $connection ?? static::$connection;

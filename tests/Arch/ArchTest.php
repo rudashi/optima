@@ -13,8 +13,7 @@ arch('no debug')
 
 arch('no env()')
     ->expect('Rudashi\Optima')
-    ->not()->toUse('env')
-    ->ignoring(OptimaServiceProvider::class);
+    ->not()->toUse('env');
 
 arch('strict types')
     ->expect('Rudashi\Optima')
@@ -22,5 +21,4 @@ arch('strict types')
 
 arch('strict equality')
     ->expect('Rudashi\Optima')
-    ->toUseStrictEquality()
-    ->ignoring(EmployeeRepository::class);
+    ->toUseStrictEquality();

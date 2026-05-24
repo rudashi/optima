@@ -16,7 +16,7 @@ it('can return list of Payments', function () {
 
     expect($data)
         ->toBeArray()
-        ->toHaveCount(6)
+        ->toHaveCount(25)
         ->toContain([
             'name' => PaymentForm::BANK_TRANSFER_PLN->description(),
             'currency' => PaymentForm::BANK_TRANSFER_PLN->currency(),

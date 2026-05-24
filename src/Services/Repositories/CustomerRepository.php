@@ -18,7 +18,7 @@ readonly class CustomerRepository
     ) {
     }
 
-    public function findByCode(string $code, string $group = null): Customer
+    public function findByCode(string $code, ?string $group = null): Customer
     {
         $data = $this->queryCustomer()
             ->where('Knt_Kod', $code)

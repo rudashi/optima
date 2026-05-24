@@ -111,3 +111,53 @@ it('throws an exception when department is archived', function () {
     expect(fn () => $this->repository->findByCode('ARCHIVED'))
         ->toThrow(RecordsNotFoundException::class);
 });
+
+it('selects all required department columns in SQL', function () {
+    $this->connection->shouldReceive('select')
+        ->once()
+        ->withArgs(fn ($sql) =>
+            str_contains($sql, 'CNT_CntId] as [id]') &&
+            str_contains($sql, 'CNT_Nazwa] as [name]') &&
+            str_contains($sql, 'CNT_ParentId') &&
+            str_contains($sql, 'PRI_Kod')
+        )
+        ->andReturn([]);
+
+    $this->repository->all();
+});
+
+it('applies all WHERE filters in query', function () {
+    $this->connection->shouldReceive('select')
+        ->once()
+        ->withArgs(fn ($sql, $bindings) =>
+            str_contains($sql, 'CNT_Nazwa') &&
+            str_contains($sql, 'CNT_Nieaktywny') &&
+            str_contains($sql, 'PRI_Typ') &&
+            str_contains($sql, 'PRI_Archiwalny') &&
+            str_contains($sql, 'CNK_Rodzaj') &&
+            in_array('', $bindings, true) &&
+            in_array(1, $bindings, true) &&
+            in_array(2, $bindings, true) &&
+            count(array_filter($bindings, fn ($b) => $b === 0)) === 3
+        )
+        ->andReturn([]);
+
+    $this->repository->all();
+});
+
+it('maps all fields from the database row', function () {
+    $row = fakeDepartmentRow([
+        'id'        => 7,
+        'name'      => 'FINANSE',
+        'user_code' => 'FIN',
+        'parent_id' => 3,
+    ]);
+
+    $this->connection->shouldReceive('select')->once()->andReturn([$row]);
+
+    expect($this->repository->findByCode('FINANSE'))
+        ->id->toBe(7)
+        ->name->toBe('FINANSE')
+        ->user_code->toBe('FIN')
+        ->parent_id->toBe(3);
+});
