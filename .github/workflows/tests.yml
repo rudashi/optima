@@ -22,7 +22,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, dom, xml, intl, zip
-          coverage: none
+          coverage: pcov
 
       - name: Install dependencies
         run: composer update --prefer-dist --no-interaction --no-progress
