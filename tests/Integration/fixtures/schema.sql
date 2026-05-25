@@ -10,6 +10,10 @@ GO
 USE optima_test;
 GO
 
+IF DB_NAME() <> 'optima_test'
+    THROW 50001, 'Refusing to seed: current DB is not optima_test', 1;
+GO
+
 -- Drop tables in dependency order before recreating
 DROP TABLE IF EXISTS [CDN].[PracKartyRcp];
 DROP TABLE IF EXISTS [CDN].[PracEtaty];

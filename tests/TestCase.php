@@ -19,12 +19,21 @@ class TestCase extends BaseTestCase
         $app['config']->set('database.default', 'optima');
         $app['config']->set('database.connections.optima', [
             'driver'   => 'sqlsrv',
-            'host'     => env('OPTIMA_DB_HOST', '127.0.0.1'),
-            'port'     => env('OPTIMA_DB_PORT', 1433),
-            'database' => env('OPTIMA_DB_DATABASE', 'optima_test'),
-            'username' => env('OPTIMA_DB_USERNAME', 'sa'),
-            'password' => env('OPTIMA_DB_PASSWORD', ''),
-            'encrypt'  => 'no',
+            'host'     => env('MS_HOST'),
+            'port'     => env('MS_PORT', 1433),
+            'database' => env('MS_DATABASE'),
+            'read'     => [
+                'username' => env('MS_USERNAME'),
+                'password' => env('MS_PASSWORD'),
+            ],
+            'write'    => [
+                'username' => env('MS_SUDO_USERNAME', env('MS_USERNAME')),
+                'password' => env('MS_SUDO_PASSWORD', env('MS_PASSWORD')),
+            ],
+            'charset'                  => 'utf8mb4',
+            'collation'                => 'utf8mb4_unicode_ci',
+            'trust_server_certificate' => true,
+            'encrypt'                  => 'no',
         ]);
     }
 }

@@ -1,31 +1,29 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: .docker/Dockerfile
-    volumes:
-      - ./:/package
-    environment:
-      OPTIMA_DB_HOST: mssql
-      OPTIMA_DB_PORT: 1433
-      OPTIMA_DB_DATABASE: optima_test
-      OPTIMA_DB_USERNAME: sa
-      OPTIMA_DB_PASSWORD: "Optima!2026"
-    depends_on:
-      mssql:
-        condition: service_healthy
+    app:
+        build:
+            context: .
+            dockerfile: .docker/Dockerfile
+        volumes:
+            - ./:/package
+        env_file:
+            - .env
+        environment:
+            OPTIMA_SEED_FIXTURES: "1"
+        depends_on:
+            mssql:
+                condition: service_healthy
 
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    platform: linux/amd64
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "Optima!2026"
-    ports:
-      - "1433:1433"
-    healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Optima!2026' -C -Q 'SELECT 1' || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
+    mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        platform: linux/amd64
+        environment:
+            ACCEPT_EULA: "Y"
+            MSSQL_SA_PASSWORD: "${MS_PASSWORD:?MS_PASSWORD must be set in .env}"
+        ports:
+            - "1433:1433"
+        healthcheck:
+            test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MS_PASSWORD}\" -C -Q 'SELECT 1' || exit 1" ]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+            start_period: 30s
