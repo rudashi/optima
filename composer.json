@@ -21,9 +21,13 @@
         "laravel/framework": "^12.0|^13.0"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.24",
+        "larastan/larastan": "^3.9",
+        "laravel/pint": "^1.29",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^10.11",
         "pestphp/pest": "^v4.0",
+        "phpstan/phpstan-mockery": "^2.0",
         "roave/security-advisories": "dev-latest"
     },
     "autoload": {
@@ -47,6 +51,7 @@
         }
     },
     "config": {
+        "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true
@@ -60,10 +65,10 @@
         "test:bundles": "vendor/bin/pest --configuration=phpunit.xml --testsuite=bundles",
         "test:integration": "vendor/bin/pest --configuration=phpunit.xml --testsuite=integration",
         "test:mutate": "vendor/bin/pest --mutate --min=80",
-        "pint": "vendor/bin/pint",
+        "pint": "vendor/bin/pint --test -vvv",
         "analyse": "vendor/bin/phpstan analyse",
         "coverage": "vendor/bin/pest --coverage",
         "profile": "vendor/bin/pest --profile",
-        "styles": "vendor/bin/pint --test"
+        "styles": ["@pint", "@analyse"]
     }
 }

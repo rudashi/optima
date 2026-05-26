@@ -30,6 +30,8 @@ RUN pecl channel-update https://pecl.php.net/channel.xml \
     && pecl install sqlsrv pdo_sqlsrv pcov \
     && docker-php-ext-enable sqlsrv pdo_sqlsrv pcov
 
+RUN echo "memory_limit=512M" > /usr/local/etc/php/conf.d/memory-limit.ini
+
 RUN update-ca-certificates
 # END SQLserver
 

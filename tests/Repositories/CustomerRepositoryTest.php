@@ -36,7 +36,8 @@ it('returns a Customer when found by code', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'Knt_Kod') && in_array('TEST', $bindings, true)
         )
         ->andReturn([$row]);
@@ -51,7 +52,8 @@ it('adds group filter to query when group is provided', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'Knt_Kod') &&
             str_contains($sql, 'Knt_Grupa') &&
             in_array('SUPPLIER1', $bindings, true) &&
@@ -85,7 +87,8 @@ it('returns a Collection of Customers when found by id', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'Knt_KntId') &&
             in_array(10, $bindings, true) &&
             in_array(20, $bindings, true)
@@ -113,7 +116,8 @@ it('selects all required customer columns in SQL', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql) =>
+        ->withArgs(
+            fn ($sql) =>
             str_contains($sql, 'Knt_KntId') &&
             str_contains($sql, 'Knt_Kod] as [code]') &&
             str_contains($sql, 'Knt_Nazwa1') &&

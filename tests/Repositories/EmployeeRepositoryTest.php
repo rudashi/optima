@@ -34,7 +34,8 @@ it('returns an Employee when found by code', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'PRI_Kod') && in_array('023E', $bindings, true)
         )
         ->andReturn([$row]);
@@ -122,7 +123,8 @@ it('selects all required employee columns in SQL', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql) =>
+        ->withArgs(
+            fn ($sql) =>
             str_contains($sql, 'PRI_PraId] as [id]') &&
             str_contains($sql, 'PRI_Kod] as [code]') &&
             str_contains($sql, 'PRI_Imie1') &&
@@ -145,7 +147,8 @@ it('filters by EMPLOYEE and OWNER types in SQL', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'PRI_Typ') &&
             in_array(EmployeeRepository::EMPLOYEE, $bindings, true) &&
             in_array(EmployeeRepository::OWNER, $bindings, true)
@@ -160,7 +163,8 @@ it('joins with the latest work record in SQL', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql) =>
+        ->withArgs(
+            fn ($sql) =>
             str_contains($sql, 'PracEtaty') &&
             str_contains($sql, 'MAX(PRE_PreId)')
         )
@@ -174,7 +178,8 @@ it('joins with RCP card filtered by date in SQL', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql) =>
+        ->withArgs(
+            fn ($sql) =>
             str_contains($sql, 'PracKartyRcp') &&
             str_contains($sql, 'PKR_OkresDo')
         )

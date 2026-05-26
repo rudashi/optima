@@ -49,7 +49,8 @@ it('returns a Department when found by code', function () {
 
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'CNT_Kod') && in_array('DRUK', $bindings, true)
         )
         ->andReturn([$row]);
@@ -104,7 +105,8 @@ it('throws an exception when department is archived', function () {
 it('selects all required department columns in SQL', function () {
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql) =>
+        ->withArgs(
+            fn ($sql) =>
             str_contains($sql, 'CNT_CntId] as [id]') &&
             str_contains($sql, 'CNT_Nazwa] as [name]') &&
             str_contains($sql, 'CNT_ParentId') &&
@@ -118,7 +120,8 @@ it('selects all required department columns in SQL', function () {
 it('applies all WHERE filters in query', function () {
     $this->connection->shouldReceive('select')
         ->once()
-        ->withArgs(fn ($sql, $bindings) =>
+        ->withArgs(
+            fn ($sql, $bindings) =>
             str_contains($sql, 'CNT_Nazwa') &&
             str_contains($sql, 'CNT_Nieaktywny') &&
             str_contains($sql, 'PRI_Typ') &&

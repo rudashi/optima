@@ -47,7 +47,7 @@ class Collection extends CollectionBase
     {
         return array_map(static function (mixed $model) use ($primaryKey) {
             if (method_exists($model, 'primaryKey')) {
-                return $model->primaryKey(); // @phpstan-ignore method.nonObject
+                return $model->primaryKey();
             }
 
             return $model->$primaryKey;

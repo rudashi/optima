@@ -1,0 +1,34 @@
+{
+    "preset": "psr12",
+    "rules": {
+        "ordered_imports": {
+            "sort_algorithm": "alpha",
+            "imports_order": [
+                "const",
+                "class",
+                "function"
+            ]
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "class_attributes_separation": {
+            "elements": {
+                "const": "none",
+                "trait_import": "none",
+                "case": "none"
+            }
+        },
+        "trailing_comma_in_multiline": {
+            "elements" : [
+                "arrays"
+            ]
+        },
+        "not_operator_with_successor_space": false,
+        "no_extra_blank_lines": {
+            "tokens" : [
+                "extra"
+            ]
+        }
+    }
+}
