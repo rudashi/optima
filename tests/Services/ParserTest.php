@@ -7,7 +7,7 @@ namespace Rudashi\Optima\Tests\Services\ParserTest;
 use Rudashi\Optima\Enums\TransactionType;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
 use Rudashi\Optima\Services\Entity\Parser;
-use Rudashi\Optima\Tests\Support\FakeEnum;
+use Rudashi\Optima\Tests\Fixtures\FakeEnum;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);

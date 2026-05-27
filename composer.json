@@ -60,9 +60,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "test": ["@test:bundles", "@test:integration"],
+        "test": ["@test:unit", "@test:integration"],
         "test:arch": "vendor/bin/pest --configuration=phpunit.xml --testsuite=arch",
-        "test:bundles": "vendor/bin/pest --configuration=phpunit.xml --testsuite=bundles",
+        "test:unit": "vendor/bin/pest --configuration=phpunit.xml --testsuite=unit",
         "test:integration": "vendor/bin/pest --configuration=phpunit.xml --testsuite=integration",
         "test:mutate": "vendor/bin/pest --mutate --min=80",
         "pint": "vendor/bin/pint --test -vvv",

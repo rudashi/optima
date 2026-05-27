@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Tests\Services\CollectionTest;
 
 use Rudashi\Optima\Services\Collection;
-use Rudashi\Optima\Tests\Support\CustomPrimaryDTO;
+use Rudashi\Optima\Tests\Fixtures\CustomPrimaryDTO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
