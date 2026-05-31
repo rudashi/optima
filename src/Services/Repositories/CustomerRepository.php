@@ -22,7 +22,7 @@ readonly class CustomerRepository
     {
         $data = $this->queryCustomer()
             ->where('Knt_Kod', $code)
-            ->when($group, static function (QueryBuilder $query) use ($group) {
+            ->when($group, static function (QueryBuilder $query, string $group) {
                 return $query->where('Knt_Grupa', CustomerGroup::from($group)->value);
             })
             ->first();

@@ -13,7 +13,7 @@ use PDOException;
 class OptimaService
 {
     public static string $connection = 'optima';
-    protected ?string $connectionName = null;
+    protected string $connectionName;
     protected DatabaseManager $resolver;
 
     public function __construct(DatabaseManager $resolver, ?string $connection = null)
