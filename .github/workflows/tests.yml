@@ -80,11 +80,6 @@ jobs:
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
           echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
 
-      - name: Activate .env for CI
-        run: |
-          cp .env.ci .env
-          sed -i 's/^MS_HOST=.*/MS_HOST=localhost/' .env
-
       - name: Seed schema fixture
         run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/fixtures/schema.sql
 

@@ -2,12 +2,17 @@ services:
     app:
         build:
             context: .
-            dockerfile: .docker/Dockerfile
+            dockerfile: .docker/8.4/Dockerfile
         volumes:
             - ./:/package
-        env_file:
-            - .env
         environment:
+            MS_HOST: "${MS_HOST:-mssql}"
+            MS_PORT: "${MS_PORT:-1433}"
+            MS_DATABASE: "${MS_DATABASE:-optima_test}"
+            MS_USERNAME: "${MS_USERNAME:-sa}"
+            MS_PASSWORD: "${MS_PASSWORD:-Optima!2026}"
+            MS_SUDO_USERNAME: "${MS_SUDO_USERNAME:-sa}"
+            MS_SUDO_PASSWORD: "${MS_SUDO_PASSWORD:-Optima!2026}"
             OPTIMA_SEED_FIXTURES: "1"
         depends_on:
             mssql:
@@ -18,11 +23,11 @@ services:
         platform: linux/amd64
         environment:
             ACCEPT_EULA: "Y"
-            MSSQL_SA_PASSWORD: "${MS_PASSWORD:?MS_PASSWORD must be set in .env}"
+            MSSQL_SA_PASSWORD: "${MS_PASSWORD:-Optima!2026}"
         ports:
             - "1433:1433"
         healthcheck:
-            test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MS_PASSWORD}\" -C -Q 'SELECT 1' || exit 1" ]
+            test: [ "CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"${MS_PASSWORD:-Optima!2026}\" -C -Q 'SELECT 1' || exit 1" ]
             interval: 10s
             timeout: 5s
             retries: 10
