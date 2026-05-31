@@ -8,6 +8,8 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
+pest()->group('smoke');
+
 it('can ping optima database and get response 200', function () {
     $this->get(route('api.optima.ping'))
         ->assertOk()

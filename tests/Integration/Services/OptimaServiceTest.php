@@ -8,6 +8,8 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
+pest()->group('smoke');
+
 it('can check connection', function () {
     expect(optima(false)->hasConnection())
         ->toBeTrue();

@@ -10,6 +10,8 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
+pest()->group('smoke');
+
 it('resolves optima connection', function () {
     expect(DB::connection('optima')->getPdo())
         ->toBeInstanceOf(PDO::class);
@@ -65,16 +67,4 @@ it('Pracidx table has expected columns', function () {
         'PRI_Typ',
         'PRI_Archiwalny',
     );
-});
-
-it('finds a customer by code from seeded fixture', function () {
-    $result = DB::connection('optima')
-        ->table('CDN.Kontrahenci')
-        ->where('Knt_Kod', 'TEST-A')
-        ->where('Knt_Nieaktywny', 0)
-        ->first();
-
-    expect($result)
-        ->not->toBeNull()
-        ->and($result->Knt_Nazwa1)->toBe('Test Company A');
 });

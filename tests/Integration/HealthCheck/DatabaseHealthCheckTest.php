@@ -9,6 +9,8 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
+pest()->group('smoke');
+
 it('can connect to optima database', function () {
     $service = new DatabaseHealthCheckService(app('db'));
 
