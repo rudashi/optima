@@ -40,7 +40,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /package
 COPY composer.json composer.json
 RUN composer install --prefer-dist --no-interaction --no-scripts --no-autoloader
-COPY .. .
+COPY . .
 RUN composer dump-autoload --optimize
 
 COPY .docker/entrypoint.sh /entrypoint.sh
