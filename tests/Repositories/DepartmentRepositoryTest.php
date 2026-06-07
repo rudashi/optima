@@ -95,13 +95,6 @@ it('throws RecordsNotFoundException when code is not found', function () {
         );
 });
 
-it('throws an exception when department is archived', function () {
-    $this->connection->shouldReceive('select')->once()->andReturn([]);
-
-    expect(fn () => $this->repository->findByCode('ARCHIVED'))
-        ->toThrow(RecordsNotFoundException::class);
-});
-
 it('selects all required department columns in SQL', function () {
     $this->connection->shouldReceive('select')
         ->once()

@@ -150,8 +150,8 @@ it('filters by EMPLOYEE and OWNER types in SQL', function () {
         ->withArgs(
             fn ($sql, $bindings) =>
             str_contains($sql, 'PRI_Typ') &&
-            in_array(EmployeeRepository::EMPLOYEE, $bindings, true) &&
-            in_array(EmployeeRepository::OWNER, $bindings, true)
+            in_array(1, $bindings, true) &&
+            in_array(2, $bindings, true)
         )
         ->andReturn([$row]);
 

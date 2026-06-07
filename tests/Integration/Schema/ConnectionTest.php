@@ -31,6 +31,7 @@ it('Kontrahenci table has expected columns', function () {
         'Knt_Nazwa1',
         'Knt_Nieaktywny',
         'Knt_Nip',
+        'Knt_Grupa',
     );
 });
 

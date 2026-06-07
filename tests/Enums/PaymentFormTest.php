@@ -101,6 +101,26 @@ it('returns generic payment forms for unsupported countries', function () {
         ->toContain(PaymentForm::BANK_TRANSFER);
 });
 
+it('returns correct payment forms per country', function (Country $country, array $expected) {
+    expect(PaymentForm::for($country))->toBe($expected);
+})->with([
+    'Norway' => [Country::NORWAY, [
+        PaymentForm::PREPAYMENT_NOK_100,
+        PaymentForm::PREPAYMENT_NOK_50,
+        PaymentForm::BANK_TRANSFER_NOK,
+    ]],
+    'United Kingdom' => [Country::UNITED_KINGDOM, [
+        PaymentForm::PREPAYMENT_GBP_100,
+        PaymentForm::PREPAYMENT_GBP_50,
+        PaymentForm::BANK_TRANSFER_GBP,
+    ]],
+    'Denmark' => [Country::DENMARK, [
+        PaymentForm::PREPAYMENT_DKK_100,
+        PaymentForm::PREPAYMENT_DKK_50,
+        PaymentForm::BANK_TRANSFER_DKK,
+    ]],
+]);
+
 it('can return list of payments as array', function () {
     $data = PaymentForm::toArray();
 

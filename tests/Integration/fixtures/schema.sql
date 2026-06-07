@@ -107,11 +107,14 @@ GO
 -- Fixtures — neutral test data
 -- ============================================================
 INSERT INTO [CDN].[Kontrahenci]
-    ([Knt_KntId], [Knt_Kod], [Knt_Nazwa1], [Knt_Nieaktywny])
+    ([Knt_KntId], [Knt_Kod], [Knt_Nazwa1], [Knt_Nazwa2], [Knt_Nazwa3],
+     [Knt_Kraj], [Knt_Miasto], [Knt_KodPocztowy], [Knt_Ulica],
+     [Knt_NrDomu], [Knt_NrLokalu], [Knt_Nip], [Knt_Nieaktywny], [Knt_Grupa])
 VALUES
-    (1, 'TEST-A', 'Test Company A', 0),
-    (2, 'TEST-B', 'Test Company B', 0),
-    (3, 'INACTIVE', 'Inactive Company', 1);
+    (1, N'TEST-A',    N'Test Company A',    NULL,         NULL,       NULL,      NULL,       NULL,      NULL,         NULL,  NULL, NULL,           0, NULL),
+    (2, N'TEST-B',    N'Test Company B',    NULL,         NULL,       NULL,      NULL,       NULL,      NULL,         NULL,  NULL, NULL,           0, NULL),
+    (3, N'INACTIVE',  N'Inactive Company',  NULL,         NULL,       NULL,      NULL,       NULL,      NULL,         NULL,  NULL, NULL,           1, NULL),
+    (4, N'TEST-FULL', N'Test Company Full', N'Sp. z o.o.', N'Oddział', N'Polska', N'GDAŃSK', N'82-500', N'ul. Polna', N'26', N'1', N'5860001234', 0, N'PODWYKONAWCA');
 GO
 
 INSERT INTO [CDN].[Centra]

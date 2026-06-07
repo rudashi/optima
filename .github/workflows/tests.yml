@@ -6,10 +6,18 @@ on:
   pull_request:
     branches: ["master"]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   unit:
     name: Arch + Unit + Mutate (PHP ${{ matrix.php }})
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -25,7 +33,10 @@ jobs:
           coverage: pcov
 
       - name: Install dependencies
-        run: composer update --prefer-dist --no-interaction --no-progress
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: highest
+          composer-options: "--prefer-dist"
 
       - name: Run arch tests
         run: composer run test:arch
@@ -39,6 +50,7 @@ jobs:
   integration:
     name: Integration (MSSQL, PHP ${{ matrix.php }})
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -49,6 +61,7 @@ jobs:
         env:
           ACCEPT_EULA: "Y"
           MSSQL_SA_PASSWORD: "Optima!2026"
+          MSSQL_MEMORY_LIMIT_MB: "2048"
         ports:
           - 1433:1433
         options: >-
@@ -68,7 +81,10 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        run: composer update --prefer-dist --no-interaction --no-progress
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: highest
+          composer-options: "--prefer-dist"
 
       - name: Install sqlcmd on runner
         run: |
