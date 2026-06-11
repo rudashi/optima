@@ -13,11 +13,6 @@ uses(TestCase::class);
 
 mutates(Country::class);
 
-it('is a string-backed enum', function () {
-    expect(Country::POLAND)->toBeInstanceOf(Country::class)
-        ->and(Country::POLAND->value)->toBeString();
-});
-
 it('implements Arrayable and Describable contracts', function () {
     expect(Country::class)
         ->toImplement(Arrayable::class)
@@ -35,16 +30,6 @@ it('has correct backed values for key countries', function (Country $case, strin
     [Country::NULL, ''],
 ]);
 
-it('can be created from a string value', function () {
-    expect(Country::from('PL'))->toBe(Country::POLAND)
-        ->and(Country::from('DE'))->toBe(Country::GERMANY);
-});
-
-it('returns null from tryFrom for unknown value', function () {
-    expect(Country::tryFrom('XX'))->toBeNull()
-        ->and(Country::tryFrom(''))->toBe(Country::NULL);
-});
-
 it('resolves to NULL case for empty or missing name via of()', function () {
     expect(Country::of())->toBe(Country::NULL)
         ->and(Country::of(''))->toBe(Country::NULL)
@@ -56,19 +41,56 @@ it('resolves correct case via of() using description', function () {
         ->and(Country::of('Germany'))->toBe(Country::GERMANY);
 });
 
-it('returns correct currency for each country', function (Country $case, string $currency) {
-    expect($case->currency())->toBe($currency);
-})->with([
-    [Country::POLAND, 'PLN'],
-    [Country::GERMANY, 'EUR'],
-    [Country::UNITED_KINGDOM, 'GBP'],
-    [Country::UNITED_STATES, 'USD'],
-    [Country::NORWAY, 'NOK'],
-    [Country::SWEDEN, 'SEK'],
-    [Country::DENMARK, 'DKK'],
-    [Country::SWITZERLAND, 'CHF'],
-    [Country::NULL, ''],
-]);
+it('returns correct currency for each country', function () {
+    $currencies = [
+        'POLAND' => 'PLN',
+        'BELGIUM' => 'EUR',
+        'BULGARIA' => 'BGN',
+        'SAINT_BARTHELEMY' => 'EUR',
+        'SWITZERLAND' => 'CHF',
+        'CZECH_REPUBLIC' => 'CZK',
+        'GERMANY' => 'EUR',
+        'DENMARK' => 'DKK',
+        'ESTONIA' => 'EUR',
+        'SPAIN' => 'EUR',
+        'FINLAND' => 'EUR',
+        'FRANCE' => 'EUR',
+        'UNITED_KINGDOM' => 'GBP',
+        'IRELAND' => 'EUR',
+        'LUXEMBOURG' => 'EUR',
+        'LATVIA' => 'EUR',
+        'NETHERLANDS' => 'EUR',
+        'NORWAY' => 'NOK',
+        'PORTUGAL' => 'EUR',
+        'SWEDEN' => 'SEK',
+        'UNITED_STATES' => 'USD',
+        'AUSTRIA' => 'EUR',
+        'GREECE' => 'EUR',
+        'ICELAND' => 'ISK',
+        'ITALY' => 'EUR',
+        'LITHUANIA' => 'EUR',
+        'SLOVAKIA' => 'EUR',
+        'SLOVENIA' => 'EUR',
+        'UKRAINE' => 'UAH',
+        'JAPAN' => 'JPY',
+        'HUNGARY' => 'EUR',
+        'AUSTRALIA' => 'AUD',
+        'CANADA' => 'CAD',
+        'ISRAEL' => 'ILS',
+        'CHINA' => 'CNY',
+        'VIRGIN_ISLANDS_BRITISH' => 'USD',
+        'QATAR' => 'QAR',
+        'ROMANIA' => 'RON',
+        'PAKISTAN' => 'PKR',
+        'NULL' => '',
+    ];
+
+    expect($currencies)->toHaveCount(count(Country::cases()));
+
+    foreach (Country::cases() as $case) {
+        expect($case->currency())->toBe($currencies[$case->name]);
+    }
+});
 
 it('returns a non-empty description for all non-null cases', function () {
     $cases = array_filter(Country::cases(), fn ($c) => $c !== Country::NULL);

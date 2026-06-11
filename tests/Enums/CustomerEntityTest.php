@@ -12,11 +12,6 @@ uses(TestCase::class);
 
 mutates(CustomerEntity::class);
 
-it('is an int-backed enum', function () {
-    expect(CustomerEntity::COMPANY)->toBeInstanceOf(CustomerEntity::class)
-        ->and(CustomerEntity::COMPANY->value)->toBeInt();
-});
-
 it('implements Describable contract', function () {
     expect(CustomerEntity::class)->toImplement(Describable::class);
 });
@@ -28,19 +23,8 @@ it('has correct backed values', function (CustomerEntity $case, int $value) {
     [CustomerEntity::PERSON, 1],
 ]);
 
-it('can be created from an int value', function () {
-    expect(CustomerEntity::from(0))->toBe(CustomerEntity::COMPANY)
-        ->and(CustomerEntity::from(1))->toBe(CustomerEntity::PERSON);
-});
-
-it('returns null from tryFrom for unknown value', function () {
-    expect(CustomerEntity::tryFrom(2))->toBeNull()
-        ->and(CustomerEntity::tryFrom(-1))->toBeNull();
-});
-
 it('returns correct description for each case', function (CustomerEntity $case, string $description) {
-    expect($case->description())->toBeString()->not->toBeEmpty()
-        ->and($case->description())->toBe($description);
+    expect($case->description())->toBe($description);
 })->with([
     [CustomerEntity::COMPANY, 'Business entity'],
     [CustomerEntity::PERSON, 'Natural person'],

@@ -27,11 +27,17 @@ it('returns response 200 with pong message', function () {
 });
 
 it('return response 500 with error message', function () {
-    config(['database.connections.optima.driver' => 'sqlite']);
+    $this->mock(DatabaseHealthCheckService::class)
+        ->allows('status')
+        ->andReturn([
+            'status' => DatabaseHealthCheckService::PROBLEM,
+            'message' => 'Could not connect to db',
+            'context' => [],
+        ]);
 
     $this->get(route('api.optima.ping'))
         ->assertStatus(500)
-        ->assertJson([
+        ->assertExactJson([
             'status' => DatabaseHealthCheckService::PROBLEM,
             'message' => 'Could not connect to db',
         ]);

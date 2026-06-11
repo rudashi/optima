@@ -87,37 +87,6 @@ it('has correct constant values', function () {
         ->and(EmployeeRepository::CONTRACTOR)->toBe(20);
 });
 
-it('maps all fields from the database row', function () {
-    $row = fakeEmployeeRow([
-        'id'              => 42,
-        'code'            => '001E',
-        'firstname'       => 'Jan',
-        'lastname'        => 'Kowalski',
-        'email'           => 'jan@example.com',
-        'job_title'       => 'Developer',
-        'department_id'   => 5,
-        'department_name' => 'IT',
-        'company'         => 'Totem',
-        'rcp'             => '99999',
-        'deleted'         => 0,
-    ]);
-
-    $this->connection->shouldReceive('select')->once()->andReturn([$row]);
-
-    expect($this->repository->findByCode('001E'))
-        ->id->toBe(42)
-        ->code->toBe('001E')
-        ->firstname->toBe('Jan')
-        ->lastname->toBe('Kowalski')
-        ->email->toBe('jan@example.com')
-        ->job_title->toBe('Developer')
-        ->department_id->toBe(5)
-        ->department_name->toBe('IT')
-        ->company->toBe('Totem')
-        ->rcp->toBe('99999')
-        ->deleted->toBeFalse();
-});
-
 it('selects all required employee columns in SQL', function () {
     $row = fakeEmployeeRow();
 

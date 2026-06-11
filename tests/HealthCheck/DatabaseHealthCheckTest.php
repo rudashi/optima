@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests\HealthCheck\DatabaseHealthCheckTest;
 
+use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\SqlServerConnection;
 use Rudashi\Optima\Services\DatabaseHealthCheckService;
@@ -23,44 +24,29 @@ it('shows ok when the database connection succeeds', function () {
     $service = new DatabaseHealthCheckService($db);
 
     expect($service->status())
-        ->toBeArray()
-        ->toHaveKey('status', $service::OK)
-        ->toHaveKey('message', 'Database connection is okay')
-        ->toHaveKey('context', []);
+        ->toBe([
+            'status' => $service::OK,
+            'message' => 'Database connection is okay',
+            'context' => [],
+        ]);
 });
 
-it('shows problem when database driver is incorrect', function () {
-    config(['database.connections.optima.driver' => 'sqlite']);
-    $service = new DatabaseHealthCheckService(app('db'));
+it('shows problem when the database connection fails', function () {
+    $connection = $this->mock(SqlServerConnection::class);
+    $connection->allows('getReadPdo')->andThrow(new Exception('Connection refused'));
+
+    $db = $this->mock(DatabaseManager::class);
+    $db->allows('connection')->andReturn($connection);
+
+    $service = new DatabaseHealthCheckService($db);
 
     expect($service->status())
         ->toBeArray()
-        ->toHaveKeys([
-            'status',
-            'message',
-            'context',
-        ])
-        ->toHaveKey('status', $service::PROBLEM)
-        ->toHaveKey('message', 'Could not connect to db')
-        ->toHaveKey('context.connection', 'optima');
-});
-
-it('shows problem when driver is not installed on server', function () {
-    config(['database.connections.optima.driver' => '__mariadb']);
-    $service = new DatabaseHealthCheckService(app('db'));
-
-    expect($service->status())
-        ->toBeArray()
-        ->toHaveKeys([
-            'status',
-            'message',
-            'context',
-        ])
         ->toHaveKey('status', $service::PROBLEM)
         ->toHaveKey('message', 'Could not connect to db')
         ->toHaveKey('context.connection', 'optima')
-        ->toHaveKey('context.exception.error', 'Unsupported driver [__mariadb].')
-        ->toHaveKey('context.exception.class')
+        ->toHaveKey('context.exception.error', 'Connection refused')
+        ->toHaveKey('context.exception.class', Exception::class)
         ->toHaveKey('context.exception.line')
         ->toHaveKey('context.exception.file');
 });

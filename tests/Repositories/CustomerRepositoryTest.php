@@ -136,38 +136,3 @@ it('selects all required customer columns in SQL', function () {
 
     $this->repository->findByCode($row->code);
 });
-
-it('maps all fields from the database row', function () {
-    $row = fakeCustomerRow([
-        'id'              => 100,
-        'code'            => 'TEST1',
-        'company'         => 'Totem',
-        'name_line_two'   => 'Line 2',
-        'name_line_three' => 'Line 3',
-        'country'         => 'PL',
-        'city'            => 'Warsaw',
-        'postal_code'     => '00-001',
-        'street'          => 'ul. Marszałkowska',
-        'building_number' => '10',
-        'suite_number'    => '5A',
-        'nip'             => '1234567890',
-        'deleted'         => 0,
-    ]);
-
-    $this->connection->shouldReceive('select')->once()->andReturn([$row]);
-
-    expect($this->repository->findByCode('TEST1'))
-        ->id->toBe(100)
-        ->code->toBe('TEST1')
-        ->company->toBe('Totem')
-        ->name_line_two->toBe('Line 2')
-        ->name_line_three->toBe('Line 3')
-        ->country->toBe('PL')
-        ->city->toBe('Warsaw')
-        ->postal_code->toBe('00-001')
-        ->street->toBe('ul. Marszałkowska')
-        ->building_number->toBe('10')
-        ->suite_number->toBe('5A')
-        ->nip->toBe('1234567890')
-        ->deleted->toBeFalse();
-});

@@ -85,3 +85,23 @@ it('can attach to collection item other filtered collection', function () {
             fn ($item) => $item->x->toBeArray()->toBeEmpty(),
         );
 });
+
+it('merges items and preserves the custom collection type', function () {
+    $merged = (new Collection(['a', 'b']))->merge(new Collection(['c']));
+
+    expect($merged)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(3)
+        ->and($merged->values()->all())->toBe(['a', 'b', 'c']);
+});
+
+it('drops falsy values when plucking', function () {
+    $collection = new Collection([
+        ['id' => 1, 'label' => 'a'],
+        ['id' => 0, 'label' => ''],
+        ['id' => 2, 'label' => 'b'],
+    ]);
+
+    expect(array_values($collection->pluckAll(['id', 'label'])))
+        ->toBe([1, 'a', 2, 'b']);
+});

@@ -16,10 +16,6 @@ it('can connect to optima database', function () {
 
     expect($service->status())
         ->toBeArray()
-        ->toHaveKeys([
-            'status',
-            'context',
-        ])
         ->toHaveKey('status', $service::OK)
         ->toHaveKey('context', []);
 });

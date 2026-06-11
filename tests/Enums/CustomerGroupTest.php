@@ -11,11 +11,6 @@ uses(TestCase::class);
 
 mutates(CustomerGroup::class);
 
-it('is a string-backed enum', function () {
-    expect(CustomerGroup::TRADING_COMPANY)->toBeInstanceOf(CustomerGroup::class)
-        ->and(CustomerGroup::TRADING_COMPANY->value)->toBeString();
-});
-
 it('has correct backed values', function (CustomerGroup $case, string $value) {
     expect($case->value)->toBe($value);
 })->with([
@@ -31,16 +26,6 @@ it('has correct backed values', function (CustomerGroup $case, string $value) {
     [CustomerGroup::SUPPLIER, 'DOSTAWCA'],
     [CustomerGroup::SUBCONTRACTOR, 'PODWYKONAWCA'],
 ]);
-
-it('can be created from a string value', function () {
-    expect(CustomerGroup::from('FIRMA HANDLOWA'))->toBe(CustomerGroup::TRADING_COMPANY)
-        ->and(CustomerGroup::from('DOSTAWCA'))->toBe(CustomerGroup::SUPPLIER);
-});
-
-it('returns null from tryFrom for unknown value', function () {
-    expect(CustomerGroup::tryFrom('NIEZNANA'))->toBeNull()
-        ->and(CustomerGroup::tryFrom(''))->toBeNull();
-});
 
 it('has exactly eleven cases', function () {
     expect(CustomerGroup::cases())->toHaveCount(11);

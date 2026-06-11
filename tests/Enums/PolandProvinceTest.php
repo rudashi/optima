@@ -11,11 +11,6 @@ uses(TestCase::class);
 
 mutates(PolandProvince::class);
 
-it('is a string-backed enum', function () {
-    expect(PolandProvince::MASOVIAN)->toBeInstanceOf(PolandProvince::class)
-        ->and(PolandProvince::MASOVIAN->value)->toBeString();
-});
-
 it('has correct backed values for all provinces', function (PolandProvince $case, string $value) {
     expect($case->value)->toBe($value);
 })->with([
@@ -36,16 +31,6 @@ it('has correct backed values for all provinces', function (PolandProvince $case
     [PolandProvince::GREATER_POLAND, 'Wielkopolskie'],
     [PolandProvince::WEST_POMERANIAN, 'Zachodniopomorskie'],
 ]);
-
-it('can be created from a string value', function () {
-    expect(PolandProvince::from('Mazowieckie'))->toBe(PolandProvince::MASOVIAN)
-        ->and(PolandProvince::from('Małopolskie'))->toBe(PolandProvince::LESSER_POLAND);
-});
-
-it('returns null from tryFrom for unknown value', function () {
-    expect(PolandProvince::tryFrom('Nieznane'))->toBeNull()
-        ->and(PolandProvince::tryFrom(''))->toBeNull();
-});
 
 it('has exactly sixteen cases matching all Polish provinces', function () {
     expect(PolandProvince::cases())->toHaveCount(16);

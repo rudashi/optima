@@ -120,36 +120,47 @@ GO
 INSERT INTO [CDN].[Centra]
     ([CNT_CntId], [CNT_Nazwa], [CNT_Kod], [CNT_ParentId], [CNT_Nieaktywny])
 VALUES
-    (1, '',       'ROOT',   NULL, 0),
-    (2, 'WYDZIAŁ A', 'WYDA', 1,    0),
-    (3, 'WYDZIAŁ B', 'WYDB', 1,    0);
+    (1, N'TOTEM',     N'ROOT',  NULL, 0),
+    (2, N'WYDZIAŁ A', N'WYDA',  1,    0),
+    (3, N'WYDZIAŁ B', N'WYDB',  1,    0),
+    (4, N'',          N'EMPTY', 1,    0);
 GO
 
 INSERT INTO [CDN].[Pracidx]
     ([PRI_PraId], [PRI_Kod], [PRI_Imie1], [PRI_Nazwisko], [PRI_Typ], [PRI_Archiwalny], [PRI_CntId])
 VALUES
-    (1, '001E', 'Jan',  'Kowalski', 1, 0, 2),
-    (2, '002E', 'Anna', 'Nowak',    1, 0, 2),
-    (3, '003E', 'Piotr','Wiśniewski',1, 1, 3);
+    (1, N'001E', N'Jan',   N'Kowalski',   1, 0, 2),
+    (2, N'002E', N'Anna',  N'Nowak',      1, 0, 2),
+    (3, N'003E', N'Piotr', N'Wiśniewski', 1, 1, 3);
 GO
 
 INSERT INTO [CDN].[CentraKierownicy]
     ([CNK_CntId], [CNK_PraId], [CNK_Rodzaj])
 VALUES
     (2, 1, 0),
-    (3, 2, 0);
+    (3, 2, 0),
+    (4, 1, 0);
 GO
 
 INSERT INTO [CDN].[PracEtaty]
     ([PRE_PreId], [PRE_PraId], [PRE_HDKEmail], [PRE_ETADkmIdStanowisko])
 VALUES
-    (1, 1, 'jan.kowalski@example.com',  1),
-    (2, 2, 'anna.nowak@example.com',    1),
-    (3, 3, 'piotr.wisniewski@example.com', NULL);
+    (1, 1, N'jan.kowalski@example.com',     1),
+    (4, 1, N'jan.kowalski.new@example.com', 2),
+    (2, 2, N'anna.nowak@example.com',       1),
+    (3, 3, N'piotr.wisniewski@example.com', NULL);
 GO
 
 INSERT INTO [CDN].[DaneKadMod]
     ([DKM_DkmId], [DKM_Nazwa])
 VALUES
-    (1, 'Specjalista');
+    (1, N'Specjalista'),
+    (2, N'Kierownik');
+GO
+
+INSERT INTO [CDN].[PracKartyRcp]
+    ([PKR_PrcId], [PKR_Numer], [PKR_OkresDo])
+VALUES
+    (1, N'RCP-001', '29991231'),
+    (2, N'RCP-EXP', '20000101');
 GO

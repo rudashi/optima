@@ -13,11 +13,6 @@ uses(TestCase::class);
 
 mutates(TransactionType::class);
 
-it('is an int-backed enum', function () {
-    expect(TransactionType::NATIONAL)->toBeInstanceOf(TransactionType::class)
-        ->and(TransactionType::NATIONAL->value)->toBeInt();
-});
-
 it('implements Arrayable and Describable contracts', function () {
     expect(TransactionType::class)
         ->toImplement(Arrayable::class)
@@ -39,16 +34,6 @@ it('has correct backed values', function (TransactionType $case, int $value) {
     [TransactionType::NON_EU_BUYER, 9],
     [TransactionType::OSS, 10],
 ]);
-
-it('can be created from an int value', function () {
-    expect(TransactionType::from(0))->toBe(TransactionType::NATIONAL)
-        ->and(TransactionType::from(10))->toBe(TransactionType::OSS);
-});
-
-it('returns null from tryFrom for unknown value', function () {
-    expect(TransactionType::tryFrom(99))->toBeNull()
-        ->and(TransactionType::tryFrom(-1))->toBeNull();
-});
 
 it('returns correct description for each case', function (TransactionType $case, string $description) {
     expect($case->description())->toBe($description);
@@ -79,12 +64,5 @@ it('includes national with correct data in toArray()', function () {
     expect(TransactionType::toArray())->toContain([
         'name' => TransactionType::NATIONAL->description(),
         'value' => TransactionType::NATIONAL->value,
-    ]);
-});
-
-it('does not mix up cases in toArray()', function () {
-    expect(TransactionType::toArray())->not->toContain([
-        'name' => TransactionType::NATIONAL->description(),
-        'value' => TransactionType::OSS->value,
     ]);
 });

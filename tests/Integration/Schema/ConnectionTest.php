@@ -17,55 +17,18 @@ it('resolves optima connection', function () {
         ->toBeInstanceOf(PDO::class);
 });
 
-it('Kontrahenci table has expected columns', function () {
+it('table has expected columns', function (string $table, array $expected) {
     $columns = DB::connection('optima')->select(
         "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-         WHERE TABLE_SCHEMA = 'CDN' AND TABLE_NAME = 'Kontrahenci'"
+         WHERE TABLE_SCHEMA = 'CDN' AND TABLE_NAME = ?",
+        [$table]
     );
 
     $names = array_map(fn ($col) => $col->COLUMN_NAME, $columns);
 
-    expect($names)->toContain(
-        'Knt_KntId',
-        'Knt_Kod',
-        'Knt_Nazwa1',
-        'Knt_Nieaktywny',
-        'Knt_Nip',
-        'Knt_Grupa',
-    );
-});
-
-it('Centra table has expected columns', function () {
-    $columns = DB::connection('optima')->select(
-        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-         WHERE TABLE_SCHEMA = 'CDN' AND TABLE_NAME = 'Centra'"
-    );
-
-    $names = array_map(fn ($col) => $col->COLUMN_NAME, $columns);
-
-    expect($names)->toContain(
-        'CNT_CntId',
-        'CNT_Nazwa',
-        'CNT_Kod',
-        'CNT_ParentId',
-        'CNT_Nieaktywny',
-    );
-});
-
-it('Pracidx table has expected columns', function () {
-    $columns = DB::connection('optima')->select(
-        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-         WHERE TABLE_SCHEMA = 'CDN' AND TABLE_NAME = 'Pracidx'"
-    );
-
-    $names = array_map(fn ($col) => $col->COLUMN_NAME, $columns);
-
-    expect($names)->toContain(
-        'PRI_PraId',
-        'PRI_Kod',
-        'PRI_Imie1',
-        'PRI_Nazwisko',
-        'PRI_Typ',
-        'PRI_Archiwalny',
-    );
-});
+    expect($names)->toContain(...$expected);
+})->with([
+    'Kontrahenci' => ['Kontrahenci', ['Knt_KntId', 'Knt_Kod', 'Knt_Nazwa1', 'Knt_Nieaktywny', 'Knt_Nip', 'Knt_Grupa']],
+    'Centra'      => ['Centra', ['CNT_CntId', 'CNT_Nazwa', 'CNT_Kod', 'CNT_ParentId', 'CNT_Nieaktywny']],
+    'Pracidx'     => ['Pracidx', ['PRI_PraId', 'PRI_Kod', 'PRI_Imie1', 'PRI_Nazwisko', 'PRI_Typ', 'PRI_Archiwalny']],
+]);

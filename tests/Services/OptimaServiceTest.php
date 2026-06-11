@@ -26,6 +26,11 @@ test('can load database configuration', function () {
         ->toBeInstanceOf(SqlServerConnection::class);
 });
 
+it('resolves the optima connection statically', function () {
+    expect(OptimaService::connection())
+        ->toBeInstanceOf(SqlServerConnection::class);
+});
+
 it('get custom Query builder', function () {
     expect($this->service->newQuery())
         ->toBeInstanceOf(QueryBuilder::class)

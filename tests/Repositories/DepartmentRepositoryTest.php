@@ -129,20 +129,3 @@ it('applies all WHERE filters in query', function () {
 
     $this->repository->all();
 });
-
-it('maps all fields from the database row', function () {
-    $row = fakeDepartmentRow([
-        'id'        => 7,
-        'name'      => 'FINANSE',
-        'user_code' => 'FIN',
-        'parent_id' => 3,
-    ]);
-
-    $this->connection->shouldReceive('select')->once()->andReturn([$row]);
-
-    expect($this->repository->findByCode('FINANSE'))
-        ->id->toBe(7)
-        ->name->toBe('FINANSE')
-        ->user_code->toBe('FIN')
-        ->parent_id->toBe(3);
-});

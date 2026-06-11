@@ -8,8 +8,13 @@ use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Rudashi\Optima\Enums\CustomerGroup;
 use Rudashi\Optima\Models\Customer;
+use Rudashi\Optima\Models\Department;
+use Rudashi\Optima\Models\Employee;
+use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
+use Rudashi\Optima\Services\Repositories\DepartmentRepository;
+use Rudashi\Optima\Services\Repositories\EmployeeRepository;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
@@ -53,8 +58,116 @@ it('applies the group filter when finding a customer by code', function () {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect($repository->findByCode('TEST-FULL', CustomerGroup::SUBCONTRACTOR->value))
-        ->code->toBe('TEST-FULL');
-
-    expect(fn () => $repository->findByCode('TEST-FULL', CustomerGroup::SUPPLIER->value))
+        ->code->toBe('TEST-FULL')
+        ->and(fn () => $repository->findByCode('TEST-FULL', CustomerGroup::SUPPLIER->value))
         ->toThrow(RecordsNotFoundException::class);
+
+});
+
+it('returns an inactive customer flagged as deleted', function () {
+    $repository = new CustomerRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('INACTIVE'))
+        ->toBeInstanceOf(Customer::class)
+        ->code->toBe('INACTIVE')
+        ->company->toBe('Inactive Company')
+        ->deleted->toBeTrue();
+});
+
+it('maps a customer with only the required fields populated', function () {
+    $repository = new CustomerRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('TEST-B'))
+        ->toBeInstanceOf(Customer::class)
+        ->code->toBe('TEST-B')
+        ->company->toBe('Test Company B')
+        ->name->toBe('Test Company B')
+        ->name_line_two->toBeNull()
+        ->name_line_three->toBeNull()
+        ->country->toBeNull()
+        ->city->toBeNull()
+        ->postal_code->toBeNull()
+        ->street->toBeNull()
+        ->building_number->toBeNull()
+        ->suite_number->toBeNull()
+        ->nip->toBeNull()
+        ->deleted->toBeFalse();
+});
+
+it('maps a fully populated employee through the repository', function () {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('001E'))
+        ->toBeInstanceOf(Employee::class)
+        ->id->toBe(1)
+        ->code->toBe('001E')
+        ->firstname->toBe('Jan')
+        ->lastname->toBe('Kowalski')
+        ->email->toBe('jan.kowalski.new@example.com')
+        ->job_title->toBe('Kierownik')
+        ->department_id->toBe(2)
+        ->department_name->toBe('WYDA')
+        ->company->toBe('TOTEM')
+        ->rcp->toBe('RCP-001')
+        ->deleted->toBeFalse();
+});
+
+it('selects the latest employment record by max PRE_PreId', function () {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('001E'))
+        ->email->toBe('jan.kowalski.new@example.com')
+        ->job_title->toBe('Kierownik');
+});
+
+it('joins the active RCP card and ignores expired ones', function () {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('001E'))->rcp->toBe('RCP-001');
+    expect($repository->findByCode('002E'))->rcp->toBeNull();
+});
+
+it('throws when the employee is archived', function () {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect(fn () => $repository->findByCode('003E'))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => '003E']),
+        );
+});
+
+it('lists seeded departments through the repository', function () {
+    $repository = new DepartmentRepository(app(OptimaService::class));
+
+    $departments = $repository->all();
+
+    expect($departments)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(2)
+        ->each->toBeInstanceOf(Department::class)
+        ->and($departments->first())
+        ->id->toBe(2)
+        ->name->toBe('WYDZIAŁ A')
+        ->user_code->toBe('001E')
+        ->parent_id->toBe(1);
+
+});
+
+it('excludes departments with an empty name', function () {
+    $repository = new DepartmentRepository(app(OptimaService::class));
+
+    expect($repository->all()->pluck('id')->all())
+        ->toBe([2, 3]);
+});
+
+it('maps a department found by code through the repository', function () {
+    $repository = new DepartmentRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('WYDA'))
+        ->toBeInstanceOf(Department::class)
+        ->id->toBe(2)
+        ->name->toBe('WYDZIAŁ A')
+        ->user_code->toBe('001E')
+        ->parent_id->toBe(1);
 });
