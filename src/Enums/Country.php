@@ -90,6 +90,7 @@ enum Country: string implements Arrayable, Describable
             self::SLOVENIA,
             self::HUNGARY,
             self::AZERBAIJAN,
+            self::PARAGUAY,
             self::PORTUGAL => 'EUR',
             self::BULGARIA => 'BGN',
             self::SWITZERLAND => 'CHF',
@@ -157,6 +158,7 @@ enum Country: string implements Arrayable, Describable
             self::ROMANIA => __('Romania'),
             self::PAKISTAN => __('Pakistan'),
             self::AZERBAIJAN => __('Azerbaijan'),
+            self::PARAGUAY => __('Paraguay'),
             self::NULL => '',
         };
     }
