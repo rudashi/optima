@@ -23,3 +23,25 @@ arch('strict equality')
 arch('enums are backed')
     ->expect('Rudashi\Optima\Enums')
     ->toBeEnums();
+
+arch('contracts are interfaces')
+    ->expect('Rudashi\Optima\Contracts')
+    ->toBeInterfaces();
+
+arch('controllers')
+    ->expect('Rudashi\Optima\Controllers')
+    ->toHaveSuffix('Controller')
+    ->toExtend('Illuminate\Routing\Controller');
+
+arch('exceptions')
+    ->expect('Rudashi\Optima\Exceptions')
+    ->toHaveSuffix('Exception')
+    ->toImplement('Throwable');
+
+arch('models are readonly')
+    ->expect('Rudashi\Optima\Models')
+    ->toBeReadonly();
+
+arch('repositories')
+    ->expect('Rudashi\Optima\Services\Repositories')
+    ->toHaveSuffix('Repository');

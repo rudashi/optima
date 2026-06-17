@@ -23,7 +23,6 @@ RUN curl https://packages.microsoft.com/keys/microsoft-2025.asc | gpg --dearmor 
     && apt-get update \
     && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
     && ACCEPT_EULA=Y apt-get install -y mssql-tools18 \
-    && echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pecl channel-update https://pecl.php.net/channel.xml \

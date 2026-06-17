@@ -80,12 +80,14 @@ it('throws RecordsNotFoundException when employee is archived', function () {
         );
 });
 
-it('has correct constant values', function () {
-    expect(EmployeeRepository::EMPLOYEE)->toBe(1)
-        ->and(EmployeeRepository::OWNER)->toBe(2)
-        ->and(EmployeeRepository::EMPLOYEE_FULL_TIME)->toBe(10)
-        ->and(EmployeeRepository::CONTRACTOR)->toBe(20);
-});
+it('has correct constant values', function (int $constant, int $expected) {
+    expect($constant)->toBe($expected);
+})->with([
+    'EMPLOYEE'           => [EmployeeRepository::EMPLOYEE, 1],
+    'OWNER'              => [EmployeeRepository::OWNER, 2],
+    'EMPLOYEE_FULL_TIME' => [EmployeeRepository::EMPLOYEE_FULL_TIME, 10],
+    'CONTRACTOR'         => [EmployeeRepository::CONTRACTOR, 20],
+]);
 
 it('selects all required employee columns in SQL', function () {
     $row = fakeEmployeeRow();

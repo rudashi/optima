@@ -45,10 +45,12 @@ it('maps all fields from the database row', function () {
         ->deleted->toBeFalse();
 });
 
-it('casts deleted to a boolean', function () {
-    expect(Customer::make(fakeCustomerRow(['deleted' => 1]))->deleted)->toBeTrue()
-        ->and(Customer::make(fakeCustomerRow(['deleted' => 0]))->deleted)->toBeFalse();
-});
+it('casts deleted to a boolean', function (int $deleted, bool $expected) {
+    expect(Customer::make(fakeCustomerRow(['deleted' => $deleted]))->deleted)->toBe($expected);
+})->with([
+    'truthy' => [1, true],
+    'falsy'  => [0, false],
+]);
 
 it('trims the name when name lines are missing', function () {
     $customer = Customer::make(fakeCustomerRow(['company' => 'ACME']));

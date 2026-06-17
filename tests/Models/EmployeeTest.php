@@ -41,10 +41,12 @@ it('maps all fields from the database row', function () {
         ->deleted->toBeFalse();
 });
 
-it('casts deleted to a boolean', function () {
-    expect(Employee::make(fakeEmployeeRow(['deleted' => 1]))->deleted)->toBeTrue()
-        ->and(Employee::make(fakeEmployeeRow(['deleted' => 0]))->deleted)->toBeFalse();
-});
+it('casts deleted to a boolean', function (int $deleted, bool $expected) {
+    expect(Employee::make(fakeEmployeeRow(['deleted' => $deleted]))->deleted)->toBe($expected);
+})->with([
+    'truthy' => [1, true],
+    'falsy'  => [0, false],
+]);
 
 it('returns null for a missing job title and rcp', function () {
     $employee = Employee::make(fakeEmployeeRow(['job_title' => null, 'rcp' => null]));

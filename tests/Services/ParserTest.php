@@ -217,9 +217,10 @@ it('returns default when int-backed enum value is not found', function (): void 
         ->toBe(TransactionType::NATIONAL);
 });
 
-it('casts non-string value to string', function (): void {
-    expect((new Parser(42))->string())
-        ->toBe('42')
-        ->and((new Parser(3.14))->string())
-        ->toBe('3.14');
-});
+it('casts non-string value to string', function ($value, string $expected): void {
+    expect((new Parser($value))->string())
+        ->toBe($expected);
+})->with([
+    'int'   => [42, '42'],
+    'float' => [3.14, '3.14'],
+]);

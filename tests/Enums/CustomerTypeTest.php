@@ -36,15 +36,19 @@ it('returns correct description for each case', function (CustomerType $case, st
     [CustomerType::POTENTIAL, 'Potential'],
 ]);
 
-it('returns true when comparing equal cases via equals()', function () {
-    expect(CustomerType::RECIPIENT->equals(CustomerType::RECIPIENT))->toBeTrue()
-        ->and(CustomerType::SUPPLIER->equals(CustomerType::SUPPLIER))->toBeTrue();
-});
+it('returns true when comparing equal cases via equals()', function (CustomerType $a, CustomerType $b) {
+    expect($a->equals($b))->toBeTrue();
+})->with([
+    [CustomerType::RECIPIENT, CustomerType::RECIPIENT],
+    [CustomerType::SUPPLIER, CustomerType::SUPPLIER],
+]);
 
-it('returns false when comparing different cases via equals()', function () {
-    expect(CustomerType::RECIPIENT->equals(CustomerType::SUPPLIER))->toBeFalse()
-        ->and(CustomerType::PARTNER->equals(CustomerType::POTENTIAL))->toBeFalse();
-});
+it('returns false when comparing different cases via equals()', function (CustomerType $a, CustomerType $b) {
+    expect($a->equals($b))->toBeFalse();
+})->with([
+    [CustomerType::RECIPIENT, CustomerType::SUPPLIER],
+    [CustomerType::PARTNER, CustomerType::POTENTIAL],
+]);
 
 it('has exactly five cases', function () {
     expect(CustomerType::cases())->toHaveCount(5);

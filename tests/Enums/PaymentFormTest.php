@@ -103,10 +103,12 @@ it('returns correct currency for currency-specific cases', function (PaymentForm
     [PaymentForm::BANK_TRANSFER_SEK, 'SEK'],
 ]);
 
-it('returns empty currency for generic payment forms', function () {
-    expect(PaymentForm::BANK_TRANSFER->currency())->toBe('')
-        ->and(PaymentForm::PREPAYMENT->currency())->toBe('');
-});
+it('returns empty currency for generic payment forms', function (PaymentForm $case) {
+    expect($case->currency())->toBe('');
+})->with([
+    PaymentForm::BANK_TRANSFER,
+    PaymentForm::PREPAYMENT,
+]);
 
 it('returns empty currency for EUR payment forms', function (PaymentForm $case) {
     expect($case->currency())->toBe('');
