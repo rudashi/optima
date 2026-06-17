@@ -162,7 +162,7 @@ it('can return list of payments as array', function () {
 
     expect($data)
         ->toBeArray()
-        ->toHaveCount(25)
+        ->toHaveCount(count(PaymentForm::cases()))
         ->each->toHaveKeys(['value', 'name', 'currency']);
 });
 

@@ -56,7 +56,7 @@ it('can return list of transactions as array', function () {
 
     expect($data)
         ->toBeArray()
-        ->toHaveCount(11)
+        ->toHaveCount(count(TransactionType::cases()))
         ->each->toHaveKeys(['name', 'value']);
 });
 

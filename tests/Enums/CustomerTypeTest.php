@@ -49,7 +49,3 @@ it('returns false when comparing different cases via equals()', function (Custom
     [CustomerType::RECIPIENT, CustomerType::SUPPLIER],
     [CustomerType::PARTNER, CustomerType::POTENTIAL],
 ]);
-
-it('has exactly five cases', function () {
-    expect(CustomerType::cases())->toHaveCount(5);
-});

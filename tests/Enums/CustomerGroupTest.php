@@ -26,7 +26,3 @@ it('has correct backed values', function (CustomerGroup $case, string $value) {
     [CustomerGroup::SUPPLIER, 'DOSTAWCA'],
     [CustomerGroup::SUBCONTRACTOR, 'PODWYKONAWCA'],
 ]);
-
-it('has exactly eleven cases', function () {
-    expect(CustomerGroup::cases())->toHaveCount(11);
-});

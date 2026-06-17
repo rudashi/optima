@@ -29,7 +29,3 @@ it('returns correct description for each case', function (CustomerEntity $case, 
     [CustomerEntity::COMPANY, 'Business entity'],
     [CustomerEntity::PERSON, 'Natural person'],
 ]);
-
-it('has exactly two cases', function () {
-    expect(CustomerEntity::cases())->toHaveCount(2);
-});

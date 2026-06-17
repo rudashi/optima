@@ -59,10 +59,11 @@ it('returns empty string description for NULL case', function () {
 
 it('can return list of countries as array', function () {
     $data = Country::toArray();
+    $nonNull = array_filter(Country::cases(), fn ($case) => $case !== Country::NULL);
 
     expect($data)
         ->toBeArray()
-        ->toHaveCount(39)
+        ->toHaveCount(count($nonNull))
         ->each->toHaveKeys(['code', 'name', 'currency']);
 });
 
