@@ -50,6 +50,7 @@ enum Country: string implements Arrayable, Describable
     case PAKISTAN = 'PK';
     case AZERBAIJAN = 'AZ';
     case PARAGUAY = 'PY';
+    case CROATIA = 'HR';
     case NULL = '';
 
     public static function of(string|null $name = null): self
@@ -91,6 +92,7 @@ enum Country: string implements Arrayable, Describable
             self::HUNGARY,
             self::AZERBAIJAN,
             self::PARAGUAY,
+            self::CROATIA,
             self::PORTUGAL => 'EUR',
             self::BULGARIA => 'BGN',
             self::SWITZERLAND => 'CHF',
@@ -159,6 +161,7 @@ enum Country: string implements Arrayable, Describable
             self::PAKISTAN => __('Pakistan'),
             self::AZERBAIJAN => __('Azerbaijan'),
             self::PARAGUAY => __('Paraguay'),
+            self::CROATIA => __('Croatia'),
             self::NULL => '',
         };
     }
