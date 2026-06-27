@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 use Rudashi\Optima\Tests\Fixtures\FakeDTO;
 
+expect()->extend('toBeNullableString', function () {
+    return $this->value === null ? $this : $this->toBeString();
+});
+
+expect()->extend('toBeNullableInt', function () {
+    return $this->value === null ? $this : $this->toBeInt();
+});
+
 function fakeCustomerRow(array $override = []): stdClass
 {
     return (object) array_merge([

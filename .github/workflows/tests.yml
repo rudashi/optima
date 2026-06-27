@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   unit:
-    name: Arch + Unit + Mutate (PHP ${{ matrix.php }})
+    name: Arch + Unit (PHP ${{ matrix.php }})
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
@@ -44,13 +44,18 @@ jobs:
       - name: Run unit tests
         run: composer run test:unit
 
-      - name: Run mutation tests
-        run: composer run test:mutate
-
   integration:
-    name: Integration (MSSQL, PHP ${{ matrix.php }})
+    name: Integration + Mutate (MSSQL, PHP ${{ matrix.php }})
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      MS_HOST: 127.0.0.1
+      MS_PORT: "1433"
+      MS_DATABASE: optima_test
+      MS_USERNAME: sa
+      MS_PASSWORD: "Optima!2026"
+      MS_SUDO_USERNAME: sa
+      MS_SUDO_PASSWORD: "Optima!2026"
     strategy:
       fail-fast: false
       matrix:
@@ -78,7 +83,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, dom, xml, intl, zip, sqlsrv, pdo_sqlsrv
-          coverage: none
+          coverage: pcov
 
       - name: Install dependencies
         uses: ramsey/composer-install@v4
@@ -100,4 +105,7 @@ jobs:
         run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/fixtures/schema.sql
 
       - name: Run integration tests
-        run: composer run test:integration
+        run: composer run test:fixtures
+
+      - name: Run mutation tests
+        run: composer run test:mutate

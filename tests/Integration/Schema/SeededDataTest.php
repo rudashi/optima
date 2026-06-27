@@ -21,6 +21,10 @@ uses(TestCase::class);
 
 pest()->group('fixtures');
 
+mutates(CustomerRepository::class);
+mutates(EmployeeRepository::class);
+mutates(DepartmentRepository::class);
+
 it('finds a customer by code from seeded fixture', function () {
     $result = DB::connection('optima')
         ->table('CDN.Kontrahenci')
@@ -94,6 +98,39 @@ it('maps a customer with only the required fields populated', function () {
         ->deleted->toBeFalse();
 });
 
+it('returns a Collection of customers when found by ids', function () {
+    $repository = new CustomerRepository(app(OptimaService::class));
+
+    $customers = $repository->find(1, 4);
+
+    expect($customers)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(2)
+        ->each->toBeInstanceOf(Customer::class);
+
+    expect($customers->pluck('id')->all())->toContain(1)->toContain(4);
+});
+
+it('throws with the code message when the customer code is not found', function () {
+    $repository = new CustomerRepository(app(OptimaService::class));
+
+    expect(fn () => $repository->findByCode('NOPE'))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => 'NOPE']),
+        );
+});
+
+it('throws with the id message when no customer matches the ids', function () {
+    $repository = new CustomerRepository(app(OptimaService::class));
+
+    expect(fn () => $repository->find(999999))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given id is invalid or not in the OPTIMA.'),
+        );
+});
+
 it('maps a fully populated employee through the repository', function () {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
@@ -137,6 +174,26 @@ it('throws when the employee is archived', function () {
         );
 });
 
+it('maps an owner-type employee through the repository', function () {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('004O'))
+        ->toBeInstanceOf(Employee::class)
+        ->code->toBe('004O')
+        ->department_name->toBe('WYDC')
+        ->deleted->toBeFalse();
+});
+
+it('throws with the acronym message when the employee code is not found', function () {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect(fn () => $repository->findByCode('NOPE'))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given acronym :code is invalid or not in the OPTIMA.', ['code' => 'NOPE']),
+        );
+});
+
 it('lists seeded departments through the repository', function () {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
@@ -144,7 +201,7 @@ it('lists seeded departments through the repository', function () {
 
     expect($departments)
         ->toBeInstanceOf(Collection::class)
-        ->toHaveCount(2)
+        ->toHaveCount(7)
         ->each->toBeInstanceOf(Department::class)
         ->and($departments->first())
         ->id->toBe(2)
@@ -158,7 +215,7 @@ it('excludes departments with an empty name', function () {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     expect($repository->all()->pluck('id')->all())
-        ->toBe([2, 3]);
+        ->toBe([2, 3, 5, 6, 7, 8, 9]);
 });
 
 it('maps a department found by code through the repository', function () {
@@ -170,4 +227,22 @@ it('maps a department found by code through the repository', function () {
         ->name->toBe('WYDZIAŁ A')
         ->user_code->toBe('001E')
         ->parent_id->toBe(1);
+});
+
+it('uppercases the department code before querying', function () {
+    $repository = new DepartmentRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('wyda'))
+        ->toBeInstanceOf(Department::class)
+        ->id->toBe(2);
+});
+
+it('throws with the code message when the department code is not found', function () {
+    $repository = new DepartmentRepository(app(OptimaService::class));
+
+    expect(fn () => $repository->findByCode('NOPE'))
+        ->toThrow(
+            exception: RecordsNotFoundException::class,
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => 'NOPE']),
+        );
 });
