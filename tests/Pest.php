@@ -2,12 +2,7 @@
 
 declare(strict_types=1);
 
-use Dotenv\Dotenv;
 use Rudashi\Optima\Tests\Fixtures\FakeDTO;
-
-if (file_exists(dirname(__DIR__) . '/.env')) {
-    Dotenv::createImmutable(dirname(__DIR__), '.env')->safeLoad();
-}
 
 function fakeCustomerRow(array $override = []): stdClass
 {

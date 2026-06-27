@@ -3,4 +3,3 @@ vendor
 .idea
 .vscode
 .phpunit.result.cache
-.env
