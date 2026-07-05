@@ -41,7 +41,7 @@ class EmployeeRepository
                 'department.CNT_Kod as department_name',
                 'work.PRE_HDKEmail as email',
                 'hr.DKM_Nazwa as job_title',
-                new Expression("( SELECT CNT_Nazwa FROM CDN.Centra WHERE CNT_Nieaktywny = 0 and CNT_Nazwa != '' and CNT_ParentId is null) as company"),
+                new Expression("( SELECT CNT_Nazwa FROM CDN.Centra WHERE CNT_Nieaktywny = 0 and CNT_Nazwa <> '' and CNT_ParentId is null) as company"),
                 'rcp.PKR_Numer as rcp',
             ])
             ->leftJoin('CDN.Centra as department', 'department.CNT_CntId', 'employee.PRI_CntId')
