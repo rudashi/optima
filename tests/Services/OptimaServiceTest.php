@@ -2,25 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Feature\OptimaServiceTest;
+namespace Rudashi\Optima\Tests\Services\OptimaServiceTest;
 
+use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\SqlServerConnection;
+use PDOException;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\QueryBuilder;
-use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function dto(): FakeDTO
-{
-    return new FakeDTO(id: fake()->numberBetween(1, 100));
-}
+mutates(OptimaService::class);
+
+beforeEach(function () {
+    $this->service = app(OptimaService::class);
+});
 
 test('can load database configuration', function () {
     expect(app('db')->connection(OptimaService::$connection))
+        ->toBeInstanceOf(SqlServerConnection::class);
+});
+
+it('resolves the optima connection statically', function () {
+    expect(OptimaService::connection())
         ->toBeInstanceOf(SqlServerConnection::class);
 });
 
@@ -67,6 +74,33 @@ it('can parse collection of models to array of model keys', function () {
         ->toMatchArray([$first->id, $second->id, $third->id]);
 });
 
+it('uses provided connection name over default', function () {
+    $resolver = $this->mock(DatabaseManager::class);
+    $service = new OptimaService($resolver, 'custom_connection');
+
+    expect($service->getConnectionName())->toBe('custom_connection');
+});
+
+it('returns true when connection is reachable', function () {
+    $connection = $this->mock(SqlServerConnection::class);
+    $connection->shouldReceive('getReadPdo')->once()->andReturn(true);
+
+    $resolver = $this->mock(DatabaseManager::class);
+    $resolver->allows('connection')->andReturn($connection);
+
+    expect((new OptimaService($resolver))->hasConnection())->toBeTrue();
+});
+
+it('returns false when connection throws PDOException', function () {
+    $connection = $this->mock(SqlServerConnection::class);
+    $connection->shouldReceive('getReadPdo')->once()->andThrow(new PDOException('Connection failed'));
+
+    $resolver = $this->mock(DatabaseManager::class);
+    $resolver->allows('connection')->andReturn($connection);
+
+    expect((new OptimaService($resolver))->hasConnection())->toBeFalse();
+});
+
 it('can switch connection', function () {
     config([
         'database.connections.optima_second' => [
@@ -86,9 +120,4 @@ it('can switch connection', function () {
 
     expect($this->service->getConnection())
         ->getDriverName()->toBe('sqlite');
-});
-
-it('can check connection', function () {
-    expect(optima(false)->hasConnection())
-        ->toBeTrue();
 });

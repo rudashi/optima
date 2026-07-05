@@ -46,8 +46,8 @@ class Collection extends CollectionBase
     public function modelKeys(string $primaryKey = 'id'): array
     {
         return array_map(static function (mixed $model) use ($primaryKey) {
-            if (method_exists($model, 'primaryKey')) {
-                return $model->primaryKey(); // @phpstan-ignore method.nonObject
+            if (is_object($model) && method_exists($model, 'primaryKey')) {
+                return $model->primaryKey();
             }
 
             return $model->$primaryKey;

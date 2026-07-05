@@ -3,6 +3,8 @@
 Comarch Optima wrapper
 ================
 
+[![tests](https://github.com/rudashi/optima/actions/workflows/tests.yml/badge.svg)](https://github.com/rudashi/optima/actions/workflows/tests.yml)
+[![styles](https://github.com/rudashi/optima/actions/workflows/styles.yml/badge.svg)](https://github.com/rudashi/optima/actions/workflows/styles.yml)
 ![Twitter Follow](https://img.shields.io/twitter/follow/rudashi?style=social)
 
 Unofficial wrapper for ERP Comarch OPTIMA.

@@ -2,39 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Feature\CollectionTest;
+namespace Rudashi\Optima\Tests\Services\CollectionTest;
 
 use Rudashi\Optima\Services\Collection;
-use Rudashi\Optima\Tests\HelperClasses\CustomPrimaryDTO;
-use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
+use Rudashi\Optima\Tests\Fixtures\CustomPrimaryDTO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-function makeArray(string $type = 'object', int $total = 3): array
-{
-    return array_map(function () use ($type) {
-        $array = [
-            'id' => fake()->numberBetween(),
-            'uuid' => fake()->uuid(),
-            'email' => fake()->email(),
-            'active' => 1,
-        ];
-        settype($array, $type);
-
-        return $array;
-    }, range(0, $total - 1));
-}
-
-function dto(string $classname = FakeDTO::class): FakeDTO
-{
-    return new $classname(
-        id: fake()->numberBetween(1, 10),
-        order_id: fake()->numberBetween(11, 100),
-        name: fake()->name(),
-        description: fake()->company()
-    );
-}
+mutates(Collection::class);
 
 it('can pluck multiple values from nested object', function (array $array) {
     $collection = (new Collection($array))->pluckAll(['uuid', 'email']);
@@ -42,7 +18,7 @@ it('can pluck multiple values from nested object', function (array $array) {
     expect($collection)
         ->toBeArray()
         ->toHaveCount(6);
-})->with([fn () => makeArray()]);
+})->with([fn () => fakeCollectionArray()]);
 
 it('can pluck multiple values from nested array', function (array $array) {
     $collection = (new Collection($array))->pluckAll(['uuid', 'email']);
@@ -50,7 +26,7 @@ it('can pluck multiple values from nested array', function (array $array) {
     expect($collection)
         ->toBeArray()
         ->toHaveCount(6);
-})->with([fn () => makeArray('array')]);
+})->with([fn () => fakeCollectionArray('array')]);
 
 it('can pluck multiple values without duplicates', function (array $array) {
     $collection = (new Collection($array))->pluckAll(['uuid', 'active']);
@@ -58,7 +34,7 @@ it('can pluck multiple values without duplicates', function (array $array) {
     expect($collection)
         ->toBeArray()
         ->toHaveCount(4);
-})->with([fn () => makeArray()]);
+})->with([fn () => fakeCollectionArray()]);
 
 it('can get only model keys', function () {
     $first = dto();
@@ -73,7 +49,7 @@ it('can get only model keys', function () {
 });
 
 it('can attach to collection item', function () {
-    $collection = (new Collection(makeArray('array', 2)));
+    $collection = (new Collection(fakeCollectionArray('array', 2)));
 
     expect($collection)
         ->sequence(
@@ -92,7 +68,7 @@ it('can attach to collection item', function () {
 });
 
 it('can attach to collection item other filtered collection', function () {
-    $collection = (new Collection(makeArray('array')));
+    $collection = (new Collection(fakeCollectionArray('array')));
     $second = (new Collection($collection->take(2)));
 
     $collection->attach(function ($item) use ($second) {
@@ -108,4 +84,24 @@ it('can attach to collection item other filtered collection', function () {
             fn ($item) => $item->x->toBeArray()->toHaveCount(2),
             fn ($item) => $item->x->toBeArray()->toBeEmpty(),
         );
+});
+
+it('merges items and preserves the custom collection type', function () {
+    $merged = (new Collection(['a', 'b']))->merge(new Collection(['c']));
+
+    expect($merged)
+        ->toBeInstanceOf(Collection::class)
+        ->toHaveCount(3)
+        ->and($merged->values()->all())->toBe(['a', 'b', 'c']);
+});
+
+it('drops falsy values when plucking', function () {
+    $collection = new Collection([
+        ['id' => 1, 'label' => 'a'],
+        ['id' => 0, 'label' => ''],
+        ['id' => 2, 'label' => 'b'],
+    ]);
+
+    expect(array_values($collection->pluckAll(['id', 'label'])))
+        ->toBe([1, 'a', 2, 'b']);
 });
