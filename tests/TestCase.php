@@ -21,10 +21,10 @@ class TestCase extends BaseTestCase
     // `bootstrap/cache`, which the bare package dir does not.
     protected function getApplicationBasePath()
     {
-        $root = \Composer\InstalledVersions::getRootPackage();
+        if (is_file((\Composer\InstalledVersions::getRootPackage()['install_path']) . '.env')) {
+            return \Composer\InstalledVersions::getRootPackage()['install_path'];
+        }
 
-        return $root['name'] === 'rudashi/optima'
-            ? parent::getApplicationBasePath()
-            : $root['install_path'];
+        return parent::getApplicationBasePath();
     }
 }
