@@ -8,16 +8,8 @@
 >
     <coverage/>
     <testsuites>
-        <testsuite name="arch">
-            <directory>./tests/Arch</directory>
-        </testsuite>
-        <testsuite name="unit">
+        <testsuite name="optima">
             <directory>./tests</directory>
-            <exclude>./tests/Integration</exclude>
-            <exclude>./tests/Arch</exclude>
-        </testsuite>
-        <testsuite name="integration">
-            <directory>./tests/Integration</directory>
         </testsuite>
     </testsuites>
     <source>
