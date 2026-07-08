@@ -3,6 +3,7 @@
 Comarch Optima wrapper
 ================
 
+[![styles](https://github.com/rudashi/optima/actions/workflows/styles.yml/badge.svg)](https://github.com/rudashi/optima/actions/workflows/styles.yml)
 ![Twitter Follow](https://img.shields.io/twitter/follow/rudashi?style=social)
 
 Unofficial wrapper for ERP Comarch OPTIMA.
@@ -32,7 +33,7 @@ If not working, add repository to yours composer.json
 ],
 ```
 
-Add  to `.env` your sqlSRV database configuration
+Add to `.env` your sqlSRV database configuration
 
 ```dotenv
 MS_HOST=127.0.0.1
@@ -46,12 +47,15 @@ MS_SOCKET=
 ## Usage
 
 To get access to optima query you can use it:
+
 ```php
 optima()->from('table')->get();
 ```
 
 ### Customers | Kontrahenci
+
 To get information about customer you can use one of two methods:
+
 ```php
 (new CustomerRepository(optima(false)))->findByCode('TEST!');
 
@@ -60,4 +64,5 @@ To get information about customer you can use one of two methods:
 
 ## Authors
 
-* **Borys Żmuda** - Lead designer - [LinkedIn](https://www.linkedin.com/in/boryszmuda/), [Portfolio](https://rudashi.github.io/)
+* **Borys Żmuda** - Lead
+  designer - [LinkedIn](https://www.linkedin.com/in/boryszmuda/), [Portfolio](https://rudashi.github.io/)

@@ -17,11 +17,18 @@
         }
     ],
     "require": {
-        "php": "^8.2 || ^8.3"
+        "php": "^8.2 || ^8.3",
+        "laravel/framework": "^12.0|^13.0"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-latest",
-        "pestphp/pest": "^v4.0"
+        "fakerphp/faker": "^1.24",
+        "larastan/larastan": "^3.9",
+        "laravel/pint": "^1.29",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^10.11",
+        "pestphp/pest": "^v4.0",
+        "phpstan/phpstan-mockery": "^2.0",
+        "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {
@@ -44,11 +51,26 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "test": "vendor/bin/pest"
+        "test": ["@test:arch", "@test:unit", "@test:mutate"],
+        "test:arch": "vendor/bin/pest --configuration=phpunit.xml --testsuite=arch",
+        "test:unit": "vendor/bin/pest --configuration=phpunit.xml --testsuite=unit",
+        "test:integration": "vendor/bin/pest --configuration=phpunit.xml --testsuite=integration",
+        "test:smoke": "vendor/bin/pest --configuration=phpunit.xml --testsuite=integration --group=smoke",
+        "test:fixtures": "vendor/bin/pest --configuration=phpunit.xml --testsuite=integration --group=fixtures",
+        "test:mutate": "vendor/bin/pest --mutate --min=80",
+        "pint": "vendor/bin/pint --test -vvv",
+        "analyse": "vendor/bin/phpstan analyse",
+        "coverage": "vendor/bin/pest --coverage",
+        "profile": "vendor/bin/pest --profile",
+        "styles": ["@pint", "@analyse"]
     }
 }
