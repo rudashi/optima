@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Feature\DepartmentRepositoryTest;
+namespace Rudashi\Optima\Tests\Integration\Repositories\DepartmentRepositoryTest;
 
 use Illuminate\Database\RecordsNotFoundException;
 use Rudashi\Optima\Models\Department;

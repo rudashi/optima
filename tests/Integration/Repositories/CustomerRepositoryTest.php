@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Feature\CustomerRepositoryTest;
+namespace Rudashi\Optima\Tests\Integration\Repositories\CustomerRepositoryTest;
 
 use Illuminate\Database\RecordsNotFoundException;
 use Rudashi\Optima\Enums\CustomerGroup;
