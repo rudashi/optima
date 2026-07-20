@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\HealthCheck\HealthCheckControllerTest;
+namespace Rudashi\Optima\Tests\Integration\HealthCheck\HealthCheckControllerTest;
 
 use Rudashi\Optima\Services\DatabaseHealthCheckService;
-use Tests\TestCase;
+use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Feature\CollectionTest;
+namespace Rudashi\Optima\Tests\Services\CollectionTest;
 
 use Rudashi\Optima\Services\Collection;
-use Rudashi\Optima\Tests\HelperClasses\CustomPrimaryDTO;
-use Rudashi\Optima\Tests\HelperClasses\FakeDTO;
+use Rudashi\Optima\Tests\Fixtures\CustomPrimaryDTO;
+use Rudashi\Optima\Tests\Fixtures\FakeDTO;
 use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);

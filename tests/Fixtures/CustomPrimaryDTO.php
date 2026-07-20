@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\HelperClasses;
+namespace Rudashi\Optima\Tests\Fixtures;
 
 class CustomPrimaryDTO extends FakeDTO
 {

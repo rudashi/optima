@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit\CountryTest;
+namespace Rudashi\Optima\Tests\Enums\PaymentFormTest;
 
 use Rudashi\Optima\Enums\PaymentForm;
 use Rudashi\Optima\Tests\TestCase;
@@ -14,7 +14,7 @@ it('can return list of Payments', function () {
 
     expect($data)
         ->toBeArray()
-        ->toHaveCount(6)
+        ->toHaveCount(25)
         ->toContain([
             'name' => PaymentForm::BANK_TRANSFER_PLN->description(),
             'currency' => PaymentForm::BANK_TRANSFER_PLN->currency(),

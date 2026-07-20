@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit;
+namespace Rudashi\Optima\Tests\Services\EntryTest;
 
 use Rudashi\Optima\Services\Entity\Entry;
 use Rudashi\Optima\Tests\TestCase;

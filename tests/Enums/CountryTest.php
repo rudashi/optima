@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit\CountryTest;
+namespace Rudashi\Optima\Tests\Enums\CountryTest;
 
 use Rudashi\Optima\Enums\Country;
 use Rudashi\Optima\Tests\TestCase;
@@ -14,7 +14,7 @@ it('can return list of Countries', function () {
 
     expect($data)
         ->toBeArray()
-        ->toHaveCount(38)
+        ->toHaveCount(42)
         ->toContain([
             'code' => Country::POLAND->value,
             'name' => Country::POLAND->description(),

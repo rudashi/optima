@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Unit\CountryTest;
+namespace Rudashi\Optima\Tests\Enums\TransactionTypeTest;
 
 use Rudashi\Optima\Enums\TransactionType;
 use Rudashi\Optima\Tests\TestCase;
