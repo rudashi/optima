@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests\Services\ParserTest;
 
+use Rudashi\Optima\Enums\TransactionType;
 use Rudashi\Optima\Exceptions\IncorrectValueException;
 use Rudashi\Optima\Services\Entity\Parser;
 use Rudashi\Optima\Tests\Fixtures\FakeEnum;
@@ -19,10 +20,10 @@ it('create Parser instance', function ($value) {
     expect(array_values((array) $parser))
         ->toMatchArray([$value]);
 })->with([
-    'string' => fake()->name(),
-    'int' => fake()->imei(),
-    'float' => fake()->latitude(),
-    'null' => null,
+    'string' => fn () => fake()->name(),
+    'int'    => fn () => fake()->imei(),
+    'float'  => fn () => fake()->latitude(),
+    'null'   => null,
 ]);
 
 it('create Parser from object', function () {
@@ -194,4 +195,32 @@ it('checks if the key is equal to value', function ($value, $expectation): void 
     'true' => ['bar', true],
     'false' => ['foo', false],
     'null' => [null, false],
+]);
+
+it('returns false from isEqual when key does not exist in object', function (): void {
+    expect(Parser::isEqual((object) ['foo' => 'bar'], 'nonexistent', 'bar'))
+        ->toBeFalse();
+});
+
+it('parses int-backed enum from integer value', function (): void {
+    expect((new Parser(1))->enum(TransactionType::class))
+        ->toBe(TransactionType::NON_EU);
+});
+
+it('casts string to int when parsing int-backed enum', function (): void {
+    expect((new Parser('1'))->enum(TransactionType::class))
+        ->toBe(TransactionType::NON_EU);
+});
+
+it('returns default when int-backed enum value is not found', function (): void {
+    expect((new Parser(999))->enum(TransactionType::class, TransactionType::NATIONAL))
+        ->toBe(TransactionType::NATIONAL);
+});
+
+it('casts non-string value to string', function ($value, string $expected): void {
+    expect((new Parser($value))->string())
+        ->toBe($expected);
+})->with([
+    'int'   => [42, '42'],
+    'float' => [3.14, '3.14'],
 ]);
