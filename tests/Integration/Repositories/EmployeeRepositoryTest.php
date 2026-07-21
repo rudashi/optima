@@ -11,54 +11,22 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-beforeEach(function () {
-    $this->repository = resolve(EmployeeRepository::class);
-});
+pest()->group('smoke');
 
-it('can find an employee by code', function () {
-    $data = $this->repository->findByCode('023E');
-
-    expect($data)
+it('maps an employee found by code to a fully typed model', function (string $code) {
+    expect(resolve(EmployeeRepository::class)->findByCode($code))
         ->toBeInstanceOf(Employee::class)
-        ->toHaveProperty('code', '023E')
-        ->toHaveProperty('firstname', 'BORYS')
-        ->toHaveProperty('job_title')
-        ->toHaveProperty('department_id')
-        ->toHaveProperty('deleted', false)
-        ->toHaveProperties([
-            'id',
-            'code',
-            'firstname',
-            'lastname',
-            'email',
-            'job_title',
-            'department_id',
-            'department_name',
-            'company',
-            'rcp',
-            'deleted',
-        ]);
-});
-
-it('can find an employee using alias method `find`', function (string $code) {
-    $data = $this->repository->find($code);
-
-    expect($data)
-        ->toBeInstanceOf(Employee::class)
-        ->toHaveProperty('code', $code)
-        ->toHaveProperties([
-            'id',
-            'code',
-            'firstname',
-            'lastname',
-            'email',
-            'job_title',
-            'department_id',
-            'department_name',
-            'company',
-            'rcp',
-            'deleted',
-        ]);
+        ->id->toBeInt()
+        ->code->toBe($code)
+        ->firstname->toBeString()
+        ->lastname->toBeString()
+        ->email->toBeString()
+        ->job_title->toBeNullableString()
+        ->department_id->toBeInt()
+        ->department_name->toBeString()
+        ->company->toBeString()
+        ->rcp->toBeNullableString()
+        ->deleted->toBeBool();
 })->with([
     '130E',
     '012E',
@@ -67,16 +35,22 @@ it('can find an employee using alias method `find`', function (string $code) {
     '074E_DOT_1_2_1CBR',
 ]);
 
-it('throws an exception when employee code not exists', function () {
-    expect(fn () => $this->repository->findByCode(''))
+it('find() is an alias for findByCode()', function () {
+    expect(resolve(EmployeeRepository::class)->find('023E'))
+        ->toBeInstanceOf(Employee::class)
+        ->code->toBe('023E');
+});
+
+it('throws when the employee code is not found', function () {
+    expect(fn () => resolve(EmployeeRepository::class)->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given acronym :code is invalid or not in the OPTIMA.', ['code' => '']),
         );
 });
 
-it('throws an exception when employee is archived', function () {
-    expect(fn () => $this->repository->findByCode('XXX'))
+it('throws when the employee is archived', function () {
+    expect(fn () => resolve(EmployeeRepository::class)->findByCode('XXX'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => 'XXX']),

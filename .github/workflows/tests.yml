@@ -40,3 +40,69 @@ jobs:
 
       - name: Run unit tests
         run: composer run test:unit
+
+  integration:
+    name: Integration + Mutate (MSSQL, PHP ${{ matrix.php }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      MS_HOST: 127.0.0.1
+      MS_PORT: "1433"
+      MS_DATABASE: optima_test
+      MS_USERNAME: sa
+      MS_PASSWORD: "Optima!2026"
+      MS_SUDO_USERNAME: sa
+      MS_SUDO_PASSWORD: "Optima!2026"
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3", "8.4"]
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "Optima!2026"
+          MSSQL_MEMORY_LIMIT_MB: "2048"
+        ports:
+          - 1433:1433
+        options: >-
+          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Optima!2026' -C -Q 'SELECT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 20
+          --health-start-period 30s
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, xml, intl, zip, sqlsrv, pdo_sqlsrv
+          coverage: pcov
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: highest
+          composer-options: "--prefer-dist"
+
+      - name: Install sqlcmd on runner
+        run: |
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc \
+            | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/ubuntu/24.04/prod noble main" \
+            | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt-get update
+          sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
+          echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
+
+      - name: Seed schema fixture
+        run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/fixtures/schema.sql
+
+      - name: Run integration tests
+        run: composer run test:fixtures
+
+      - name: Run mutation tests
+        run: composer run test:mutate
