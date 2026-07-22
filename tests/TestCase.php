@@ -16,6 +16,8 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
+        app()->setLocale('en');
+
         $this->service = app(OptimaService::class);
     }
 

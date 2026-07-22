@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   unit:
-    name: Unit (PHP ${{ matrix.php }})
+    name: Arch + Unit (PHP ${{ matrix.php }})
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     strategy:
@@ -30,13 +30,16 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, dom, xml, intl, zip
-          coverage: none
+          coverage: pcov
 
       - name: Install dependencies
         uses: ramsey/composer-install@v4
         with:
           dependency-versions: highest
           composer-options: "--prefer-dist"
+
+      - name: Run arch tests
+        run: composer run test:arch
 
       - name: Run unit tests
         run: composer run test:unit
