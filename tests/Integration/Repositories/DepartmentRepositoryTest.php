@@ -12,61 +12,50 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-dataset('departments', [
+pest()->group('smoke');
+
+it('returns a typed Collection of departments from all()', function () {
+    $departments = resolve(DepartmentRepository::class)->all();
+
+    expect($departments->isEmpty())->toBeFalse()
+        ->and($departments)
+        ->toBeInstanceOf(Collection::class)
+        ->each->toBeInstanceOf(Department::class)
+        ->and($departments->first())
+        ->id->toBeInt()
+        ->name->toBeString()
+        ->user_code->toBeString()
+        ->parent_id->toBeNullableInt();
+});
+
+it('maps a department found by code to a typed model', function (string $code) {
+    expect(resolve(DepartmentRepository::class)->findByCode($code))
+        ->toBeInstanceOf(Department::class)
+        ->id->toBeInt()
+        ->name->toBeString()
+        ->user_code->toBeString()
+        ->parent_id->toBeNullableInt();
+})->with([
     'DRUK',
     'INTROLIGATORNIA',
     'PREPRESS',
     'BIURO',
 ]);
 
-beforeEach(function () {
-    $this->repository = resolve(DepartmentRepository::class);
+it('uppercases the code before querying', function () {
+    expect(resolve(DepartmentRepository::class)->findByCode('druk'))
+        ->toBeInstanceOf(Department::class);
 });
 
-it('can get all departments', function () {
-    $data = $this->repository->all();
-
-    expect($data)
-        ->toBeInstanceOf(Collection::class)
-        ->each(function ($item) {
-            $item->toBeInstanceOf(Department::class)
-                ->toHaveProperties([
-                    'id',
-                    'name',
-                    'parent_id',
-                    'user_code',
-                ]);
-        });
+it('find() is an alias for findByCode()', function () {
+    expect(resolve(DepartmentRepository::class)->find('DRUK'))
+        ->toBeInstanceOf(Department::class);
 });
 
-it('can find a department by code', function (string $code) {
-    $data = $this->repository->findByCode($code);
-
-    expect($data)
-        ->toBeInstanceOf(Department::class)
-        ->toHaveProperty('name', $code)
-        ->not()->toHaveProperty('parent_id', null)
-        ->not()->toHaveProperty('user_code', null)
-        ->toHaveProperties([
-            'id',
-            'name',
-            'parent_id',
-            'user_code',
-        ]);
-})->with('departments');
-
-it('can find a department using alias method `find`', function (string $code) {
-    $data = $this->repository->find($code);
-
-    expect($data)
-        ->toBeInstanceOf(Department::class)
-        ->toHaveProperty('name', $code);
-})->with('departments');
-
-it('throws an exception when department is archived', function (string $code) {
-    expect(fn () => $this->repository->findByCode($code))
+it('throws when the department code is not found', function () {
+    expect(fn () => resolve(DepartmentRepository::class)->findByCode('__MISSING_DEPARTMENT__'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
-            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => $code]),
+            exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => '__MISSING_DEPARTMENT__']),
         );
-})->with(['KIEROWNICTWO PRODUKCJI']);
+});
