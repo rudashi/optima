@@ -80,3 +80,19 @@ it('includes Poland with correct data in toArray()', function () {
         'currency' => Country::POLAND->currency(),
     ]);
 });
+
+it('can return list of currencies', function () {
+    $data = Country::currencies();
+    $countries = array_filter(Country::cases(), fn (Country $country) => $country !== Country::NULL);
+
+    expect($data)
+        ->toBeArray()
+        ->not->toBeEmpty();
+
+    foreach ($countries as $country) {
+        expect($data)
+            ->toHaveKey($country->currency())
+            ->and($data[$country->currency()])
+            ->toContain($country->value);
+    }
+});

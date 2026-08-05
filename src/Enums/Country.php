@@ -166,6 +166,26 @@ enum Country: string implements Arrayable, Describable
         };
     }
 
+    /**
+     * @return array<string, string[]>
+     */
+    public static function currencies(): array
+    {
+        $result = [];
+
+        foreach (self::cases() as $country) {
+            if ($country === self::NULL) {
+                continue;
+            }
+
+            $result[$country->currency()][] = $country->value;
+        }
+
+        ksort($result);
+
+        return $result;
+    }
+
     public static function toArray(): array
     {
         $result = [];
