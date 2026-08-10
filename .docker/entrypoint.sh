@@ -6,7 +6,7 @@ if [ "$OPTIMA_SEED_FIXTURES" = "1" ] && [[ "${MS_HOST:-localhost}" =~ ^(localhos
         -S "${MS_HOST:-mssql}" \
         -U "${MS_USERNAME:-sa}" \
         -P "${MS_PASSWORD:-Optima!2026}" \
-        -C -i tests/Integration/fixtures/schema.sql
+        -C -i tests/Integration/schemas/schema.sql
 fi
 
 exec "$@"

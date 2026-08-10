@@ -9,11 +9,6 @@ use Rudashi\Optima\Enums\CustomerGroup;
 use Rudashi\Optima\Models\Customer;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
-use Rudashi\Optima\Tests\TestCase;
-
-uses(TestCase::class);
-
-pest()->group('smoke');
 
 it('maps a customer found by code to a fully typed model', function (string $code) {
     expect(resolve(CustomerRepository::class)->findByCode($code))
@@ -50,7 +45,7 @@ it('throws when the code exists only in another group', function () {
 });
 
 it('returns a typed Collection of customers when found by id', function () {
-    $customers = resolve(CustomerRepository::class)->find(1, 4328, 26820, 5160);
+    $customers = resolve(CustomerRepository::class)->find(50, 4328, 26820, 5160);
 
     expect($customers->isEmpty())->toBeFalse()
         ->and($customers)

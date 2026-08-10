@@ -104,74 +104,14 @@ CREATE TABLE [CDN].[PracKartyRcp] (
 GO
 
 -- ============================================================
--- Fixtures — neutral test data
--- ============================================================
-INSERT INTO [CDN].[Kontrahenci]
-    ([Knt_KntId], [Knt_Kod], [Knt_Nazwa1], [Knt_Nazwa2], [Knt_Nazwa3],
-     [Knt_Kraj], [Knt_Miasto], [Knt_KodPocztowy], [Knt_Ulica],
-     [Knt_NrDomu], [Knt_NrLokalu], [Knt_Nip], [Knt_Nieaktywny], [Knt_Grupa])
-VALUES
-    (1, N'TEST-A',    N'Test Company A',    NULL,         NULL,       NULL,      NULL,       NULL,      NULL,         NULL,  NULL, NULL,           0, NULL),
-    (2, N'TEST-B',    N'Test Company B',    NULL,         NULL,       NULL,      NULL,       NULL,      NULL,         NULL,  NULL, NULL,           0, NULL),
-    (3, N'INACTIVE',  N'Inactive Company',  NULL,         NULL,       NULL,      NULL,       NULL,      NULL,         NULL,  NULL, NULL,           1, NULL),
-    (4, N'TEST-FULL', N'Test Company Full', N'Sp. z o.o.', N'Oddział', N'Polska', N'GDAŃSK', N'82-500', N'ul. Polna', N'26', N'1', N'5860001234', 0, N'PODWYKONAWCA');
-GO
-
-INSERT INTO [CDN].[Centra]
-    ([CNT_CntId], [CNT_Nazwa], [CNT_Kod], [CNT_ParentId], [CNT_Nieaktywny])
-VALUES
-    (1, N'TOTEM',     N'ROOT',  NULL, 0),
-    (2, N'WYDZIAŁ A', N'WYDA',  1,    0),
-    (3, N'WYDZIAŁ B', N'WYDB',  1,    0),
-    (4, N'',          N'EMPTY', 1,    0),
-    (5, N'WYDZIAŁ C', N'WYDC',  1,    0);
-GO
-
-INSERT INTO [CDN].[Pracidx]
-    ([PRI_PraId], [PRI_Kod], [PRI_Imie1], [PRI_Nazwisko], [PRI_Typ], [PRI_Archiwalny], [PRI_CntId])
-VALUES
-    (1, N'001E', N'Jan',   N'Kowalski',   1, 0, 2),
-    (2, N'002E', N'Anna',  N'Nowak',      1, 0, 2),
-    (3, N'003E', N'Piotr', N'Wiśniewski', 1, 1, 3),
-    (5, N'004O', N'Owner', N'Test',       2, 0, 5);
-GO
-
-INSERT INTO [CDN].[CentraKierownicy]
-    ([CNK_CntId], [CNK_PraId], [CNK_Rodzaj])
-VALUES
-    (2, 1, 0),
-    (3, 2, 0),
-    (4, 1, 0),
-    (5, 5, 0);
-GO
-
-INSERT INTO [CDN].[PracEtaty]
-    ([PRE_PreId], [PRE_PraId], [PRE_HDKEmail], [PRE_ETADkmIdStanowisko])
-VALUES
-    (1, 1, N'jan.kowalski@example.com',     1),
-    (4, 1, N'jan.kowalski.new@example.com', 2),
-    (2, 2, N'anna.nowak@example.com',       1),
-    (3, 3, N'piotr.wisniewski@example.com', NULL),
-    (5, 5, N'owner.test@example.com',       NULL);
-GO
-
-INSERT INTO [CDN].[DaneKadMod]
-    ([DKM_DkmId], [DKM_Nazwa])
-VALUES
-    (1, N'Specjalista'),
-    (2, N'Kierownik');
-GO
-
-INSERT INTO [CDN].[PracKartyRcp]
-    ([PKR_PrcId], [PKR_Numer], [PKR_OkresDo])
-VALUES
-    (1, N'RCP-001', '29991231'),
-    (2, N'RCP-EXP', '20000101');
-GO
-
--- ============================================================
 -- Smoke fixtures
 -- ============================================================
+-- Only smoke-group data lives here — the `fixtures`-group tests (SeededDataTest)
+-- run exclusively against schema.sqlite.sql now and never seed against this MSSQL
+-- schema, so no "core" test dataset is needed in this file. The single Centra
+-- root row below is kept: it's shared infrastructure, not test data — every
+-- department here hangs off it via CNT_ParentId, and EmployeeRepository derives
+-- `company` from the one Centra row with CNT_ParentId IS NULL.
 INSERT INTO [CDN].[Kontrahenci]
     ([Knt_KntId], [Knt_Kod], [Knt_Nazwa1], [Knt_Grupa], [Knt_Nieaktywny])
 VALUES
@@ -184,6 +124,7 @@ GO
 INSERT INTO [CDN].[Centra]
     ([CNT_CntId], [CNT_Nazwa], [CNT_Kod], [CNT_ParentId], [CNT_Nieaktywny])
 VALUES
+    (1, N'TOTEM',           N'ROOT',            NULL, 0),
     (6, N'DRUK',            N'DRUK',            1, 0),
     (7, N'INTROLIGATORNIA', N'INTROLIGATORNIA', 1, 0),
     (8, N'PREPRESS',        N'PREPRESS',        1, 0),

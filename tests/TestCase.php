@@ -41,4 +41,27 @@ class TestCase extends BaseTestCase
 
         return parent::getApplicationBasePath();
     }
+
+    // config/database.php always ships the real sqlsrv `optima` connection — it's package
+    // config, read by real consumers too, so it must stay test-agnostic. Test-only: when no
+    // MS_HOST is present (no real MSSQL pointed at — neither staging nor Docker), fall back
+    // to an in-memory sqlite connection instead.
+    //
+    // Runs in defineEnvironment() because Testbench calls it right after config files are
+    // loaded (env('MS_HOST') in config/database.php has already resolved) and before
+    // BootProviders — connections resolve lazily, so this mutation is guaranteed visible to
+    // any later DB::connection('optima') call.
+    protected function defineEnvironment($app): void
+    {
+        parent::defineEnvironment($app);
+
+        if (! env('MS_HOST')) {
+            $app['config']->set('database.connections.optima', [
+                'driver' => 'sqlite',
+                'database' => ':memory:',
+                'prefix' => '',
+                'foreign_key_constraints' => true,
+            ]);
+        }
+    }
 }

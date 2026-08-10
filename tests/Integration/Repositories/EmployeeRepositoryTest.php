@@ -7,11 +7,6 @@ namespace Rudashi\Optima\Tests\Integration\Repositories\EmployeeRepositoryTest;
 use Illuminate\Database\RecordsNotFoundException;
 use Rudashi\Optima\Models\Employee;
 use Rudashi\Optima\Services\Repositories\EmployeeRepository;
-use Rudashi\Optima\Tests\TestCase;
-
-uses(TestCase::class);
-
-pest()->group('smoke');
 
 it('maps an employee found by code to a fully typed model', function (string $code) {
     expect(resolve(EmployeeRepository::class)->findByCode($code))
