@@ -11,6 +11,7 @@ enum Country: string implements Arrayable, Describable
 {
     case POLAND = 'PL';
     case BELGIUM = 'BE';
+    case BRAZIL = 'BR';
     case BULGARIA = 'BG';
     case SAINT_BARTHELEMY = 'BL';
     case SWITZERLAND = 'CH';
@@ -73,6 +74,7 @@ enum Country: string implements Arrayable, Describable
         return match ($this) {
             self::POLAND => 'PLN',
             self::BELGIUM,
+            self::BRAZIL,
             self::SAINT_BARTHELEMY,
             self::GERMANY,
             self::ESTONIA,
@@ -122,6 +124,7 @@ enum Country: string implements Arrayable, Describable
         return match ($this) {
             self::POLAND => __('Poland'),
             self::BELGIUM => __('Belgium'),
+            self::BRAZIL => __('Brazil'),
             self::BULGARIA => __('Bulgaria'),
             self::SAINT_BARTHELEMY => __('Saint Barthélemy'),
             self::SWITZERLAND => __('Switzerland'),
