@@ -31,14 +31,18 @@ class QueryBuilder extends Builder
      */
     public function get($columns = ['*']): Collection
     {
-        $models = new Collection($this->onceWithColumns(Arr::wrap($columns), function () {
-            return $this->processor->processSelect($this, $this->runSelect());
-        }));
+        $original = $this->columns;
 
-        $this->loadRelations($models);
+        $this->columns ??= Arr::wrap($columns);
+
+        $items = new Collection($this->processor->processSelect($this, $this->runSelect()));
+
+        $this->columns = $original;
+
+        $this->loadRelations($items);
 
         return $this->applyAfterQueryCallbacks(
-            isset($this->groupLimit) ? $this->withoutGroupLimitKeys($models) : $models
+            isset($this->groupLimit) ? $this->withoutGroupLimitKeys($items) : $items
         );
     }
 
