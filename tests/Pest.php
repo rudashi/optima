@@ -2,22 +2,7 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\DB;
 use Rudashi\Optima\Tests\Fixtures\FakeDTO;
-use Rudashi\Optima\Tests\TestCase;
-
-uses(TestCase::class)
-    ->group('smoke')
-    ->beforeEach(fn () => skipUnlessMssql())
-    ->in('Integration/HealthCheck', 'Integration/Repositories', 'Integration/Schema', 'Integration/Services');
-
-uses(TestCase::class)
-    ->group('fixtures')
-    ->beforeEach(function () {
-        skipUnlessSqlite();
-        seedOptimaSqliteFixtures();
-    })
-    ->in('Integration/Fixtures');
 
 expect()->extend('toBeNullableString', function () {
     return $this->value === null ? $this : $this->toBeString();
@@ -44,13 +29,6 @@ function skipUnlessSqlite(): void
     if (optimaDriver() !== 'sqlite') {
         test()->markTestSkipped('Requires the sqlite fallback "optima" connection (unset MS_HOST to run fixtures tests).');
     }
-}
-
-function seedOptimaSqliteFixtures(): void
-{
-    DB::connection('optima')->unprepared(
-        file_get_contents(__DIR__ . '/Integration/schemas/schema.sqlite.sql')
-    );
 }
 
 function fakeCustomerRow(array $override = []): stdClass

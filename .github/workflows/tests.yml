@@ -102,7 +102,7 @@ jobs:
           echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
 
       - name: Seed schema fixture
-        run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/schemas/schema.sql
+        run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/schemas/structure.sql,tests/Integration/schemas/data.sql
 
       - name: Run smoke tests
         run: composer run test:smoke

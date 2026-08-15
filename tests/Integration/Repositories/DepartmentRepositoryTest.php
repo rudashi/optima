@@ -8,6 +8,13 @@ use Illuminate\Database\RecordsNotFoundException;
 use Rudashi\Optima\Models\Department;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\Repositories\DepartmentRepository;
+use Rudashi\Optima\Tests\TestCase;
+
+uses(TestCase::class);
+
+pest()->group('smoke');
+
+beforeEach(fn () => skipUnlessMssql());
 
 it('returns a typed Collection of departments from all()', function () {
     $departments = resolve(DepartmentRepository::class)->all();

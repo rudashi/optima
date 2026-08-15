@@ -6,6 +6,13 @@ namespace Rudashi\Optima\Tests\Integration\Schema\ConnectionTest;
 
 use Illuminate\Support\Facades\DB;
 use PDO;
+use Rudashi\Optima\Tests\TestCase;
+
+uses(TestCase::class);
+
+pest()->group('smoke');
+
+beforeEach(fn () => skipUnlessMssql());
 
 it('resolves optima connection', function () {
     expect(DB::connection('optima')->getPdo())

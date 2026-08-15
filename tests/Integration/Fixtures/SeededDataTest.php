@@ -15,6 +15,18 @@ use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
 use Rudashi\Optima\Services\Repositories\DepartmentRepository;
 use Rudashi\Optima\Services\Repositories\EmployeeRepository;
+use Rudashi\Optima\Tests\TestCase;
+
+uses(TestCase::class);
+
+pest()->group('fixtures');
+
+beforeEach(function () {
+    skipUnlessSqlite();
+
+    DB::connection('optima')->unprepared(file_get_contents(__DIR__ . '/../schemas/structure.sqlite.sql'));
+    DB::connection('optima')->unprepared(file_get_contents(__DIR__ . '/../schemas/data.sqlite.sql'));
+});
 
 mutates(CustomerRepository::class);
 mutates(EmployeeRepository::class);

@@ -9,6 +9,13 @@ use Rudashi\Optima\Enums\CustomerGroup;
 use Rudashi\Optima\Models\Customer;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
+use Rudashi\Optima\Tests\TestCase;
+
+uses(TestCase::class);
+
+pest()->group('smoke');
+
+beforeEach(fn () => skipUnlessMssql());
 
 it('maps a customer found by code to a fully typed model', function (string $code) {
     expect(resolve(CustomerRepository::class)->findByCode($code))
