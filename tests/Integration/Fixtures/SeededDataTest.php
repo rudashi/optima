@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rudashi\Optima\Tests\Integration\Schema\SeededDataTest;
+namespace Rudashi\Optima\Tests\Integration\Fixtures\SeededDataTest;
 
 use Illuminate\Database\RecordsNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +20,13 @@ use Rudashi\Optima\Tests\TestCase;
 uses(TestCase::class);
 
 pest()->group('fixtures');
+
+beforeEach(function () {
+    skipUnlessSqlite();
+
+    DB::connection('optima')->unprepared(file_get_contents(__DIR__ . '/../schemas/structure.sqlite.sql'));
+    DB::connection('optima')->unprepared(file_get_contents(__DIR__ . '/../schemas/data.sqlite.sql'));
+});
 
 mutates(CustomerRepository::class);
 mutates(EmployeeRepository::class);
@@ -201,7 +208,7 @@ it('lists seeded departments through the repository', function () {
 
     expect($departments)
         ->toBeInstanceOf(Collection::class)
-        ->toHaveCount(7)
+        ->toHaveCount(3)
         ->each->toBeInstanceOf(Department::class)
         ->and($departments->first())
         ->id->toBe(2)
@@ -215,7 +222,7 @@ it('excludes departments with an empty name', function () {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     expect($repository->all()->pluck('id')->all())
-        ->toBe([2, 3, 5, 6, 7, 8, 9]);
+        ->toBe([2, 3, 5]);
 });
 
 it('maps a department found by code through the repository', function () {

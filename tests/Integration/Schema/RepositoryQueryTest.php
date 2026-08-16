@@ -16,6 +16,8 @@ uses(TestCase::class);
 
 pest()->group('smoke');
 
+beforeEach(fn () => skipUnlessMssql());
+
 beforeEach(function () {
     $service = app(OptimaService::class);
 
