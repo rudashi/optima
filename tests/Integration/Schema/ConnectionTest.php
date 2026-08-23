@@ -12,6 +12,8 @@ uses(TestCase::class);
 
 pest()->group('smoke');
 
+beforeEach(fn () => skipUnlessMssql());
+
 it('resolves optima connection', function () {
     expect(DB::connection('optima')->getPdo())
         ->toBeInstanceOf(PDO::class);

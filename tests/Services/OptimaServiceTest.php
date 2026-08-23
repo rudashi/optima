@@ -7,6 +7,7 @@ namespace Rudashi\Optima\Tests\Services\OptimaServiceTest;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\SqlServerConnection;
+use Illuminate\Support\Facades\DB;
 use PDOException;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
@@ -21,14 +22,8 @@ beforeEach(function () {
     $this->service = app(OptimaService::class);
 });
 
-test('can load database configuration', function () {
-    expect(app('db')->connection(OptimaService::$connection))
-        ->toBeInstanceOf(SqlServerConnection::class);
-});
-
 it('resolves the optima connection statically', function () {
-    expect(OptimaService::connection())
-        ->toBeInstanceOf(SqlServerConnection::class);
+    expect(OptimaService::connection())->toBe(DB::connection('optima'));
 });
 
 it('get custom Query builder', function () {
@@ -103,6 +98,7 @@ it('returns false when connection throws PDOException', function () {
 
 it('can switch connection', function () {
     config([
+        'database.connections.optima.driver' => 'sqlsrv',
         'database.connections.optima_second' => [
             'driver' => 'sqlite',
             'host' => '192.168.0.0',

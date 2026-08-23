@@ -11,6 +11,8 @@ uses(TestCase::class);
 
 pest()->group('smoke');
 
+beforeEach(fn () => skipUnlessMssql());
+
 it('can connect to optima database', function () {
     $service = new DatabaseHealthCheckService(app('db'));
 

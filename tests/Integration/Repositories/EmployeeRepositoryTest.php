@@ -13,6 +13,8 @@ uses(TestCase::class);
 
 pest()->group('smoke');
 
+beforeEach(fn () => skipUnlessMssql());
+
 it('maps an employee found by code to a fully typed model', function (string $code) {
     expect(resolve(EmployeeRepository::class)->findByCode($code))
         ->toBeInstanceOf(Employee::class)

@@ -44,8 +44,8 @@ jobs:
       - name: Run unit tests
         run: composer run test:unit
 
-  integration:
-    name: Integration + Mutate (MSSQL, PHP ${{ matrix.php }})
+  smoke:
+    name: Smoke (MSSQL, PHP ${{ matrix.php }})
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
@@ -102,9 +102,36 @@ jobs:
           echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
 
       - name: Seed schema fixture
-        run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/fixtures/schema.sql
+        run: sqlcmd -S localhost -U sa -P "Optima!2026" -C -i tests/Integration/schemas/structure.sql,tests/Integration/schemas/data.sql
 
-      - name: Run integration tests
+      - name: Run smoke tests
+        run: composer run test:smoke
+
+  integration:
+    name: Integration + Mutate (SQLite, PHP ${{ matrix.php }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3", "8.4"]
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, xml, intl, zip, sqlite3, pdo_sqlite
+          coverage: pcov
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: highest
+          composer-options: "--prefer-dist"
+
+      - name: Run fixtures tests (sqlite fallback; smoke self-skips)
         run: composer run test:fixtures
 
       - name: Run mutation tests

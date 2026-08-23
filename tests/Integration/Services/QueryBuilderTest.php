@@ -13,7 +13,9 @@ use Rudashi\Optima\Tests\TestCase;
 
 uses(TestCase::class);
 
-pest()->group('fixtures');
+pest()->group('smoke');
+
+beforeEach(fn () => skipUnlessMssql());
 
 mutates(QueryBuilder::class);
 

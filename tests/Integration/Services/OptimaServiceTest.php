@@ -10,6 +10,8 @@ uses(TestCase::class);
 
 pest()->group('smoke');
 
+beforeEach(fn () => skipUnlessMssql());
+
 it('can check connection', function () {
     expect(optima(false)->hasConnection())
         ->toBeTrue();

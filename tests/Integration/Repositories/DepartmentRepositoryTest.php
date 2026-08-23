@@ -14,6 +14,8 @@ uses(TestCase::class);
 
 pest()->group('smoke');
 
+beforeEach(fn () => skipUnlessMssql());
+
 it('returns a typed Collection of departments from all()', function () {
     $departments = resolve(DepartmentRepository::class)->all();
 

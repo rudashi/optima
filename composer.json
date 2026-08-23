@@ -25,7 +25,7 @@
         "larastan/larastan": "^3.9",
         "laravel/pint": "^1.29",
         "mockery/mockery": "^1.6",
-        "orchestra/testbench": "^10.11",
+        "orchestra/testbench": "^10.11|^11.0",
         "pestphp/pest": "^v4.0",
         "phpstan/phpstan-mockery": "^2.0",
         "roave/security-advisories": "dev-latest"

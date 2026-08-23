@@ -12,6 +12,25 @@ expect()->extend('toBeNullableInt', function () {
     return $this->value === null ? $this : $this->toBeInt();
 });
 
+function optimaDriver(): ?string
+{
+    return config('database.connections.optima.driver');
+}
+
+function skipUnlessMssql(): void
+{
+    if (optimaDriver() !== 'sqlsrv') {
+        test()->markTestSkipped('Requires a real MSSQL "optima" connection (set MS_HOST to run smoke tests).');
+    }
+}
+
+function skipUnlessSqlite(): void
+{
+    if (optimaDriver() !== 'sqlite') {
+        test()->markTestSkipped('Requires the sqlite fallback "optima" connection (unset MS_HOST to run fixtures tests).');
+    }
+}
+
 function fakeCustomerRow(array $override = []): stdClass
 {
     return (object) array_merge([
