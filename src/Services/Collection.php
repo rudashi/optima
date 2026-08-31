@@ -15,7 +15,7 @@ use Illuminate\Support\Collection as CollectionBase;
 class Collection extends CollectionBase
 {
     /**
-     * @template TMapValue of TValue
+     * @template TMapValue
      *
      * @param callable(TValue): TMapValue $callback
      *

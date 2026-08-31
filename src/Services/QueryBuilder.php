@@ -60,7 +60,7 @@ class QueryBuilder extends Builder
      *
      * @template TMapValue
      *
-     * @param callable(stdClass, array-key): TMapValue $callback
+     * @param callable(stdClass): TMapValue $callback
      *
      * @return \Rudashi\Optima\Services\Collection<array-key, TMapValue>
      */
