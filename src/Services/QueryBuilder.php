@@ -66,7 +66,7 @@ class QueryBuilder extends Builder
      */
     public function getTo(callable $callback): Collection
     {
-        return $this->get()->map($callback);
+        return $this->get()->attach($callback);
     }
 
     /**

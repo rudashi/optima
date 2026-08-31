@@ -23,7 +23,9 @@ class Collection extends CollectionBase
      */
     public function attach(callable $callback): self
     {
-        $this->items = $this->map(static fn ($item) => $callback($item))->all();
+        foreach ($this->items as $key => $item) {
+            $this->items[$key] = $callback($item);
+        }
 
         return $this;
     }
