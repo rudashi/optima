@@ -17,7 +17,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('maps a customer found by code to a fully typed model', function (string $code) {
+it('maps a customer found by code to a fully typed model', function (string $code): void {
     expect(resolve(CustomerRepository::class)->findByCode($code))
         ->toBeInstanceOf(Customer::class)
         ->id->toBeInt()
@@ -40,18 +40,18 @@ it('maps a customer found by code to a fully typed model', function (string $cod
     'TOTEM TEST!',
 ]);
 
-it('applies the group filter when a group is provided', function () {
+it('applies the group filter when a group is provided', function (): void {
     expect(resolve(CustomerRepository::class)->findByCode('ANTALIS', CustomerGroup::SUPPLIER->value))
         ->toBeInstanceOf(Customer::class)
         ->code->toBe('ANTALIS');
 });
 
-it('throws when the code exists only in another group', function () {
+it('throws when the code exists only in another group', function (): void {
     expect(fn () => resolve(CustomerRepository::class)->findByCode('ANTALIS', CustomerGroup::SUBCONTRACTOR->value))
         ->toThrow(RecordsNotFoundException::class);
 });
 
-it('returns a typed Collection of customers when found by id', function () {
+it('returns a typed Collection of customers when found by id', function (): void {
     $customers = resolve(CustomerRepository::class)->find(50, 4328, 26820, 5160);
 
     expect($customers->isEmpty())->toBeFalse()
@@ -61,7 +61,7 @@ it('returns a typed Collection of customers when found by id', function () {
         ->and($customers->pluck('id')->all())->each->toBeInt();
 });
 
-it('throws when no customer matches the given code', function () {
+it('throws when no customer matches the given code', function (): void {
     expect(fn () => resolve(CustomerRepository::class)->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
@@ -69,7 +69,7 @@ it('throws when no customer matches the given code', function () {
         );
 });
 
-it('throws when no customer matches the given id', function () {
+it('throws when no customer matches the given id', function (): void {
     expect(fn () => resolve(CustomerRepository::class)->find(999999999))
         ->toThrow(
             exception: RecordsNotFoundException::class,

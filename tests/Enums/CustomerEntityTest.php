@@ -12,18 +12,18 @@ uses(TestCase::class);
 
 mutates(CustomerEntity::class);
 
-it('implements Describable contract', function () {
+it('implements Describable contract', function (): void {
     expect(CustomerEntity::class)->toImplement(Describable::class);
 });
 
-it('has correct backed values', function (CustomerEntity $case, int $value) {
+it('has correct backed values', function (CustomerEntity $case, int $value): void {
     expect($case->value)->toBe($value);
 })->with([
     [CustomerEntity::COMPANY, 0],
     [CustomerEntity::PERSON, 1],
 ]);
 
-it('returns correct description for each case', function (CustomerEntity $case, string $description) {
+it('returns correct description for each case', function (CustomerEntity $case, string $description): void {
     expect($case->description())->toBe($description);
 })->with([
     [CustomerEntity::COMPANY, 'Business entity'],

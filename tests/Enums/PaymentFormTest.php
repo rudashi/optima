@@ -14,13 +14,13 @@ uses(TestCase::class);
 
 mutates(PaymentForm::class);
 
-it('implements Arrayable and Describable contracts', function () {
+it('implements Arrayable and Describable contracts', function (): void {
     expect(PaymentForm::class)
         ->toImplement(Arrayable::class)
         ->toImplement(Describable::class);
 });
 
-it('has correct backed values', function () {
+it('has correct backed values', function (): void {
     $values = [
         'CASH_PLN' => 1,
         'PREPAYMENT_PLN' => 19,
@@ -56,7 +56,7 @@ it('has correct backed values', function () {
     }
 });
 
-it('returns correct description for each case', function () {
+it('returns correct description for each case', function (): void {
     $descriptions = [
         'CASH_PLN' => 'gotówka',
         'PREPAYMENT_PLN' => 'przedpłata',
@@ -92,7 +92,7 @@ it('returns correct description for each case', function () {
     }
 });
 
-it('returns correct currency for currency-specific cases', function (PaymentForm $case, string $currency) {
+it('returns correct currency for currency-specific cases', function (PaymentForm $case, string $currency): void {
     expect($case->currency())->toBe($currency);
 })->with([
     [PaymentForm::CASH_PLN, 'PLN'],
@@ -103,14 +103,14 @@ it('returns correct currency for currency-specific cases', function (PaymentForm
     [PaymentForm::BANK_TRANSFER_SEK, 'SEK'],
 ]);
 
-it('returns empty currency for generic payment forms', function (PaymentForm $case) {
+it('returns empty currency for generic payment forms', function (PaymentForm $case): void {
     expect($case->currency())->toBe('');
 })->with([
     PaymentForm::BANK_TRANSFER,
     PaymentForm::PREPAYMENT,
 ]);
 
-it('returns empty currency for EUR payment forms', function (PaymentForm $case) {
+it('returns empty currency for EUR payment forms', function (PaymentForm $case): void {
     expect($case->currency())->toBe('');
 })->with([
     PaymentForm::BANK_TRANSFER_EUR_E,
@@ -119,7 +119,7 @@ it('returns empty currency for EUR payment forms', function (PaymentForm $case) 
     PaymentForm::PREPAYMENT_EUR_50_E,
 ]);
 
-it('returns correct payment forms per country', function (Country $country, array $expected) {
+it('returns correct payment forms per country', function (Country $country, array $expected): void {
     expect(PaymentForm::for($country))->toBe($expected);
 })->with([
     'Poland' => [Country::POLAND, [
@@ -157,7 +157,7 @@ it('returns correct payment forms per country', function (Country $country, arra
     ]],
 ]);
 
-it('can return list of payments as array', function () {
+it('can return list of payments as array', function (): void {
     $data = PaymentForm::toArray();
 
     expect($data)
@@ -166,7 +166,7 @@ it('can return list of payments as array', function () {
         ->each->toHaveKeys(['value', 'name', 'currency']);
 });
 
-it('includes bank transfer PLN with correct data in toArray()', function () {
+it('includes bank transfer PLN with correct data in toArray()', function (): void {
     expect(PaymentForm::toArray())->toContain([
         'name' => PaymentForm::BANK_TRANSFER_PLN->description(),
         'currency' => PaymentForm::BANK_TRANSFER_PLN->currency(),

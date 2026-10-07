@@ -13,7 +13,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('can connect to optima database', function () {
+it('can connect to optima database', function (): void {
     $service = new DatabaseHealthCheckService(app('db'));
 
     expect($service->status())

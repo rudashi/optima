@@ -21,7 +21,7 @@ uses(TestCase::class);
 
 pest()->group('fixtures');
 
-beforeEach(function () {
+beforeEach(function (): void {
     skipUnlessSqlite();
 
     DB::connection('optima')->unprepared(file_get_contents(__DIR__ . '/../schemas/structure.sqlite.sql'));
@@ -32,7 +32,7 @@ mutates(CustomerRepository::class);
 mutates(EmployeeRepository::class);
 mutates(DepartmentRepository::class);
 
-it('finds a customer by code from seeded fixture', function () {
+it('finds a customer by code from seeded fixture', function (): void {
     $result = DB::connection('optima')
         ->table('CDN.Kontrahenci')
         ->where('Knt_Kod', 'TEST-A')
@@ -44,7 +44,7 @@ it('finds a customer by code from seeded fixture', function () {
         ->and($result->Knt_Nazwa1)->toBe('Test Company A');
 });
 
-it('maps a fully populated customer through the repository', function () {
+it('maps a fully populated customer through the repository', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect($repository->findByCode('TEST-FULL'))
@@ -65,7 +65,7 @@ it('maps a fully populated customer through the repository', function () {
         ->deleted->toBeFalse();
 });
 
-it('applies the group filter when finding a customer by code', function () {
+it('applies the group filter when finding a customer by code', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect($repository->findByCode('TEST-FULL', CustomerGroup::SUBCONTRACTOR->value))
@@ -75,7 +75,7 @@ it('applies the group filter when finding a customer by code', function () {
 
 });
 
-it('returns an inactive customer flagged as deleted', function () {
+it('returns an inactive customer flagged as deleted', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect($repository->findByCode('INACTIVE'))
@@ -85,7 +85,7 @@ it('returns an inactive customer flagged as deleted', function () {
         ->deleted->toBeTrue();
 });
 
-it('maps a customer with only the required fields populated', function () {
+it('maps a customer with only the required fields populated', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect($repository->findByCode('TEST-B'))
@@ -105,7 +105,7 @@ it('maps a customer with only the required fields populated', function () {
         ->deleted->toBeFalse();
 });
 
-it('returns a Collection of customers when found by ids', function () {
+it('returns a Collection of customers when found by ids', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     $customers = $repository->find(1, 4);
@@ -118,7 +118,7 @@ it('returns a Collection of customers when found by ids', function () {
     expect($customers->pluck('id')->all())->toContain(1)->toContain(4);
 });
 
-it('throws with the code message when the customer code is not found', function () {
+it('throws with the code message when the customer code is not found', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect(fn () => $repository->findByCode('NOPE'))
@@ -128,7 +128,7 @@ it('throws with the code message when the customer code is not found', function 
         );
 });
 
-it('throws with the id message when no customer matches the ids', function () {
+it('throws with the id message when no customer matches the ids', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
     expect(fn () => $repository->find(999999))
@@ -138,7 +138,7 @@ it('throws with the id message when no customer matches the ids', function () {
         );
 });
 
-it('maps a fully populated employee through the repository', function () {
+it('maps a fully populated employee through the repository', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
     expect($repository->findByCode('001E'))
@@ -156,7 +156,7 @@ it('maps a fully populated employee through the repository', function () {
         ->deleted->toBeFalse();
 });
 
-it('selects the latest employment record by max PRE_PreId', function () {
+it('selects the latest employment record by max PRE_PreId', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
     expect($repository->findByCode('001E'))
@@ -164,14 +164,14 @@ it('selects the latest employment record by max PRE_PreId', function () {
         ->job_title->toBe('Kierownik');
 });
 
-it('joins the active RCP card and ignores expired ones', function () {
+it('joins the active RCP card and ignores expired ones', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
     expect($repository->findByCode('001E'))->rcp->toBe('RCP-001');
     expect($repository->findByCode('002E'))->rcp->toBeNull();
 });
 
-it('throws when the employee is archived', function () {
+it('throws when the employee is archived', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
     expect(fn () => $repository->findByCode('003E'))
@@ -181,7 +181,7 @@ it('throws when the employee is archived', function () {
         );
 });
 
-it('maps an owner-type employee through the repository', function () {
+it('maps an owner-type employee through the repository', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
     expect($repository->findByCode('004O'))
@@ -191,7 +191,7 @@ it('maps an owner-type employee through the repository', function () {
         ->deleted->toBeFalse();
 });
 
-it('throws with the acronym message when the employee code is not found', function () {
+it('throws with the acronym message when the employee code is not found', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
     expect(fn () => $repository->findByCode('NOPE'))
@@ -201,7 +201,7 @@ it('throws with the acronym message when the employee code is not found', functi
         );
 });
 
-it('lists seeded departments through the repository', function () {
+it('lists seeded departments through the repository', function (): void {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     $departments = $repository->all();
@@ -218,14 +218,14 @@ it('lists seeded departments through the repository', function () {
 
 });
 
-it('excludes departments with an empty name', function () {
+it('excludes departments with an empty name', function (): void {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     expect($repository->all()->pluck('id')->all())
         ->toBe([2, 3, 5]);
 });
 
-it('maps a department found by code through the repository', function () {
+it('maps a department found by code through the repository', function (): void {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     expect($repository->findByCode('WYDA'))
@@ -236,7 +236,7 @@ it('maps a department found by code through the repository', function () {
         ->parent_id->toBe(1);
 });
 
-it('uppercases the department code before querying', function () {
+it('uppercases the department code before querying', function (): void {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     expect($repository->findByCode('wyda'))
@@ -244,7 +244,7 @@ it('uppercases the department code before querying', function () {
         ->id->toBe(2);
 });
 
-it('throws with the code message when the department code is not found', function () {
+it('throws with the code message when the department code is not found', function (): void {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
     expect(fn () => $repository->findByCode('NOPE'))

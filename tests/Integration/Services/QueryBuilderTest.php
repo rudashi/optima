@@ -19,7 +19,7 @@ beforeEach(fn () => skipUnlessMssql());
 
 mutates(QueryBuilder::class);
 
-it('returns query results as a package Collection from the live schema', function () {
+it('returns query results as a package Collection from the live schema', function (): void {
     $result = $this->service->newQuery()
         ->from('CDN.Centra')
         ->get();
@@ -29,10 +29,10 @@ it('returns query results as a package Collection from the live schema', functio
         ->and($result->count())->toBeGreaterThanOrEqual(5);
 });
 
-it('compiles and executes the WITH (NOLOCK) table hint against the live schema', function () {
+it('compiles and executes the WITH (NOLOCK) table hint against the live schema', function (): void {
     $queries = [];
 
-    DB::listen(function ($query) use (&$queries) {
+    DB::listen(function ($query) use (&$queries): void {
         $queries[] = $query->sql;
     });
 
@@ -45,7 +45,7 @@ it('compiles and executes the WITH (NOLOCK) table hint against the live schema',
         ->and(collect($queries)->contains(fn ($sql) => str_contains($sql, 'WITH (NOLOCK)')))->toBeTrue();
 });
 
-it('resolves a hasOne relation against the live schema', function () {
+it('resolves a hasOne relation against the live schema', function (): void {
     $result = $this->service->newQuery()
         ->from('CDN.Centra')
         ->whereIn('CNT_CntId', [2, 3, 4, 5])
@@ -64,7 +64,7 @@ it('resolves a hasOne relation against the live schema', function () {
         ->and($byId->get(5)->manager->manager_id)->toBe(5);
 });
 
-it('resolves a hasMany relation against the live schema, defaulting to an empty array', function () {
+it('resolves a hasMany relation against the live schema, defaulting to an empty array', function (): void {
     $result = $this->service->newQuery()
         ->from('CDN.Centra')
         ->whereIn('CNT_CntId', [1, 2, 3])
@@ -82,7 +82,7 @@ it('resolves a hasMany relation against the live schema, defaulting to an empty 
         ->and($byId->get(3)->employees[0]->code)->toBe('003E');
 });
 
-it('does not run relations when there are no owner rows', function () {
+it('does not run relations when there are no owner rows', function (): void {
     $relation = new DepartmentEmployeesRelation($this->service);
     $this->app->instance(DepartmentEmployeesRelation::class, $relation);
 
@@ -97,7 +97,7 @@ it('does not run relations when there are no owner rows', function () {
         ->and($relation->calls)->toBe(0);
 });
 
-it('loads a relation for a single owner row', function () {
+it('loads a relation for a single owner row', function (): void {
     $relation = new DepartmentManagerRelation($this->service);
     $this->app->instance(DepartmentManagerRelation::class, $relation);
 
@@ -113,21 +113,20 @@ it('loads a relation for a single owner row', function () {
         ->and($relation->calls)->toBe(1);
 });
 
-it('resolves a hasMany relation built from a closure against the live schema', function () {
+it('resolves a hasMany relation built from a closure against the live schema', function (): void {
     $result = $this->service->newQuery()
         ->from('CDN.Centra')
         ->whereIn('CNT_CntId', [2, 3])
         ->orderBy('CNT_CntId')
         ->select(['CNT_CntId as id'])
         ->hasMany(
-            function (QueryBuilder $query, array $ids) {
-                return $query->from('CDN.Pracidx')
-                    ->whereIn('PRI_CntId', $ids)
-                    ->select(['PRI_CntId as dept_id', 'PRI_Kod as code']);
-            },
-            'id',
-            'dept_id',
-            'employees'
+            related: fn (QueryBuilder $query, array $ids) => $query
+                ->from('CDN.Pracidx')
+                ->whereIn('PRI_CntId', $ids)
+                ->select(['PRI_CntId as dept_id', 'PRI_Kod as code']),
+            ownerKey: 'id',
+            foreignKey: 'dept_id',
+            relation: 'employees'
         )
         ->get();
 

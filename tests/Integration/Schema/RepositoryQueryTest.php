@@ -18,7 +18,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-beforeEach(function () {
+beforeEach(function (): void {
     $service = app(OptimaService::class);
 
     $this->customers = new CustomerRepository($service);
@@ -26,17 +26,17 @@ beforeEach(function () {
     $this->departments = new DepartmentRepository($service);
 });
 
-it('executes the canonical customer SELECT against the live schema', function () {
+it('executes the canonical customer SELECT against the live schema', function (): void {
     expect(fn () => $this->customers->findByCode('__OPTIMA_SMOKE_PROBE__'))
         ->toThrow(RecordsNotFoundException::class);
 });
 
-it('executes the canonical employee SELECT against the live schema', function () {
+it('executes the canonical employee SELECT against the live schema', function (): void {
     expect(fn () => $this->employees->findByCode('__OPTIMA_SMOKE_PROBE__'))
         ->toThrow(RecordsNotFoundException::class);
 });
 
-it('executes the canonical department join query against the live schema', function () {
+it('executes the canonical department join query against the live schema', function (): void {
     expect($this->departments->all())
         ->toBeInstanceOf(Collection::class);
 });

@@ -14,12 +14,12 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('resolves optima connection', function () {
+it('resolves optima connection', function (): void {
     expect(DB::connection('optima')->getPdo())
         ->toBeInstanceOf(PDO::class);
 });
 
-it('table has expected columns', function (string $table, array $expected) {
+it('table has expected columns', function (string $table, array $expected): void {
     $columns = DB::connection('optima')->select(
         "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
          WHERE TABLE_SCHEMA = 'CDN' AND TABLE_NAME = ?",

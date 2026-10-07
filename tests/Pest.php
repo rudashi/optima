@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 use Rudashi\Optima\Tests\Fixtures\FakeDTO;
 
-expect()->extend('toBeNullableString', function () {
-    return $this->value === null ? $this : $this->toBeString();
-});
+expect()->extend('toBeNullableString', fn () => $this->value === null ? $this : $this->toBeString());
 
-expect()->extend('toBeNullableInt', function () {
-    return $this->value === null ? $this : $this->toBeInt();
-});
+expect()->extend('toBeNullableInt', fn () => $this->value === null ? $this : $this->toBeInt());
 
 function optimaDriver(): ?string
 {
@@ -34,27 +30,27 @@ function skipUnlessSqlite(): void
 function fakeCustomerRow(array $override = []): stdClass
 {
     return (object) array_merge([
-        'id'              => fake()->numberBetween(1, 9999),
-        'code'            => fake()->lexify('????'),
-        'company'         => fake()->company(),
-        'name_line_two'   => null,
+        'id' => fake()->numberBetween(1, 9999),
+        'code' => fake()->lexify('????'),
+        'company' => fake()->company(),
+        'name_line_two' => null,
         'name_line_three' => null,
-        'country'         => null,
-        'city'            => null,
-        'postal_code'     => null,
-        'street'          => null,
+        'country' => null,
+        'city' => null,
+        'postal_code' => null,
+        'street' => null,
         'building_number' => null,
-        'suite_number'    => null,
-        'nip'             => null,
-        'deleted'         => 0,
+        'suite_number' => null,
+        'nip' => null,
+        'deleted' => 0,
     ], $override);
 }
 
 function fakeDepartmentRow(array $override = []): stdClass
 {
     return (object) array_merge([
-        'id'        => fake()->numberBetween(1, 999),
-        'name'      => strtoupper(fake()->word()),
+        'id' => fake()->numberBetween(1, 999),
+        'name' => strtoupper(fake()->word()),
         'user_code' => fake()->lexify('???'),
         'parent_id' => fake()->numberBetween(1, 20),
     ], $override);
@@ -63,17 +59,17 @@ function fakeDepartmentRow(array $override = []): stdClass
 function fakeEmployeeRow(array $override = []): stdClass
 {
     return (object) array_merge([
-        'id'              => fake()->numberBetween(1, 9999),
-        'code'            => fake()->lexify('???E'),
-        'firstname'       => fake()->firstName(),
-        'lastname'        => fake()->lastName(),
-        'email'           => fake()->email(),
-        'job_title'       => fake()->jobTitle(),
-        'department_id'   => fake()->numberBetween(1, 50),
+        'id' => fake()->numberBetween(1, 9999),
+        'code' => fake()->lexify('???E'),
+        'firstname' => fake()->firstName(),
+        'lastname' => fake()->lastName(),
+        'email' => fake()->email(),
+        'job_title' => fake()->jobTitle(),
+        'department_id' => fake()->numberBetween(1, 50),
         'department_name' => strtoupper(fake()->word()),
-        'company'         => fake()->company(),
-        'rcp'             => null,
-        'deleted'         => 0,
+        'company' => fake()->company(),
+        'rcp' => null,
+        'deleted' => 0,
     ], $override);
 }
 
@@ -81,9 +77,9 @@ function fakeCollectionArray(string $type = 'object', int $total = 3): array
 {
     return array_map(function () use ($type) {
         $array = [
-            'id'     => fake()->numberBetween(),
-            'uuid'   => fake()->uuid(),
-            'email'  => fake()->email(),
+            'id' => fake()->numberBetween(),
+            'uuid' => fake()->uuid(),
+            'email' => fake()->email(),
             'active' => 1,
         ];
         settype($array, $type);

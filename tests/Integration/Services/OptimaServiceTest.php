@@ -12,7 +12,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('can check connection', function () {
+it('can check connection', function (): void {
     expect(optima(false)->hasConnection())
         ->toBeTrue();
 });

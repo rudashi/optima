@@ -35,7 +35,7 @@ class DatabaseHealthCheckService
     }
 
     /**
-     * @param  array<array-key, mixed>  $context
+     * @param array<array-key, mixed> $context
      *
      * @return array{status: string, message: string, context: array<array-key, mixed>}
      */
@@ -49,7 +49,7 @@ class DatabaseHealthCheckService
     }
 
     /**
-     * @param  array<array-key, mixed>  $context
+     * @param array<array-key, mixed> $context
      *
      * @return array{status: string, message: string, context: array<array-key, mixed>}
      */
@@ -69,7 +69,7 @@ class DatabaseHealthCheckService
     {
         return [
             'error' => $e->getMessage(),
-            'class' => get_class($e),
+            'class' => $e::class,
             'line' => $e->getLine(),
             'file' => $e->getFile(),
         ];

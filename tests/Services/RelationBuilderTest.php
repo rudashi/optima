@@ -13,13 +13,13 @@ uses(TestCase::class);
 
 mutates(RelationBuilder::class);
 
-it('returns the owner key name', function () {
+it('returns the owner key name', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
 
     expect($builder->getKeyName())->toBe('id');
 });
 
-it('initializes every model with an empty array default', function () {
+it('initializes every model with an empty array default', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1], (object) ['id' => 2]]);
 
@@ -29,7 +29,7 @@ it('initializes every model with an empty array default', function () {
         ->and($models->last()->items)->toBe([]);
 });
 
-it('passes owner keys to the relation', function () {
+it('passes owner keys to the relation', function (): void {
     $relation = new FakeRelation();
     $builder = new RelationBuilder('items', $relation, 'id', 'order_id');
 
@@ -38,14 +38,14 @@ it('passes owner keys to the relation', function () {
     expect($relation->receivedKeys)->toBe([5, 9]);
 });
 
-it('returns related items from init', function () {
+it('returns related items from init', function (): void {
     $related = [(object) ['order_id' => 5]];
     $builder = new RelationBuilder('items', new FakeRelation($related), 'id', 'order_id');
 
     expect($builder->init(new Collection([(object) ['id' => 5]])))->toBe($related);
 });
 
-it('groups related models per owner on match', function () {
+it('groups related models per owner on match', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1], (object) ['id' => 2]]);
     $related = [
@@ -64,7 +64,7 @@ it('groups related models per owner on match', function () {
         ->and($result->last()->items[0]->name)->toBe('C');
 });
 
-it('keeps the default for models without related rows', function () {
+it('keeps the default for models without related rows', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1]]);
 
@@ -74,7 +74,7 @@ it('keeps the default for models without related rows', function () {
     expect($result->first()->items)->toBe([]);
 });
 
-it('assigns a single related object directly on match', function () {
+it('assigns a single related object directly on match', function (): void {
     $builder = new RelationBuilder('item', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1], (object) ['id' => 2]]);
     $related = (object) ['order_id' => 1, 'name' => 'A'];
@@ -86,7 +86,7 @@ it('assigns a single related object directly on match', function () {
         ->and($result->last()->item)->toBe([]);
 });
 
-it('reads the key from the first row of a nested collection', function () {
+it('reads the key from the first row of a nested collection', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1]]);
     $group = new Collection([
@@ -101,7 +101,7 @@ it('reads the key from the first row of a nested collection', function () {
         ->and($result->first()->items[0])->toBe($group);
 });
 
-it('skips an empty nested collection of related rows', function () {
+it('skips an empty nested collection of related rows', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1]]);
 
@@ -111,7 +111,7 @@ it('skips an empty nested collection of related rows', function () {
     expect($result->first()->items)->toBe([]);
 });
 
-it('reads the key from a non-iterable object with a get method', function () {
+it('reads the key from a non-iterable object with a get method', function (): void {
     $builder = new RelationBuilder('items', new FakeRelation(), 'id', 'order_id');
     $models = new Collection([(object) ['id' => 1]]);
     $related = new class () {
@@ -130,7 +130,7 @@ it('reads the key from a non-iterable object with a get method', function () {
         ->and($result->first()->items[0])->toBe($related);
 });
 
-it('resolves a relation class from the container', function () {
+it('resolves a relation class from the container', function (): void {
     $relation = new FakeRelation();
     $this->app->instance(FakeRelation::class, $relation);
 
@@ -142,7 +142,7 @@ it('resolves a relation class from the container', function () {
         ->and($builder->newRelationInstance(FakeRelation::class))->toBe($relation);
 });
 
-it('returns a relation instance as is', function () {
+it('returns a relation instance as is', function (): void {
     $relation = new FakeRelation();
     $builder = new RelationBuilder('items', $relation, 'id', 'order_id');
 

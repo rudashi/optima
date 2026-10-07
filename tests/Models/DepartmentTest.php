@@ -11,7 +11,7 @@ uses(TestCase::class);
 
 mutates(Department::class);
 
-it('maps all fields from the database row', function () {
+it('maps all fields from the database row', function (): void {
     $department = Department::make(fakeDepartmentRow([
         'id'        => '7',
         'name'      => 'FINANSE',
@@ -26,11 +26,11 @@ it('maps all fields from the database row', function () {
         ->parent_id->toBe(3);
 });
 
-it('returns null when the parent is missing', function () {
+it('returns null when the parent is missing', function (): void {
     expect(Department::make(fakeDepartmentRow(['parent_id' => null]))->parent_id)->toBeNull();
 });
 
-it('converts to an array', function () {
+it('converts to an array', function (): void {
     $department = Department::make(fakeDepartmentRow([
         'id'        => 7,
         'name'      => 'FINANSE',

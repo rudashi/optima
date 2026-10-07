@@ -14,11 +14,11 @@ class OptimaService
 {
     public static string $connection = 'optima';
     protected string $connectionName;
-    protected DatabaseManager $resolver;
 
-    public function __construct(DatabaseManager $resolver, ?string $connection = null)
-    {
-        $this->resolver = $resolver;
+    public function __construct(
+        protected DatabaseManager $resolver,
+        ?string $connection = null,
+    ) {
         $this->connectionName = $connection ?? static::$connection;
     }
 
@@ -66,7 +66,7 @@ class OptimaService
     }
 
     /**
-     * @param  mixed  ...$ids
+     * @param mixed ...$ids
      *
      * @return array<int, int|string>
      */

@@ -13,7 +13,7 @@ uses(TestCase::class);
 
 mutates(RelationHasOneBuilder::class);
 
-it('initializes every model with a null default', function () {
+it('initializes every model with a null default', function (): void {
     $builder = new RelationHasOneBuilder('address', new FakeRelation(), 'id', 'customer_id');
     $models = new Collection([(object) ['id' => 1], (object) ['id' => 2]]);
 
@@ -23,7 +23,7 @@ it('initializes every model with a null default', function () {
         ->and($models->last()->address)->toBeNull();
 });
 
-it('assigns the single matching model on match', function () {
+it('assigns the single matching model on match', function (): void {
     $builder = new RelationHasOneBuilder('address', new FakeRelation(), 'id', 'customer_id');
     $models = new Collection([(object) ['id' => 1], (object) ['id' => 2]]);
     $related = [
@@ -37,7 +37,7 @@ it('assigns the single matching model on match', function () {
         ->and($result->last()->address)->toBeNull();
 });
 
-it('keeps the last related row when owners are duplicated', function () {
+it('keeps the last related row when owners are duplicated', function (): void {
     $builder = new RelationHasOneBuilder('address', new FakeRelation(), 'id', 'customer_id');
     $models = new Collection([(object) ['id' => 1]]);
     $first = (object) ['customer_id' => 1, 'city' => 'GDAŃSK'];
@@ -49,7 +49,7 @@ it('keeps the last related row when owners are duplicated', function () {
     expect($result->first()->address)->toBe($second);
 });
 
-it('assigns a single related object directly on match', function () {
+it('assigns a single related object directly on match', function (): void {
     $builder = new RelationHasOneBuilder('address', new FakeRelation(), 'id', 'customer_id');
     $models = new Collection([(object) ['id' => 1]]);
     $related = (object) ['customer_id' => 1, 'city' => 'GDAŃSK'];

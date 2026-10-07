@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rudashi\Optima\Tests;
 
+use Illuminate\Routing\Controller;
+
 arch('no debug')
     ->expect('Rudashi\Optima')
     ->not->toUse(['die', 'dd', 'dump', 'var_dump']);
@@ -31,7 +33,7 @@ arch('contracts are interfaces')
 arch('controllers')
     ->expect('Rudashi\Optima\Controllers')
     ->toHaveSuffix('Controller')
-    ->toExtend('Illuminate\Routing\Controller');
+    ->toExtend(Controller::class);
 
 arch('exceptions')
     ->expect('Rudashi\Optima\Exceptions')

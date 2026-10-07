@@ -14,7 +14,7 @@ uses(TestCase::class);
 
 mutates(DatabaseHealthCheckService::class);
 
-it('shows ok when the database connection succeeds', function () {
+it('shows ok when the database connection succeeds', function (): void {
     $connection = $this->mock(SqlServerConnection::class);
     $connection->allows('getReadPdo')->andReturnNull();
 
@@ -31,7 +31,7 @@ it('shows ok when the database connection succeeds', function () {
         ]);
 });
 
-it('shows problem when the database connection fails', function () {
+it('shows problem when the database connection fails', function (): void {
     $connection = $this->mock(SqlServerConnection::class);
     $connection->allows('getReadPdo')->andThrow(new Exception('Connection refused'));
 
@@ -51,7 +51,7 @@ it('shows problem when the database connection fails', function () {
         ->toHaveKey('context.exception.file');
 });
 
-it('builds a problem payload with defaults', function () {
+it('builds a problem payload with defaults', function (): void {
     $service = new DatabaseHealthCheckService(app('db'));
 
     expect($service->problem())

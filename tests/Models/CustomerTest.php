@@ -11,7 +11,7 @@ uses(TestCase::class);
 
 mutates(Customer::class);
 
-it('maps all fields from the database row', function () {
+it('maps all fields from the database row', function (): void {
     $customer = Customer::make(fakeCustomerRow([
         'id'              => '7',
         'code'            => 'TEST1',
@@ -45,20 +45,20 @@ it('maps all fields from the database row', function () {
         ->deleted->toBeFalse();
 });
 
-it('casts deleted to a boolean', function (int $deleted, bool $expected) {
+it('casts deleted to a boolean', function (int $deleted, bool $expected): void {
     expect(Customer::make(fakeCustomerRow(['deleted' => $deleted]))->deleted)->toBe($expected);
 })->with([
     'truthy' => [1, true],
     'falsy'  => [0, false],
 ]);
 
-it('trims the name when name lines are missing', function () {
+it('trims the name when name lines are missing', function (): void {
     $customer = Customer::make(fakeCustomerRow(['company' => 'ACME']));
 
     expect($customer->name)->toBe('ACME');
 });
 
-it('keeps a double space in the name when only the third line is set', function () {
+it('keeps a double space in the name when only the third line is set', function (): void {
     $customer = Customer::make(fakeCustomerRow([
         'company'         => 'ACME',
         'name_line_three' => 'North',
@@ -67,7 +67,7 @@ it('keeps a double space in the name when only the third line is set', function 
     expect($customer->name)->toBe('ACME  North');
 });
 
-it('normalizes the city capitalization', function (?string $city, ?string $expected) {
+it('normalizes the city capitalization', function (?string $city, ?string $expected): void {
     expect(Customer::make(fakeCustomerRow(['city' => $city]))->city)->toBe($expected);
 })->with([
     'uppercase'           => ['KWIDZYN', 'Kwidzyn'],
@@ -76,7 +76,7 @@ it('normalizes the city capitalization', function (?string $city, ?string $expec
     'null'                => [null, null],
 ]);
 
-it('formats the street name', function (?string $street, ?string $expected) {
+it('formats the street name', function (?string $street, ?string $expected): void {
     expect(Customer::make(fakeCustomerRow(['street' => $street]))->street)->toBe($expected);
 })->with([
     'ul prefix'             => ['ul. Polna', 'ul. Polna'],
@@ -88,7 +88,7 @@ it('formats the street name', function (?string $street, ?string $expected) {
     'null'                  => [null, null],
 ]);
 
-it('trims the country and postal code', function () {
+it('trims the country and postal code', function (): void {
     $customer = Customer::make(fakeCustomerRow([
         'country'     => ' Polska ',
         'postal_code' => ' 82-500 ',
@@ -98,7 +98,7 @@ it('trims the country and postal code', function () {
         ->and($customer->postal_code)->toBe('82-500');
 });
 
-it('returns null for empty optional fields', function () {
+it('returns null for empty optional fields', function (): void {
     $customer = Customer::make(fakeCustomerRow([
         'country'         => '',
         'postal_code'     => '',
@@ -112,7 +112,7 @@ it('returns null for empty optional fields', function () {
         ->and($customer->suite_number)->toBeNull();
 });
 
-it('handles rows without optional columns', function () {
+it('handles rows without optional columns', function (): void {
     $row = fakeCustomerRow();
     unset($row->country, $row->nip);
 

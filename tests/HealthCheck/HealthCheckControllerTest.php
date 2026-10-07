@@ -12,7 +12,7 @@ uses(TestCase::class);
 
 mutates(HealthCheckController::class);
 
-it('returns response 200 with pong message', function () {
+it('returns response 200 with pong message', function (): void {
     $this->mock(DatabaseHealthCheckService::class)
         ->allows('status')
         ->andReturn([
@@ -26,7 +26,7 @@ it('returns response 200 with pong message', function () {
         ->assertExactJson(['message' => 'pong']);
 });
 
-it('return response 500 with error message', function () {
+it('return response 500 with error message', function (): void {
     $this->mock(DatabaseHealthCheckService::class)
         ->allows('status')
         ->andReturn([

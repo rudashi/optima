@@ -22,9 +22,11 @@ readonly class CustomerRepository
     {
         $data = $this->queryCustomer()
             ->where('Knt_Kod', $code)
-            ->when($group, static function (QueryBuilder $query, string $group) {
-                return $query->where('Knt_Grupa', CustomerGroup::from($group)->value);
-            })
+            ->when(
+                value: $group,
+                callback: static fn (QueryBuilder $query, string $group) => $query
+                    ->where('Knt_Grupa', CustomerGroup::from($group)->value)
+            )
             ->first();
 
         if ($data === null) {

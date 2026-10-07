@@ -13,13 +13,13 @@ uses(TestCase::class);
 
 mutates(TransactionType::class);
 
-it('implements Arrayable and Describable contracts', function () {
+it('implements Arrayable and Describable contracts', function (): void {
     expect(TransactionType::class)
         ->toImplement(Arrayable::class)
         ->toImplement(Describable::class);
 });
 
-it('has correct backed values', function (TransactionType $case, int $value) {
+it('has correct backed values', function (TransactionType $case, int $value): void {
     expect($case->value)->toBe($value);
 })->with([
     [TransactionType::NATIONAL, 0],
@@ -35,7 +35,7 @@ it('has correct backed values', function (TransactionType $case, int $value) {
     [TransactionType::OSS, 10],
 ]);
 
-it('returns correct description for each case', function (TransactionType $case, string $description) {
+it('returns correct description for each case', function (TransactionType $case, string $description): void {
     expect($case->description())->toBe($description);
 })->with([
     [TransactionType::NATIONAL, 'Krajowy'],
@@ -51,7 +51,7 @@ it('returns correct description for each case', function (TransactionType $case,
     [TransactionType::OSS, 'Procedura OSS'],
 ]);
 
-it('can return list of transactions as array', function () {
+it('can return list of transactions as array', function (): void {
     $data = TransactionType::toArray();
 
     expect($data)
@@ -60,7 +60,7 @@ it('can return list of transactions as array', function () {
         ->each->toHaveKeys(['name', 'value']);
 });
 
-it('includes national with correct data in toArray()', function () {
+it('includes national with correct data in toArray()', function (): void {
     expect(TransactionType::toArray())->toContain([
         'name' => TransactionType::NATIONAL->description(),
         'value' => TransactionType::NATIONAL->value,

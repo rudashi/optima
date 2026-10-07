@@ -12,10 +12,10 @@ use Rudashi\Optima\Services\OptimaService;
 
 class EmployeeRepository
 {
-    public const EMPLOYEE = 1;
-    public const OWNER = 2;
-    public const EMPLOYEE_FULL_TIME = 10;
-    public const CONTRACTOR = 20;
+    public const int EMPLOYEE = 1;
+    public const int OWNER = 2;
+    public const int EMPLOYEE_FULL_TIME = 10;
+    public const int CONTRACTOR = 20;
 
     public function __construct(
         private readonly OptimaService $service
@@ -45,7 +45,7 @@ class EmployeeRepository
                 'rcp.PKR_Numer as rcp',
             ])
             ->leftJoin('CDN.Centra as department', 'department.CNT_CntId', 'employee.PRI_CntId')
-            ->leftJoin('CDN.PracEtaty as work', static function (JoinClause $join) {
+            ->leftJoin('CDN.PracEtaty as work', static function (JoinClause $join): void {
                 $join->on(
                     first: 'work.PRE_PreId',
                     operator: '=',
@@ -53,7 +53,7 @@ class EmployeeRepository
                 );
             })
             ->leftJoin('CDN.DaneKadMod as hr', 'hr.DKM_DkmId', 'work.PRE_ETADkmIdStanowisko')
-            ->leftJoin('CDN.PracKartyRcp as rcp', static function (JoinClause $join) {
+            ->leftJoin('CDN.PracKartyRcp as rcp', static function (JoinClause $join): void {
                 $join->on('rcp.PKR_PrcId', '=', 'employee.PRI_PraId')
                     ->whereDate('rcp.PKR_OkresDo', '>=', today());
             })

@@ -14,7 +14,7 @@ uses(TestCase::class);
 
 mutates(Parser::class);
 
-it('create Parser instance', function ($value) {
+it('create Parser instance', function ($value): void {
     $parser = new Parser($value);
 
     expect(array_values((array) $parser))
@@ -26,7 +26,7 @@ it('create Parser instance', function ($value) {
     'null' => null,
 ]);
 
-it('create Parser from object', function () {
+it('create Parser from object', function (): void {
     $value = fake()->name();
     $parser = Parser::for((object) ['key' => $value], 'key');
 
@@ -34,7 +34,7 @@ it('create Parser from object', function () {
         ->toMatchArray([$value]);
 });
 
-it('create Parser statically', function () {
+it('create Parser statically', function (): void {
     $value = fake()->name();
     $parser = Parser::of($value);
 
@@ -106,7 +106,7 @@ it('get float or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('returns value', function () {
+it('returns value', function (): void {
     $value = fake()->name();
     $parser = Parser::for((object) ['key' => $value], 'key');
 

@@ -13,13 +13,13 @@ uses(TestCase::class);
 
 mutates(Country::class);
 
-it('implements Arrayable and Describable contracts', function () {
+it('implements Arrayable and Describable contracts', function (): void {
     expect(Country::class)
         ->toImplement(Arrayable::class)
         ->toImplement(Describable::class);
 });
 
-it('has correct backed values for key countries', function (Country $case, string $value) {
+it('has correct backed values for key countries', function (Country $case, string $value): void {
     expect($case->value)->toBe($value);
 })->with([
     [Country::POLAND, 'PL'],
@@ -30,7 +30,7 @@ it('has correct backed values for key countries', function (Country $case, strin
     [Country::NULL, ''],
 ]);
 
-it('resolves to NULL case for empty or missing name via of()', function (?string $name) {
+it('resolves to NULL case for empty or missing name via of()', function (?string $name): void {
     expect(Country::of($name))->toBe(Country::NULL);
 })->with([
     'no argument'  => [null],
@@ -38,14 +38,14 @@ it('resolves to NULL case for empty or missing name via of()', function (?string
     'non-existent' => ['NonExistentCountry'],
 ]);
 
-it('resolves correct case via of() using description', function (string $name, Country $expected) {
+it('resolves correct case via of() using description', function (string $name, Country $expected): void {
     expect(Country::of($name))->toBe($expected);
 })->with([
     'Poland'  => ['Poland', Country::POLAND],
     'Germany' => ['Germany', Country::GERMANY],
 ]);
 
-it('returns a non-empty description for all non-null cases', function () {
+it('returns a non-empty description for all non-null cases', function (): void {
     $cases = array_filter(Country::cases(), fn ($c) => $c !== Country::NULL);
 
     foreach ($cases as $case) {
@@ -53,11 +53,11 @@ it('returns a non-empty description for all non-null cases', function () {
     }
 });
 
-it('returns empty string description for NULL case', function () {
+it('returns empty string description for NULL case', function (): void {
     expect(Country::NULL->description())->toBe('');
 });
 
-it('can return list of countries as array', function () {
+it('can return list of countries as array', function (): void {
     $data = Country::toArray();
     $nonNull = array_filter(Country::cases(), fn ($case) => $case !== Country::NULL);
 
@@ -67,13 +67,13 @@ it('can return list of countries as array', function () {
         ->each->toHaveKeys(['code', 'name', 'currency']);
 });
 
-it('excludes NULL case from toArray()', function () {
+it('excludes NULL case from toArray()', function (): void {
     $values = array_column(Country::toArray(), 'code');
 
     expect($values)->not->toContain('');
 });
 
-it('includes Poland with correct data in toArray()', function () {
+it('includes Poland with correct data in toArray()', function (): void {
     expect(Country::toArray())->toContain([
         'code' => Country::POLAND->value,
         'name' => Country::POLAND->description(),
@@ -81,7 +81,7 @@ it('includes Poland with correct data in toArray()', function () {
     ]);
 });
 
-it('can return list of currencies', function () {
+it('can return list of currencies', function (): void {
     $data = Country::currencies();
     $countries = array_filter(Country::cases(), fn (Country $country) => $country !== Country::NULL);
 

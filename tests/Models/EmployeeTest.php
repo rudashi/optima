@@ -12,7 +12,7 @@ uses(TestCase::class);
 
 mutates(Employee::class);
 
-it('maps all fields from the database row', function () {
+it('maps all fields from the database row', function (): void {
     $employee = Employee::make(fakeEmployeeRow([
         'id'              => '5',
         'code'            => '001E',
@@ -41,25 +41,25 @@ it('maps all fields from the database row', function () {
         ->deleted->toBeFalse();
 });
 
-it('casts deleted to a boolean', function (int $deleted, bool $expected) {
+it('casts deleted to a boolean', function (int $deleted, bool $expected): void {
     expect(Employee::make(fakeEmployeeRow(['deleted' => $deleted]))->deleted)->toBe($expected);
 })->with([
     'truthy' => [1, true],
     'falsy'  => [0, false],
 ]);
 
-it('returns null for a missing job title and rcp', function () {
+it('returns null for a missing job title and rcp', function (): void {
     $employee = Employee::make(fakeEmployeeRow(['job_title' => null, 'rcp' => null]));
 
     expect($employee->job_title)->toBeNull()
         ->and($employee->rcp)->toBeNull();
 });
 
-it('casts a numeric rcp to a string', function () {
+it('casts a numeric rcp to a string', function (): void {
     expect(Employee::make(fakeEmployeeRow(['rcp' => 123]))->rcp)->toBe('123');
 });
 
-it('rejects a row without an email', function () {
+it('rejects a row without an email', function (): void {
     expect(fn () => Employee::make(fakeEmployeeRow(['email' => null])))
         ->toThrow(TypeError::class);
 });

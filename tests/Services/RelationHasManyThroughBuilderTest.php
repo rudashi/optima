@@ -13,7 +13,7 @@ uses(TestCase::class);
 
 mutates(RelationHasManyThroughBuilder::class);
 
-it('passes pivot local keys to the relation', function () {
+it('passes pivot local keys to the relation', function (): void {
     $relation = new FakeRelation();
     $this->app->instance(FakeRelation::class, $relation);
 
@@ -33,7 +33,7 @@ it('passes pivot local keys to the relation', function () {
     expect($relation->receivedKeys)->toBe([100, 200]);
 });
 
-it('attaches deduplicated owner keys to related items', function () {
+it('attaches deduplicated owner keys to related items', function (): void {
     $related = (object) ['dept_id' => 100, 'name' => 'IT'];
     $this->app->instance(FakeRelation::class, new FakeRelation([$related]));
 
@@ -59,7 +59,7 @@ it('attaches deduplicated owner keys to related items', function () {
     expect(array_values($related->employee_id))->toBe([1, 2]);
 });
 
-it('matches related models to owners through the pivot', function () {
+it('matches related models to owners through the pivot', function (): void {
     $this->app->instance(FakeRelation::class, new FakeRelation([
         (object) ['dept_id' => 100, 'name' => 'IT'],
         (object) ['dept_id' => 200, 'name' => 'HR'],
@@ -91,7 +91,7 @@ it('matches related models to owners through the pivot', function () {
         ->and($result->last()->departments[0]->name)->toBe('IT');
 });
 
-it('keeps the default for owners without pivot rows', function () {
+it('keeps the default for owners without pivot rows', function (): void {
     $this->app->instance(FakeRelation::class, new FakeRelation());
 
     $builder = new RelationHasManyThroughBuilder(FakeRelation::class, 'contracts', 'id', 'dept_id', 'dept_id', 'employee_id', 'departments');
@@ -102,7 +102,7 @@ it('keeps the default for owners without pivot rows', function () {
     expect($result->first()->departments)->toBe([]);
 });
 
-it('does not match a single related object', function () {
+it('does not match a single related object', function (): void {
     $this->app->instance(FakeRelation::class, new FakeRelation());
 
     $builder = new RelationHasManyThroughBuilder(FakeRelation::class, 'contracts', 'id', 'dept_id', 'dept_id', 'employee_id', 'departments');

@@ -12,7 +12,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('can ping optima database and get response 200', function () {
+it('can ping optima database and get response 200', function (): void {
     $this->get(route('api.optima.ping'))
         ->assertOk()
         ->assertJson([

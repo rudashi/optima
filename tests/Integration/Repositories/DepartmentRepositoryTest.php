@@ -16,7 +16,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('returns a typed Collection of departments from all()', function () {
+it('returns a typed Collection of departments from all()', function (): void {
     $departments = resolve(DepartmentRepository::class)->all();
 
     expect($departments->isEmpty())->toBeFalse()
@@ -30,7 +30,7 @@ it('returns a typed Collection of departments from all()', function () {
         ->parent_id->toBeNullableInt();
 });
 
-it('maps a department found by code to a typed model', function (string $code) {
+it('maps a department found by code to a typed model', function (string $code): void {
     expect(resolve(DepartmentRepository::class)->findByCode($code))
         ->toBeInstanceOf(Department::class)
         ->id->toBeInt()
@@ -44,17 +44,17 @@ it('maps a department found by code to a typed model', function (string $code) {
     'BIURO',
 ]);
 
-it('uppercases the code before querying', function () {
+it('uppercases the code before querying', function (): void {
     expect(resolve(DepartmentRepository::class)->findByCode('druk'))
         ->toBeInstanceOf(Department::class);
 });
 
-it('find() is an alias for findByCode()', function () {
+it('find() is an alias for findByCode()', function (): void {
     expect(resolve(DepartmentRepository::class)->find('DRUK'))
         ->toBeInstanceOf(Department::class);
 });
 
-it('throws when the department code is not found', function () {
+it('throws when the department code is not found', function (): void {
     expect(fn () => resolve(DepartmentRepository::class)->findByCode('__MISSING_DEPARTMENT__'))
         ->toThrow(
             exception: RecordsNotFoundException::class,

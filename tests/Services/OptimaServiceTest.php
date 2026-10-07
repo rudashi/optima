@@ -18,21 +18,21 @@ uses(TestCase::class);
 
 mutates(OptimaService::class);
 
-beforeEach(function () {
+beforeEach(function (): void {
     $this->service = app(OptimaService::class);
 });
 
-it('resolves the optima connection statically', function () {
+it('resolves the optima connection statically', function (): void {
     expect(OptimaService::connection())->toBe(DB::connection('optima'));
 });
 
-it('get custom Query builder', function () {
+it('get custom Query builder', function (): void {
     expect($this->service->newQuery())
         ->toBeInstanceOf(QueryBuilder::class)
         ->toBeInstanceOf(Builder::class);
 });
 
-it('can use helper function `optima`', function () {
+it('can use helper function `optima`', function (): void {
     $builder = optima();
 
     expect($builder)
@@ -48,7 +48,7 @@ it('can use helper function `optima`', function () {
         ->toBeInstanceOf(Builder::class);
 });
 
-it('can parse multiple ids to flatten array', function () {
+it('can parse multiple ids to flatten array', function (): void {
     $ids = [1, 'test', '34', 0];
 
     expect($this->service->parseIds(1, 'test', '34', 0))
@@ -57,7 +57,7 @@ it('can parse multiple ids to flatten array', function () {
         ->toBe($ids);
 });
 
-it('can parse collection of models to array of model keys', function () {
+it('can parse collection of models to array of model keys', function (): void {
     $first = dto();
     $second = dto();
     $third = dto();
@@ -69,14 +69,14 @@ it('can parse collection of models to array of model keys', function () {
         ->toMatchArray([$first->id, $second->id, $third->id]);
 });
 
-it('uses provided connection name over default', function () {
+it('uses provided connection name over default', function (): void {
     $resolver = $this->mock(DatabaseManager::class);
     $service = new OptimaService($resolver, 'custom_connection');
 
     expect($service->getConnectionName())->toBe('custom_connection');
 });
 
-it('returns true when connection is reachable', function () {
+it('returns true when connection is reachable', function (): void {
     $connection = $this->mock(SqlServerConnection::class);
     $connection->shouldReceive('getReadPdo')->once()->andReturn(true);
 
@@ -86,7 +86,7 @@ it('returns true when connection is reachable', function () {
     expect((new OptimaService($resolver))->hasConnection())->toBeTrue();
 });
 
-it('returns false when connection throws PDOException', function () {
+it('returns false when connection throws PDOException', function (): void {
     $connection = $this->mock(SqlServerConnection::class);
     $connection->shouldReceive('getReadPdo')->once()->andThrow(new PDOException('Connection failed'));
 
@@ -96,7 +96,7 @@ it('returns false when connection throws PDOException', function () {
     expect((new OptimaService($resolver))->hasConnection())->toBeFalse();
 });
 
-it('can switch connection', function () {
+it('can switch connection', function (): void {
     config([
         'database.connections.optima.driver' => 'sqlsrv',
         'database.connections.optima_second' => [

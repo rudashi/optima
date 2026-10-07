@@ -12,11 +12,11 @@ uses(TestCase::class);
 
 mutates(CustomerType::class);
 
-it('implements Describable contract', function () {
+it('implements Describable contract', function (): void {
     expect(CustomerType::class)->toImplement(Describable::class);
 });
 
-it('has correct backed values', function (CustomerType $case, int $value) {
+it('has correct backed values', function (CustomerType $case, int $value): void {
     expect($case->value)->toBe($value);
 })->with([
     [CustomerType::RECIPIENT, 0],
@@ -26,7 +26,7 @@ it('has correct backed values', function (CustomerType $case, int $value) {
     [CustomerType::POTENTIAL, 4],
 ]);
 
-it('returns correct description for each case', function (CustomerType $case, string $description) {
+it('returns correct description for each case', function (CustomerType $case, string $description): void {
     expect($case->description())->toBe($description);
 })->with([
     [CustomerType::RECIPIENT, 'Recipient'],
@@ -36,14 +36,14 @@ it('returns correct description for each case', function (CustomerType $case, st
     [CustomerType::POTENTIAL, 'Potential'],
 ]);
 
-it('returns true when comparing equal cases via equals()', function (CustomerType $a, CustomerType $b) {
+it('returns true when comparing equal cases via equals()', function (CustomerType $a, CustomerType $b): void {
     expect($a->equals($b))->toBeTrue();
 })->with([
     [CustomerType::RECIPIENT, CustomerType::RECIPIENT],
     [CustomerType::SUPPLIER, CustomerType::SUPPLIER],
 ]);
 
-it('returns false when comparing different cases via equals()', function (CustomerType $a, CustomerType $b) {
+it('returns false when comparing different cases via equals()', function (CustomerType $a, CustomerType $b): void {
     expect($a->equals($b))->toBeFalse();
 })->with([
     [CustomerType::RECIPIENT, CustomerType::SUPPLIER],

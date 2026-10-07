@@ -15,7 +15,7 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
-it('maps an employee found by code to a fully typed model', function (string $code) {
+it('maps an employee found by code to a fully typed model', function (string $code): void {
     expect(resolve(EmployeeRepository::class)->findByCode($code))
         ->toBeInstanceOf(Employee::class)
         ->id->toBeInt()
@@ -37,13 +37,13 @@ it('maps an employee found by code to a fully typed model', function (string $co
     '074E_DOT_1_2_1CBR',
 ]);
 
-it('find() is an alias for findByCode()', function () {
+it('find() is an alias for findByCode()', function (): void {
     expect(resolve(EmployeeRepository::class)->find('023E'))
         ->toBeInstanceOf(Employee::class)
         ->code->toBe('023E');
 });
 
-it('throws when the employee code is not found', function () {
+it('throws when the employee code is not found', function (): void {
     expect(fn () => resolve(EmployeeRepository::class)->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
@@ -51,7 +51,7 @@ it('throws when the employee code is not found', function () {
         );
 });
 
-it('throws when the employee is archived', function () {
+it('throws when the employee is archived', function (): void {
     expect(fn () => resolve(EmployeeRepository::class)->findByCode('XXX'))
         ->toThrow(
             exception: RecordsNotFoundException::class,

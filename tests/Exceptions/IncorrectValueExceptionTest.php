@@ -12,11 +12,11 @@ uses(TestCase::class);
 
 mutates(IncorrectValueException::class);
 
-it('keeps a provided non-zero code', function () {
+it('keeps a provided non-zero code', function (): void {
     expect((new IncorrectValueException('Invalid value', 500))->getCode())->toBe(500);
 });
 
-it('extends UnexpectedValueException and defaults to an empty message', function () {
+it('extends UnexpectedValueException and defaults to an empty message', function (): void {
     $exception = new IncorrectValueException();
 
     expect($exception)->toBeInstanceOf(UnexpectedValueException::class)
