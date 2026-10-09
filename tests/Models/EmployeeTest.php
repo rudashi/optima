@@ -60,6 +60,6 @@ it('casts a numeric rcp to a string', function (): void {
 });
 
 it('rejects a row without an email', function (): void {
-    expect(fn () => Employee::make(fakeEmployeeRow(['email' => null])))
+    expect(fn (): Employee => Employee::make(fakeEmployeeRow(['email' => null])))
         ->toThrow(TypeError::class);
 });

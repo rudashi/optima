@@ -26,7 +26,7 @@ it('table has expected columns', function (string $table, array $expected): void
         [$table]
     );
 
-    $names = array_map(fn ($col) => $col->COLUMN_NAME, $columns);
+    $names = array_map(fn ($col): string => $col->COLUMN_NAME, $columns);
 
     expect($names)->toContain(...$expected);
 })->with([

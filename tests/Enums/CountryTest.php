@@ -46,7 +46,7 @@ it('resolves correct case via of() using description', function (string $name, C
 ]);
 
 it('returns a non-empty description for all non-null cases', function (): void {
-    $cases = array_filter(Country::cases(), fn ($c) => $c !== Country::NULL);
+    $cases = array_filter(Country::cases(), fn ($c): bool => $c !== Country::NULL);
 
     foreach ($cases as $case) {
         expect($case->description())->toBeString()->not->toBeEmpty();
@@ -59,7 +59,7 @@ it('returns empty string description for NULL case', function (): void {
 
 it('can return list of countries as array', function (): void {
     $data = Country::toArray();
-    $nonNull = array_filter(Country::cases(), fn ($case) => $case !== Country::NULL);
+    $nonNull = array_filter(Country::cases(), fn ($case): bool => $case !== Country::NULL);
 
     expect($data)
         ->toBeArray()
@@ -83,7 +83,7 @@ it('includes Poland with correct data in toArray()', function (): void {
 
 it('can return list of currencies', function (): void {
     $data = Country::currencies();
-    $countries = array_filter(Country::cases(), fn (Country $country) => $country !== Country::NULL);
+    $countries = array_filter(Country::cases(), fn (Country $country): bool => $country !== Country::NULL);
 
     expect($data)
         ->toBeArray()

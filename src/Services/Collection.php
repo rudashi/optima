@@ -63,9 +63,9 @@ class Collection extends CollectionBase
      */
     public function pluckAll(array $values): array
     {
-        $callback = static fn ($item, string $v) => is_array($item) ? ($item[$v] ?? null) : $item->{$v};
+        $callback = static fn ($item, string $v): mixed => is_array($item) ? ($item[$v] ?? null) : $item->{$v};
 
-        return $this->map(static fn ($item) => array_map(static fn ($v) => $callback($item, $v), $values))
+        return $this->map(static fn ($item): array => array_map(static fn ($v): mixed => $callback($item, $v), $values))
             ->flatten()
             ->unique()
             ->filter()

@@ -42,7 +42,7 @@ it('compiles and executes the WITH (NOLOCK) table hint against the live schema',
         ->get();
 
     expect($result->count())->toBeGreaterThanOrEqual(5)
-        ->and(collect($queries)->contains(fn ($sql) => str_contains($sql, 'WITH (NOLOCK)')))->toBeTrue();
+        ->and(collect($queries)->contains(fn (string $sql): bool => str_contains($sql, 'WITH (NOLOCK)')))->toBeTrue();
 });
 
 it('resolves a hasOne relation against the live schema', function (): void {
@@ -120,7 +120,7 @@ it('resolves a hasMany relation built from a closure against the live schema', f
         ->orderBy('CNT_CntId')
         ->select(['CNT_CntId as id'])
         ->hasMany(
-            related: fn (QueryBuilder $query, array $ids) => $query
+            related: fn (QueryBuilder $query, array $ids): QueryBuilder => $query
                 ->from('CDN.Pracidx')
                 ->whereIn('PRI_CntId', $ids)
                 ->select(['PRI_CntId as dept_id', 'PRI_Kod as code']),

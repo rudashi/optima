@@ -137,7 +137,7 @@ enum PaymentForm: int implements Arrayable, Describable
     public static function toArray(): array
     {
         return array_map(
-            callback: static fn ($item) => [
+            callback: static fn ($item): array => [
                 'name' => $item->description(),
                 'currency' => $item->currency(),
                 'value' => $item->value,

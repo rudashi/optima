@@ -54,7 +54,7 @@ it('get bool or null', function ($payload, $value): void {
 it('runs callback on value', function ($test, $expectation): void {
     $parser = new Parser(1);
 
-    $result = $parser->call(fn ($value) => $value !== $test);
+    $result = $parser->call(fn ($value): bool => $value !== $test);
 
     expect($result)
         ->toBe($expectation);
@@ -135,7 +135,7 @@ it('trim data', function ($payload, $value): void {
 it('throws an exception on condition', function (): void {
     $parser = new Parser('');
 
-    expect(fn () => $parser->throwWhen(fn () => true))
+    expect(fn () => $parser->throwWhen(fn (): bool => true))
         ->toThrow(
             exception: IncorrectValueException::class,
             exceptionMessage: 'Incorrect value',
@@ -145,7 +145,7 @@ it('throws an exception on condition', function (): void {
 it('throws an exception with custom message', function (): void {
     $parser = new Parser('');
 
-    expect(fn () => $parser->throwWhen(fn () => true, 'Custom message'))
+    expect(fn () => $parser->throwWhen(fn (): bool => true, 'Custom message'))
         ->toThrow(
             exception: IncorrectValueException::class,
             exceptionMessage: 'Custom message',
@@ -155,14 +155,14 @@ it('throws an exception with custom message', function (): void {
 it('not throws an exception on condition', function (): void {
     $parser = new Parser('');
 
-    expect(fn () => $parser->throwWhen(fn ($v) => $v === null))
+    expect(fn () => $parser->throwWhen(fn ($v): bool => $v === null))
         ->not->toThrow(IncorrectValueException::class);
 });
 
 it('runs callback on non null value', function ($payload, $expectation): void {
     $parser = new Parser($payload);
 
-    $result = $parser->whenNotNull(fn ($value) => $value === 1);
+    $result = $parser->whenNotNull(fn ($value): bool => $value === 1);
 
     expect($result)
         ->toBe($expectation);

@@ -16,8 +16,12 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
+beforeEach(function (): void {
+    $this->departments = resolve(DepartmentRepository::class);
+});
+
 it('returns a typed Collection of departments from all()', function (): void {
-    $departments = resolve(DepartmentRepository::class)->all();
+    $departments = $this->departments->all();
 
     expect($departments->isEmpty())->toBeFalse()
         ->and($departments)
@@ -31,7 +35,7 @@ it('returns a typed Collection of departments from all()', function (): void {
 });
 
 it('maps a department found by code to a typed model', function (string $code): void {
-    expect(resolve(DepartmentRepository::class)->findByCode($code))
+    expect($this->departments->findByCode($code))
         ->toBeInstanceOf(Department::class)
         ->id->toBeInt()
         ->name->toBeString()
@@ -45,17 +49,17 @@ it('maps a department found by code to a typed model', function (string $code): 
 ]);
 
 it('uppercases the code before querying', function (): void {
-    expect(resolve(DepartmentRepository::class)->findByCode('druk'))
+    expect($this->departments->findByCode('druk'))
         ->toBeInstanceOf(Department::class);
 });
 
 it('find() is an alias for findByCode()', function (): void {
-    expect(resolve(DepartmentRepository::class)->find('DRUK'))
+    expect($this->departments->find('DRUK'))
         ->toBeInstanceOf(Department::class);
 });
 
 it('throws when the department code is not found', function (): void {
-    expect(fn () => resolve(DepartmentRepository::class)->findByCode('__MISSING_DEPARTMENT__'))
+    expect(fn (): Department => $this->departments->findByCode('__MISSING_DEPARTMENT__'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => '__MISSING_DEPARTMENT__']),

@@ -18,7 +18,7 @@ it('can pluck multiple values from nested object', function (array $array): void
     expect($collection)
         ->toBeArray()
         ->toHaveCount(6);
-})->with([fn () => fakeCollectionArray()]);
+})->with([fn (): array => fakeCollectionArray()]);
 
 it('can pluck multiple values from nested array', function (array $array): void {
     $collection = (new Collection($array))->pluckAll(['uuid', 'email']);
@@ -26,7 +26,7 @@ it('can pluck multiple values from nested array', function (array $array): void 
     expect($collection)
         ->toBeArray()
         ->toHaveCount(6);
-})->with([fn () => fakeCollectionArray('array')]);
+})->with([fn (): array => fakeCollectionArray('array')]);
 
 it('can pluck multiple values without duplicates', function (array $array): void {
     $collection = (new Collection($array))->pluckAll(['uuid', 'active']);
@@ -34,7 +34,7 @@ it('can pluck multiple values without duplicates', function (array $array): void
     expect($collection)
         ->toBeArray()
         ->toHaveCount(4);
-})->with([fn () => fakeCollectionArray()]);
+})->with([fn (): array => fakeCollectionArray()]);
 
 it('can get only model keys', function (): void {
     $first = dto();
@@ -71,9 +71,9 @@ it('can attach to collection item other filtered collection', function (): void 
     $collection = (new Collection(fakeCollectionArray('array')));
     $second = (new Collection($collection->take(2)));
 
-    $collection->attach(function ($item) use ($second) {
+    $collection->attach(function (array $item) use ($second): array {
         $item['x'] = $second
-            ->filter(static fn ($y) => $y['id'] === $item['id'])
+            ->filter(static fn ($y): bool => $y['id'] === $item['id'])
             ->pluckAll(['id', 'uuid']);
         return $item;
     });

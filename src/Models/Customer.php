@@ -40,10 +40,10 @@ readonly class Customer
             name_line_three: $name_3,
             name: trim(implode(' ', [$data->company, $name_2, $name_3])),
             country: Parser::for($data, 'country')->trim(),
-            city: Parser::for($data, 'city')->whenNotNull(fn ($value) => ucfirst(mb_strtolower($value))),
+            city: Parser::for($data, 'city')->whenNotNull(fn ($value): string => ucfirst(mb_strtolower($value))),
             postal_code: Parser::for($data, 'postal_code')->trim(),
             street: Parser::for($data, 'street')->whenNotNull(
-                fn ($value) => str_starts_with($value, 'ul') ? $value : mb_convert_case($value, MB_CASE_TITLE, 'UTF-8')
+                fn ($value): string => str_starts_with($value, 'ul') ? $value : mb_convert_case($value, MB_CASE_TITLE, 'UTF-8')
             ),
             building_number: Parser::for($data, 'building_number')->trim(),
             suite_number: Parser::for($data, 'suite_number')->trim(),

@@ -15,8 +15,12 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
+beforeEach(function (): void {
+    $this->employees = resolve(EmployeeRepository::class);
+});
+
 it('maps an employee found by code to a fully typed model', function (string $code): void {
-    expect(resolve(EmployeeRepository::class)->findByCode($code))
+    expect($this->employees->findByCode($code))
         ->toBeInstanceOf(Employee::class)
         ->id->toBeInt()
         ->code->toBe($code)
@@ -38,13 +42,13 @@ it('maps an employee found by code to a fully typed model', function (string $co
 ]);
 
 it('find() is an alias for findByCode()', function (): void {
-    expect(resolve(EmployeeRepository::class)->find('023E'))
+    expect($this->employees->find('023E'))
         ->toBeInstanceOf(Employee::class)
         ->code->toBe('023E');
 });
 
 it('throws when the employee code is not found', function (): void {
-    expect(fn () => resolve(EmployeeRepository::class)->findByCode(''))
+    expect(fn (): Employee => $this->employees->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given acronym :code is invalid or not in the OPTIMA.', ['code' => '']),
@@ -52,7 +56,7 @@ it('throws when the employee code is not found', function (): void {
 });
 
 it('throws when the employee is archived', function (): void {
-    expect(fn () => resolve(EmployeeRepository::class)->findByCode('XXX'))
+    expect(fn (): Employee => $this->employees->findByCode('XXX'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => 'XXX']),

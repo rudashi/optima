@@ -25,7 +25,7 @@ class DepartmentEmployeesRelation implements Relation
             ->from('CDN.Pracidx')
             ->whereIn('PRI_CntId', (array) $relationId)
             ->orderBy('PRI_PraId')
-            ->getTo(fn ($row) => (object) [
+            ->getTo(fn ($row): object => (object) [
                 'dept_id' => (int) $row->PRI_CntId,
                 'code' => (string) $row->PRI_Kod,
             ]);

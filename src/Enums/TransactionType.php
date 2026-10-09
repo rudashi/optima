@@ -41,7 +41,7 @@ enum TransactionType: int implements Arrayable, Describable
     public static function toArray(): array
     {
         return array_map(
-            callback: static fn ($item) => [
+            callback: static fn ($item): array => [
                 'name' => $item->description(),
                 'value' => $item->value,
             ],

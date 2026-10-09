@@ -17,8 +17,12 @@ pest()->group('smoke');
 
 beforeEach(fn () => skipUnlessMssql());
 
+beforeEach(function (): void {
+    $this->customers = resolve(CustomerRepository::class);
+});
+
 it('maps a customer found by code to a fully typed model', function (string $code): void {
-    expect(resolve(CustomerRepository::class)->findByCode($code))
+    expect($this->customers->findByCode($code))
         ->toBeInstanceOf(Customer::class)
         ->id->toBeInt()
         ->code->toBe($code)
@@ -41,18 +45,18 @@ it('maps a customer found by code to a fully typed model', function (string $cod
 ]);
 
 it('applies the group filter when a group is provided', function (): void {
-    expect(resolve(CustomerRepository::class)->findByCode('ANTALIS', CustomerGroup::SUPPLIER->value))
+    expect($this->customers->findByCode('ANTALIS', CustomerGroup::SUPPLIER->value))
         ->toBeInstanceOf(Customer::class)
         ->code->toBe('ANTALIS');
 });
 
 it('throws when the code exists only in another group', function (): void {
-    expect(fn () => resolve(CustomerRepository::class)->findByCode('ANTALIS', CustomerGroup::SUBCONTRACTOR->value))
+    expect(fn (): Customer => $this->customers->findByCode('ANTALIS', CustomerGroup::SUBCONTRACTOR->value))
         ->toThrow(RecordsNotFoundException::class);
 });
 
 it('returns a typed Collection of customers when found by id', function (): void {
-    $customers = resolve(CustomerRepository::class)->find(50, 4328, 26820, 5160);
+    $customers = $this->customers->find(50, 4328, 26820, 5160);
 
     expect($customers->isEmpty())->toBeFalse()
         ->and($customers)
@@ -62,7 +66,7 @@ it('returns a typed Collection of customers when found by id', function (): void
 });
 
 it('throws when no customer matches the given code', function (): void {
-    expect(fn () => resolve(CustomerRepository::class)->findByCode(''))
+    expect(fn (): Customer => $this->customers->findByCode(''))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => '']),
@@ -70,7 +74,7 @@ it('throws when no customer matches the given code', function (): void {
 });
 
 it('throws when no customer matches the given id', function (): void {
-    expect(fn () => resolve(CustomerRepository::class)->find(999999999))
+    expect(fn (): Customer => $this->customers->find(999999999))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given id is invalid or not in the OPTIMA.'),

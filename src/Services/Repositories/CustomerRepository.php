@@ -24,7 +24,7 @@ readonly class CustomerRepository
             ->where('Knt_Kod', $code)
             ->when(
                 value: $group,
-                callback: static fn (QueryBuilder $query, string $group) => $query
+                callback: static fn (QueryBuilder $query, string $group): QueryBuilder => $query
                     ->where('Knt_Grupa', CustomerGroup::from($group)->value)
             )
             ->first();

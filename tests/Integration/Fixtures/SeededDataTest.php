@@ -70,7 +70,7 @@ it('applies the group filter when finding a customer by code', function (): void
 
     expect($repository->findByCode('TEST-FULL', CustomerGroup::SUBCONTRACTOR->value))
         ->code->toBe('TEST-FULL')
-        ->and(fn () => $repository->findByCode('TEST-FULL', CustomerGroup::SUPPLIER->value))
+        ->and(fn (): Customer => $repository->findByCode('TEST-FULL', CustomerGroup::SUPPLIER->value))
         ->toThrow(RecordsNotFoundException::class);
 
 });
@@ -113,15 +113,14 @@ it('returns a Collection of customers when found by ids', function (): void {
     expect($customers)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(2)
+        ->pluck('id')->all()->toContain(1)->toContain(4)
         ->each->toBeInstanceOf(Customer::class);
-
-    expect($customers->pluck('id')->all())->toContain(1)->toContain(4);
 });
 
 it('throws with the code message when the customer code is not found', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
-    expect(fn () => $repository->findByCode('NOPE'))
+    expect(fn (): Customer => $repository->findByCode('NOPE'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => 'NOPE']),
@@ -131,7 +130,7 @@ it('throws with the code message when the customer code is not found', function 
 it('throws with the id message when no customer matches the ids', function (): void {
     $repository = new CustomerRepository(app(OptimaService::class));
 
-    expect(fn () => $repository->find(999999))
+    expect(fn (): Collection => $repository->find(999999))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given id is invalid or not in the OPTIMA.'),
@@ -164,17 +163,24 @@ it('selects the latest employment record by max PRE_PreId', function (): void {
         ->job_title->toBe('Kierownik');
 });
 
-it('joins the active RCP card and ignores expired ones', function (): void {
+it('joins the active RCP card', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
-    expect($repository->findByCode('001E'))->rcp->toBe('RCP-001');
-    expect($repository->findByCode('002E'))->rcp->toBeNull();
+    expect($repository->findByCode('001E'))
+        ->rcp->toBe('RCP-001');
+});
+
+it('ignores expired RCP card', function (): void {
+    $repository = new EmployeeRepository(app(OptimaService::class));
+
+    expect($repository->findByCode('002E'))
+        ->rcp->toBeNull();
 });
 
 it('throws when the employee is archived', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
-    expect(fn () => $repository->findByCode('003E'))
+    expect(fn (): Employee => $repository->findByCode('003E'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Employee with given acronym :code is archived.', ['code' => '003E']),
@@ -194,7 +200,7 @@ it('maps an owner-type employee through the repository', function (): void {
 it('throws with the acronym message when the employee code is not found', function (): void {
     $repository = new EmployeeRepository(app(OptimaService::class));
 
-    expect(fn () => $repository->findByCode('NOPE'))
+    expect(fn (): Employee => $repository->findByCode('NOPE'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given acronym :code is invalid or not in the OPTIMA.', ['code' => 'NOPE']),
@@ -247,7 +253,7 @@ it('uppercases the department code before querying', function (): void {
 it('throws with the code message when the department code is not found', function (): void {
     $repository = new DepartmentRepository(app(OptimaService::class));
 
-    expect(fn () => $repository->findByCode('NOPE'))
+    expect(fn (): Department => $repository->findByCode('NOPE'))
         ->toThrow(
             exception: RecordsNotFoundException::class,
             exceptionMessage: __('Given code :code is invalid or not in the OPTIMA.', ['code' => 'NOPE']),

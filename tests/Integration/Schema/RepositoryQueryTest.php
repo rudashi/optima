@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rudashi\Optima\Tests\Integration\Schema\RepositoryQueryTest;
 
 use Illuminate\Database\RecordsNotFoundException;
+use Rudashi\Optima\Models\Customer;
 use Rudashi\Optima\Services\Collection;
 use Rudashi\Optima\Services\OptimaService;
 use Rudashi\Optima\Services\Repositories\CustomerRepository;
@@ -27,12 +28,12 @@ beforeEach(function (): void {
 });
 
 it('executes the canonical customer SELECT against the live schema', function (): void {
-    expect(fn () => $this->customers->findByCode('__OPTIMA_SMOKE_PROBE__'))
+    expect(fn (): Customer => $this->customers->findByCode('__OPTIMA_SMOKE_PROBE__'))
         ->toThrow(RecordsNotFoundException::class);
 });
 
 it('executes the canonical employee SELECT against the live schema', function (): void {
-    expect(fn () => $this->employees->findByCode('__OPTIMA_SMOKE_PROBE__'))
+    expect(fn (): Customer => $this->employees->findByCode('__OPTIMA_SMOKE_PROBE__'))
         ->toThrow(RecordsNotFoundException::class);
 });
 

@@ -24,7 +24,7 @@ class DepartmentManagerRelation implements Relation
         return $this->service->newQuery()
             ->from('CDN.CentraKierownicy')
             ->whereIn('CNK_CntId', (array) $relationId)
-            ->getTo(fn ($row) => (object) [
+            ->getTo(fn ($row): object => (object) [
                 'dept_id' => (int) $row->CNK_CntId,
                 'manager_id' => (int) $row->CNK_PraId,
             ]);
