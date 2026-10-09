@@ -24,7 +24,7 @@ class DepartmentRepository
     {
         return $this->queryDepartment()
             ->orderBy('CNT_CntId')
-            ->getTo(fn ($item) => Department::make($item));
+            ->getTo(Department::make(...));
     }
 
     public function find(string $code): Department

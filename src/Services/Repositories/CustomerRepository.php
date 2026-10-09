@@ -45,7 +45,7 @@ readonly class CustomerRepository
     {
         $data = $this->queryCustomer()
             ->whereIn('Knt_KntId', $this->service->parseIds($ids))
-            ->getTo(fn ($item) => Customer::make($item));
+            ->getTo(Customer::make(...));
 
         if ($data->isEmpty()) {
             throw new RecordsNotFoundException(__('Given id is invalid or not in the OPTIMA.'));
