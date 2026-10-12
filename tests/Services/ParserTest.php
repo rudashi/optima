@@ -14,7 +14,7 @@ uses(TestCase::class);
 
 mutates(Parser::class);
 
-it('create Parser instance', function ($value): void {
+it('create Parser instance', function (mixed $value): void {
     $parser = new Parser($value);
 
     expect(array_values((array) $parser))
@@ -42,7 +42,7 @@ it('create Parser statically', function (): void {
         ->toMatchArray([$value]);
 });
 
-it('get bool or null', function ($payload, $value): void {
+it('get bool or null', function (string|null $payload, bool $value): void {
     expect((new Parser($payload))->bool())
         ->toBe($value);
 })->with([
@@ -51,10 +51,10 @@ it('get bool or null', function ($payload, $value): void {
     'false when null' => [null, false],
 ]);
 
-it('runs callback on value', function ($test, $expectation): void {
+it('runs callback on value', function (int $test, bool $expectation): void {
     $parser = new Parser(1);
 
-    $result = $parser->call(fn ($value): bool => $value !== $test);
+    $result = $parser->call(fn (int $value): bool => $value !== $test);
 
     expect($result)
         ->toBe($expectation);
@@ -63,7 +63,7 @@ it('runs callback on value', function ($test, $expectation): void {
     'negative' => [-1, true],
 ]);
 
-it('get Date or null', function ($payload, $value): void {
+it('get Date or null', function (string|null $payload, string|null $value): void {
     expect((new Parser($payload))->date())
         ->when(
             condition: $payload !== null,
@@ -79,7 +79,7 @@ it('get Date or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('get enum or null', function ($payload, $value): void {
+it('get enum or null', function (string|null $payload, FakeEnum|null $value): void {
     expect((new Parser($payload))->enum(FakeEnum::class))
         ->toBe($value);
 })->with([
@@ -88,7 +88,7 @@ it('get enum or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('get int or null', function ($payload, $value): void {
+it('get int or null', function (string|null $payload, int|null $value): void {
     expect((new Parser($payload))->int())
         ->toBe($value);
 })->with([
@@ -97,7 +97,7 @@ it('get int or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('get float or null', function ($payload, $value): void {
+it('get float or null', function (string|null $payload, float|null $value): void {
     expect((new Parser($payload))->float())
         ->toBe($value);
 })->with([
@@ -114,7 +114,7 @@ it('returns value', function (): void {
         ->toMatchArray([$value]);
 });
 
-it('get string', function ($payload, $value): void {
+it('get string', function (string|null $payload, string|null $value): void {
     expect((new Parser($payload))->string())
         ->toBe($value);
 })->with([
@@ -123,7 +123,7 @@ it('get string', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('trim data', function ($payload, $value): void {
+it('trim data', function (string|null $payload, string|null $value): void {
     expect((new Parser($payload))->trim())
         ->toBe($value);
 })->with([
@@ -155,14 +155,14 @@ it('throws an exception with custom message', function (): void {
 it('not throws an exception on condition', function (): void {
     $parser = new Parser('');
 
-    expect(fn () => $parser->throwWhen(fn ($v): bool => $v === null))
+    expect(fn () => $parser->throwWhen(fn (mixed $v): bool => $v === null))
         ->not->toThrow(IncorrectValueException::class);
 });
 
-it('runs callback on non null value', function ($payload, $expectation): void {
+it('runs callback on non null value', function (int|null $payload, bool|null$expectation): void {
     $parser = new Parser($payload);
 
-    $result = $parser->whenNotNull(fn ($value): bool => $value === 1);
+    $result = $parser->whenNotNull(fn (mixed $value): bool => $value === 1);
 
     expect($result)
         ->toBe($expectation);
@@ -172,7 +172,7 @@ it('runs callback on non null value', function ($payload, $expectation): void {
     'null' => [null, null],
 ]);
 
-it('checks if the key exists in the object', function ($key, $expectation): void {
+it('checks if the key exists in the object', function (string $key, bool $expectation): void {
     $object = (object) ['foo' => 'bar'];
 
     $result = Parser::has($object, $key);
@@ -184,7 +184,7 @@ it('checks if the key exists in the object', function ($key, $expectation): void
     'false' => ['bar', false],
 ]);
 
-it('checks if the key is equal to value', function ($value, $expectation): void {
+it('checks if the key is equal to value', function (string|null $value, bool $expectation): void {
     $object = (object) ['foo' => 'bar'];
 
     $result = Parser::isEqual($object, 'foo', $value);
@@ -217,7 +217,7 @@ it('returns default when int-backed enum value is not found', function (): void 
         ->toBe(TransactionType::NATIONAL);
 });
 
-it('casts non-string value to string', function ($value, string $expected): void {
+it('casts non-string value to string', function (int|float $value, string $expected): void {
     expect((new Parser($value))->string())
         ->toBe($expected);
 })->with([

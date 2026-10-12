@@ -11,7 +11,7 @@ uses(TestCase::class);
 
 mutates(Entry::class);
 
-it('get bool or null', function ($payload, $value): void {
+it('get bool or null', function (string|null $payload, bool|null $value): void {
     expect(Entry::bool($payload))
         ->toBe($value);
 })->with([
@@ -20,7 +20,7 @@ it('get bool or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('trim data', function ($payload, $value): void {
+it('trim data', function (string|null $payload, string|null $value): void {
     expect(Entry::trim($payload))
         ->toBe($value);
 })->with([
@@ -29,7 +29,7 @@ it('trim data', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('get int or null', function ($payload, $value): void {
+it('get int or null', function (string|null $payload, int|null $value): void {
     expect(Entry::int($payload))
         ->toBe($value);
 })->with([
@@ -38,7 +38,7 @@ it('get int or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('get float or null', function ($payload, $value): void {
+it('get float or null', function (string|null $payload, float|null $value): void {
     expect(Entry::float($payload))
         ->toBe($value);
 })->with([
@@ -47,7 +47,7 @@ it('get float or null', function ($payload, $value): void {
     'null when null' => [null, null],
 ]);
 
-it('get Date or null', function ($payload, $value): void {
+it('get Date or null', function (string|null $payload, string|null $value): void {
     expect(Entry::date($payload))
         ->when(
             condition: $payload !== null,

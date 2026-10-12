@@ -42,7 +42,7 @@ class QueryBuilder extends Builder
         $this->loadRelations($items);
 
         return $this->applyAfterQueryCallbacks(
-            isset($this->groupLimit) ? $this->withoutGroupLimitKeys($items) : $items
+            $this->groupLimit !== null ? $this->withoutGroupLimitKeys($items) : $items
         );
     }
 

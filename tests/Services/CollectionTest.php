@@ -56,7 +56,7 @@ it('can attach to collection item', function (): void {
             fn ($item) => $item->not->toHaveKey('y', 'new'),
         );
 
-    $collection->attach(static function ($item) {
+    $collection->attach(static function (array $item): array {
         $item['y'] = 'new';
         return $item;
     });
