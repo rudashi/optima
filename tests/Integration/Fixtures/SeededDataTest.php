@@ -113,8 +113,12 @@ it('returns a Collection of customers when found by ids', function (): void {
     expect($customers)
         ->toBeInstanceOf(Collection::class)
         ->toHaveCount(2)
-        ->pluck('id')->all()->toContain(1)->toContain(4)
         ->each->toBeInstanceOf(Customer::class);
+
+    $ids = $customers->pluck('id');
+
+    expect($ids)
+        ->toMatchArray([1, 4]);
 });
 
 it('throws with the code message when the customer code is not found', function (): void {
