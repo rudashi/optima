@@ -65,7 +65,7 @@ class EmployeeRepository
             throw new RecordsNotFoundException(__('Given acronym :code is invalid or not in the OPTIMA.', ['code' => $code]));
         }
 
-        if ((bool) $data->deleted === true) {
+        if ((bool) $data->deleted) {
             throw new RecordsNotFoundException(__('Employee with given acronym :code is archived.', ['code' => $code]));
         }
 
