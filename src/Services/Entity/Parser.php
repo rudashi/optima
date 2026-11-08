@@ -66,6 +66,9 @@ class Parser
         return $callback($this->value) ?? $default;
     }
 
+    /**
+     * @return ($default is null ? CarbonInterface|null : CarbonInterface)
+     */
     public function date(?CarbonInterface $default = null): CarbonInterface|null
     {
         return Entry::date($this->value) ?? $default;
@@ -73,9 +76,11 @@ class Parser
 
     /**
      * @template TEnum of \BackedEnum
+     * @template TDefault
      *
      * @param  class-string<TEnum>  $enum
-     * @return TEnum|null
+     * @param  TDefault  $default
+     * @return TEnum|TDefault
      */
     public function enum(string $enum, mixed $default = null): mixed
     {
@@ -90,11 +95,17 @@ class Parser
         return $default;
     }
 
+    /**
+     * @return ($default is null ? int|null : int)
+     */
     public function int(?int $default = null): int|null
     {
         return Entry::int($this->value) ?? $default;
     }
 
+    /**
+     * @return ($default is null ? float|null : float)
+     */
     public function float(?float $default = null): float|null
     {
         return Entry::float($this->value) ?? $default;
@@ -105,11 +116,17 @@ class Parser
         return $this->value;
     }
 
+    /**
+     * @return ($default is null ? string|null : string)
+     */
     public function string(?string $default = null): string|null
     {
         return $this->value !== null ? (string) $this->value : $default;
     }
 
+    /**
+     * @return ($default is null ? string|null : string)
+     */
     public function trim(?string $default = null): string|null
     {
         return Entry::trim($this->value) ?? $default;
